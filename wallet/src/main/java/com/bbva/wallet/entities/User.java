@@ -40,6 +40,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role roleId;
@@ -50,6 +51,7 @@ public class User implements Serializable {
     @Column(name = "creation_date",nullable = false)
     private LocalDateTime creationDate;
 
+    @JsonIgnore
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
 

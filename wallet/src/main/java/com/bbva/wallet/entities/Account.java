@@ -26,7 +26,6 @@ public class Account implements Serializable {
     private Long id;
 
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private Currencies currency;
 
@@ -41,7 +40,6 @@ public class Account implements Serializable {
     private User userId;
 
     @NotNull
-    @NotBlank
     @Column (unique = true)
     private String cbu;
 

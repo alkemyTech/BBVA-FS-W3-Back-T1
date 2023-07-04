@@ -55,7 +55,7 @@ public class AuthenticationService {
         Account usdAccount = Account.builder().currency(Currencies.USD)
                 .transactionLimit(1000.0)
                 .userId(savedUser)
-//                .balance(0.0)
+                .balance(0.0)
                 .softDelete(false)
                 .build();
         accountRepository.save(usdAccount);

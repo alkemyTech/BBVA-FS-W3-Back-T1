@@ -12,13 +12,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter@Setter
-@AllArgsConstructor@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "roles")
 public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Byte id;
+    private Integer id;
     @Enumerated(EnumType.STRING)
     private EnumRole name;
 

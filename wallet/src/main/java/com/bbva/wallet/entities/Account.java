@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Builder
 @NoArgsConstructor
@@ -26,7 +27,6 @@ public class Account implements Serializable {
     private Long id;
 
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private Currencies currency;
 
@@ -34,6 +34,7 @@ public class Account implements Serializable {
     private Double transactionLimit;
 
     @NotNull
+    @Column(columnDefinition = "double default 0.0")
     private Double balance;
 
     @ManyToOne
@@ -57,5 +58,22 @@ public class Account implements Serializable {
     @Column(nullable = false ,columnDefinition = "boolean default false")
     private Boolean softDelete;
 
+    private static final int CBU_LENGTH = 22;
 
+
+    @PrePersist
+    protected void onCreate(){
+        generateCBU();
+    }
+    public void generateCBU() {
+        Random random = new Random();
+        StringBuilder cbuBuilder = new StringBuilder();
+
+        for (int i = 0; i < CBU_LENGTH; i++) {
+            int digit = random.nextInt(10);
+            cbuBuilder.append(digit);
+        }
+
+        this.cbu = cbuBuilder.toString();
+    }
 }

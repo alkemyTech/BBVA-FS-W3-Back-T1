@@ -2,7 +2,6 @@ package com.bbva.wallet.entities;
 import com.bbva.wallet.enums.Currencies;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -34,10 +33,9 @@ public class Account implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userId;
 
     @NotNull
-    @NotBlank
     @Column (unique = true)
     private String cbu;
 

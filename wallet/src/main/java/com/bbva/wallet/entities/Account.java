@@ -1,9 +1,13 @@
 package com.bbva.wallet.entities;
 import com.bbva.wallet.enums.Currencies;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,6 +26,7 @@ public class Account implements Serializable {
     private Long id;
 
     @NotNull
+    @NotBlank
     @Enumerated(EnumType.STRING)
     private Currencies currency;
 
@@ -36,26 +41,21 @@ public class Account implements Serializable {
     private User userId;
 
     @NotNull
+    @NotBlank
     @Column (unique = true)
     private String cbu;
 
-    @Column(name = "creation_date")
+    @CreationTimestamp
+    @Column
     private LocalDateTime creationDate;
 
-    @Column(name = "update_date")
+    @UpdateTimestamp
+    @Column
     private LocalDateTime updateDate;
 
+    @JsonIgnore
+    @Column(nullable = false ,columnDefinition = "boolean default false")
     private Boolean softDelete;
 
-    @PrePersist
-    protected void onCreate() {
-        this.creationDate = LocalDateTime.now();
-        this.updateDate = this.creationDate;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updateDate = LocalDateTime.now();
-    }
 
 }

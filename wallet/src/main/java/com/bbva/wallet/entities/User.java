@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -52,6 +53,10 @@ public class User implements Serializable {
 
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
+
+    @JsonIgnore
+    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Account> accounts;
 
 
     @PrePersist

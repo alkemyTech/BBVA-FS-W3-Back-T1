@@ -34,6 +34,7 @@ public class Account implements Serializable {
     private Double transactionLimit;
 
     @NotNull
+    @Column(columnDefinition = "double default 0.0")
     private Double balance;
 
     @ManyToOne
@@ -54,12 +55,11 @@ public class Account implements Serializable {
     private LocalDateTime updateDate;
 
     @JsonIgnore
-    @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
-    private boolean softDelete;
-
-
+    @Column(nullable = false ,columnDefinition = "boolean default false")
+    private Boolean softDelete;
 
     private static final int CBU_LENGTH = 22;
+
 
     @PrePersist
     protected void onCreate(){
@@ -77,5 +77,4 @@ public class Account implements Serializable {
 
         this.cbu = cbuBuilder.toString();
     }
-
 }

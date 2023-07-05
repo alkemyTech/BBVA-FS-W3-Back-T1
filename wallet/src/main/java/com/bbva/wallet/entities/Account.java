@@ -57,6 +57,7 @@ public class Account implements Serializable {
     @JsonIgnore
     @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
     private boolean softDelete;
+
     private static final int CBU_LENGTH = 22;
 
 
@@ -64,7 +65,6 @@ public class Account implements Serializable {
     protected void onCreate(){
         generateCBU();
     }
-
     public void generateCBU() {
         Random random = new Random();
         StringBuilder cbuBuilder = new StringBuilder();

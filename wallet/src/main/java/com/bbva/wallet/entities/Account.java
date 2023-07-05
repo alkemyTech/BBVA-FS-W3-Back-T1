@@ -22,7 +22,6 @@ import java.util.Random;
 @Table (name = "accounts")
 public class Account implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -78,5 +77,5 @@ public class Account implements Serializable {
 
         this.cbu = cbuBuilder.toString();
     }
-    
+
 }

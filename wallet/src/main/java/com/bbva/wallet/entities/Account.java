@@ -55,9 +55,8 @@ public class Account implements Serializable {
     private LocalDateTime updateDate;
 
     @JsonIgnore
-    @Column(nullable = false ,columnDefinition = "boolean default false")
-    private Boolean softDelete;
-
+    @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
+    private boolean softDelete;
     private static final int CBU_LENGTH = 22;
 
 

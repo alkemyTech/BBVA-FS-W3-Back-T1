@@ -1,5 +1,6 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.dtos.JwtAuthenticationResponse;
 import com.bbva.wallet.dtos.SingUpRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
@@ -26,7 +27,9 @@ public class AuthenticationService {
 
     private final AccountRepository accountRepository;
 
-    public User singUp(SingUpRequestDTO singUpRequestDTO){
+    private final JwtService jwtService;
+
+    public JwtAuthenticationResponse singUp(SingUpRequestDTO singUpRequestDTO){
         Role userRole = roleRepository.findByName(EnumRole.USER).orElseThrow(() -> new IllegalStateException("El rol USER no existe"));
         User user = User.builder()
                 .email(singUpRequestDTO.email())
@@ -37,7 +40,10 @@ public class AuthenticationService {
                 .build();
 
         User savedUser = saveUserWithAccounts(user);
-        return  savedUser;
+
+        String jwt = jwtService.generateToken(savedUser);
+
+        return JwtAuthenticationResponse.builder().token(jwt).user(savedUser).build();
     }
 
 

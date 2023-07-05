@@ -48,7 +48,6 @@ public class AuthenticationService {
                 .transactionLimit(300000.0)
                 .userId(savedUser)
                 .balance(0.0)
-                .softDelete(false)
                 .build();
         accountRepository.save(arsAccount);
 
@@ -56,7 +55,6 @@ public class AuthenticationService {
                 .transactionLimit(1000.0)
                 .userId(savedUser)
                 .balance(0.0)
-                .softDelete(false)
                 .build();
         accountRepository.save(usdAccount);
 

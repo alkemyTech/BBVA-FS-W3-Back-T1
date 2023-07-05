@@ -1,6 +1,7 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.dtos.JwtAuthenticationResponse;
+import com.bbva.wallet.dtos.SingInRequestDTO;
 import com.bbva.wallet.dtos.SingUpRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
@@ -11,6 +12,8 @@ import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +23,11 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserService userService;
-
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AccountRepository accountRepository;
-
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public JwtAuthenticationResponse singUp(SingUpRequestDTO singUpRequestDTO){
         Role userRole = roleRepository.findByName(EnumRole.USER).orElseThrow(() -> new IllegalStateException("El rol USER no existe"));
@@ -44,6 +44,14 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(savedUser);
 
         return JwtAuthenticationResponse.builder().token(jwt).user(savedUser).build();
+    }
+
+    public JwtAuthenticationResponse singIn(SingInRequestDTO request){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email(),request.password()));
+        User user = userService.findByEmail(request.email());
+        String jwt = jwtService.generateToken(user);
+        return JwtAuthenticationResponse.builder().token(jwt).user(user).build();
     }
 
 

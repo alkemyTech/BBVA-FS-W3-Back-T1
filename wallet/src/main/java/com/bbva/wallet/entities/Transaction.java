@@ -21,6 +21,7 @@ import com.bbva.wallet.enums.TransactionType;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name="transactions")
 public class Transaction implements Serializable {
 
     @Id

@@ -10,10 +10,8 @@ import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Setter@Getter
-@SQLDelete(sql = "UPDATE users SET soft_delete=true WHERE id=?")
+@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id=?")
 @Where(clause = "soft_delete = false")
 @Entity
 @Table(name = "users")
@@ -73,10 +71,6 @@ public class User implements UserDetails,Serializable {
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
 
-    @JsonIgnore
-    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Account> accounts;
-
 
     @PrePersist
     protected void onCreate() {
@@ -125,4 +119,8 @@ public class User implements UserDetails,Serializable {
         return !this.softDelete;
     }
 
+    @PreRemove
+    public void deleteUser(){
+        this.softDelete = true;
+    }
 }

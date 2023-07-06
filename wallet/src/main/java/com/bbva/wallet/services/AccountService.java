@@ -6,10 +6,9 @@ import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.utils.CurrencyLimit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AccountService {
@@ -31,28 +30,21 @@ public class AccountService {
             System.out.println("Usuario eliminado");
             return null;
         }
-        List<Account> existingAccounts = authenticatedUser.getAccounts().stream()
-                .filter(existingAccount->existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete())
-                .toList();
-        Account savedAccount = null;
-        if(existingAccounts.size() == 0){
-            Account account = new Account();
-            account.setCurrency(currency);
-            if (currency.equals(Currencies.ARS)) {
-                account.setTransactionLimit(300000.0);
-            } else {
-                account.setTransactionLimit(1000.0);
-            }
-            account.setBalance(0.0);
-            account.setUserId(authenticatedUser);
-            savedAccount = accountRepository.save(account);
-        }else {
-            //Utilizar handleExceptions para cuenta ya creada
-            System.out.println("YA HAY CUENTA CREADA");
-            return null;
-        }
-        return savedAccount;
 
+        boolean accountExists = authenticatedUser.getAccounts().stream()
+                .anyMatch(existingAccount -> existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete());
+
+        if (accountExists) {
+            System.out.println("YA HAY CUENTA CREADA");
+            return null; // O maneja el caso de error de alguna manera específica
+        }
+
+        Account account = new Account();
+        account.setCurrency(currency);
+        account.setTransactionLimit(CurrencyLimit.getTransactionLimitForCurrency(currency));
+        account.setBalance(0.0);
+        account.setUserId(authenticatedUser);
+        return accountRepository.save(account);
     }
 
 

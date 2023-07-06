@@ -23,14 +23,19 @@ public class AccountService {
     public Account createAccount(CurrenciesDto currenciesDto ){
 
         Currencies currency = currenciesDto.getCurrency();
-
         //User authenticatedUser= ExtractUser.extract();    //Con este anda una vez agregado el JWT
         User authenticatedUser = userRepository.findByFirstName("prueba22");
 
-        List<Account> listaDeCuentas = accountRepository.findAllByUserId(authenticatedUser);
-        System.out.println(listaDeCuentas);
+        if(authenticatedUser.isSoftDelete()){
+            //Utilizar handlerException para usuario eliminado
+            System.out.println("Usuario eliminado");
+            return null;
+        }
+        List<Account> existingAccounts = authenticatedUser.getAccounts().stream()
+                .filter(existingAccount->existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete())
+                .toList();
         Account savedAccount = null;
-        if(listaDeCuentas.size() == 0 || listaDeCuentas.stream().noneMatch(existingAccount -> existingAccount.getCurrency().equals(currency))){
+        if(existingAccounts.size() == 0){
             Account account = new Account();
             account.setCurrency(currency);
             if (currency.toString().equals("ARS")) {
@@ -42,38 +47,11 @@ public class AccountService {
             account.setUserId(authenticatedUser);
             savedAccount = accountRepository.save(account);
         }else {
-        //Utilizar handleExceptions
-        System.out.println("YA HAY CUENTA CREADA");
-    }
+            //Utilizar handleExceptions para cuenta ya creada
+            System.out.println("YA HAY CUENTA CREADA");
+            return null;
+        }
         return savedAccount;
-
-
-//        List<Account> existingAccounts = authenticatedUser.getAccounts().
-//                stream()
-//                .filter(existingAccount->existingAccount.getCurrency().equals(currency))
-//                .toList();
-//
-//        Account savedAccount = null;
-//
-//        if(existingAccounts.size()==0) {
-//            Account account = new Account();
-//            account.setCurrency(currency);
-//            if (currency.toString().equals("ARS")) {
-//                account.setTransactionLimit(300000.0);
-//            } else {
-//                account.setTransactionLimit(1000.0);
-//            }
-//            account.setBalance(0.0);
-//            account.setUserId(authenticatedUser);
-//            savedAccount = accountRepository.save(account);
-//
-//
-//        }else {
-//            //Utilizar handleExceptions
-//            System.out.println("YA HAY CUENTA CREADA");
-//        }
-//        return savedAccount;
-
 
     }
 

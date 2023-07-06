@@ -38,7 +38,7 @@ public class AccountService {
         if(existingAccounts.size() == 0){
             Account account = new Account();
             account.setCurrency(currency);
-            if (currency.toString().equals("ARS")) {
+            if (currency.equals(Currencies.ARS)) {
                 account.setTransactionLimit(300000.0);
             } else {
                 account.setTransactionLimit(1000.0);

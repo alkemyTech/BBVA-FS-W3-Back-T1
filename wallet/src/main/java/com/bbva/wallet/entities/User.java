@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -40,6 +41,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    private List<Account> accountList;
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role roleId;

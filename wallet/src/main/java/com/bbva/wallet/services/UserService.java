@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,9 @@ public class UserService {
         //CAMBIAR CUANDO HAYA LAS CUSTOM EXCEPTION
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("usuario no existe"));
 
-        return user.getAccountList();
+        return user
+                .getAccountList().stream()
+                .filter(account -> !account.isSoftDelete())
+                .collect(Collectors.toList());
     }
 }

@@ -7,6 +7,7 @@ import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.CurrencyLimit;
+import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,7 @@ public class AccountService {
     public Account createAccount(CurrenciesDto currenciesDto ){
 
         Currencies currency = currenciesDto.getCurrency();
-        //User authenticatedUser= ExtractUser.extract();    //Con este anda una vez agregado el JWT
-        User authenticatedUser = userRepository.findByFirstName("prueba22");
+        User authenticatedUser= ExtractUser.extract();
 
         if(authenticatedUser.isSoftDelete()){
             //Utilizar handlerException para usuario eliminado

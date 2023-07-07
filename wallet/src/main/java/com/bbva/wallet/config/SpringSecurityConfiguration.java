@@ -52,6 +52,7 @@ public class SpringSecurityConfiguration   {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/accounts/{userId}").hasAuthority(EnumRole.ADMIN.name())
+                                .requestMatchers("/users").hasAuthority(EnumRole.ADMIN.name())
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

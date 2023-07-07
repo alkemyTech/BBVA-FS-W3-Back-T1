@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "630dfd7f-35fb-4015-9d6c-42c38ed06876",
+		"_postman_id": "1eb57428-102b-4377-8e8a-e4b3cccb53c3",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27190580"
+		"_exporter_id": "27886107"
 	},
 	"item": [
 		{
@@ -112,6 +112,14 @@
 								"1"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAccount",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

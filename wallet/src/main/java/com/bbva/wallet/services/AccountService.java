@@ -4,6 +4,8 @@ import com.bbva.wallet.dtos.CurrenciesDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
+import com.bbva.wallet.exceptions.ExceptionUserNotFound;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.CurrencyLimit;
@@ -26,17 +28,14 @@ public class AccountService {
         User authenticatedUser= ExtractUser.extract();
 
         if(authenticatedUser.isSoftDelete()){
-            //Utilizar handlerException para usuario eliminado
-            System.out.println("Usuario eliminado");
-            return null;
+            throw new ExceptionUserNotFound();
         }
 
         boolean accountExists = authenticatedUser.getAccounts().stream()
                 .anyMatch(existingAccount -> existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete());
 
         if (accountExists) {
-            System.out.println("YA HAY CUENTA CREADA");
-            return null; // O maneja el caso de error de alguna manera específica
+            throw new ExceptionAccountAlreadyExist();
         }
 
         Account account = new Account();

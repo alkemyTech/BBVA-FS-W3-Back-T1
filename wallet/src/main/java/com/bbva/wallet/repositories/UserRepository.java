@@ -1,7 +1,6 @@
 package com.bbva.wallet.repositories;
 
 import com.bbva.wallet.entities.User;
-import com.bbva.wallet.enums.Currencies;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

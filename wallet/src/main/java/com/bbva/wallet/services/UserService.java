@@ -40,15 +40,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void removeUser(Long id){
+    public void removeUser (Long id){
         Optional<User> userToDelete = userRepository.findById(id);
 
         if (userToDelete.isPresent()) {
             userRepository.deleteById(id);
-
         } else {
             throw new ExceptionUserNotFound();
         }
+
     }
 
     public List<User> getAll() {

@@ -3,7 +3,6 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.JwtAuthenticationResponse;
 import com.bbva.wallet.dtos.SingInRequestDTO;
 import com.bbva.wallet.dtos.SingUpRequestDTO;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.AuthenticationService;
 import com.bbva.wallet.utils.Response;
 import jakarta.validation.Valid;

@@ -23,14 +23,18 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserService userService;
+
     private final RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final AccountRepository accountRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public JwtAuthenticationResponse singUp(SingUpRequestDTO singUpRequestDTO){
-        Role userRole = roleRepository.findByName(EnumRole.USER).orElseThrow(() -> new IllegalStateException("El rol USER no existe"));
+        Role userRole = roleRepository.findByName(EnumRole.USER)
+                .orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
         User user = User.builder()
                 .email(singUpRequestDTO.email())
                 .firstName(singUpRequestDTO.firstName())

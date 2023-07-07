@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -45,13 +46,20 @@ public class User implements UserDetails,Serializable {
     @Column(nullable = false)
     private String password;
 
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    private List<Account> accountList;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role roleId;
+
     @JsonIgnore
     @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
     private boolean softDelete;
+
     @JsonIgnore
     @Column(name = "creation_date",nullable = false)
     private LocalDateTime creationDate;

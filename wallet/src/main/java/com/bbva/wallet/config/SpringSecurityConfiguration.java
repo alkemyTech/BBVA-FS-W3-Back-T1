@@ -50,8 +50,8 @@ public class SpringSecurityConfiguration   {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/auth/**")
-                                .permitAll()
+                        request.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/accounts/{userId}").hasAuthority(EnumRole.ADMIN.name())
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

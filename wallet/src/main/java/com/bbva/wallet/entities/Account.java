@@ -22,7 +22,6 @@ import java.util.Random;
 @Table (name = "accounts")
 public class Account implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,6 +34,7 @@ public class Account implements Serializable {
     private Double transactionLimit;
 
     @NotNull
+    @Column(columnDefinition = "double default 0.0")
     private Double balance;
 
     @ManyToOne
@@ -58,15 +58,13 @@ public class Account implements Serializable {
     @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
     private boolean softDelete;
 
-
-
     private static final int CBU_LENGTH = 22;
+
 
     @PrePersist
     protected void onCreate(){
         generateCBU();
     }
-
     public void generateCBU() {
         Random random = new Random();
         StringBuilder cbuBuilder = new StringBuilder();
@@ -78,5 +76,4 @@ public class Account implements Serializable {
 
         this.cbu = cbuBuilder.toString();
     }
-    
 }

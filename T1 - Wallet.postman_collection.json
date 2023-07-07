@@ -118,8 +118,37 @@
 				{
 					"name": "CreateAccount",
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZWhzZXJmQGdtbC5jb20iLCJpYXQiOjE2ODg3NDAzMzQsImV4cCI6MTY4ODc0MTc3NH0.695C7mzjdiEiBmAAHnqX22DTtYQXMxM5AQRIbXz_Znc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currency\":\"USD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/accounts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"accounts"
+							]
+						}
 					},
 					"response": []
 				}

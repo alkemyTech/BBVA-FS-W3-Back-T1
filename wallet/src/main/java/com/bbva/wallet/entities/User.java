@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import java.util.Collection;
 import java.util.List;
@@ -67,6 +68,10 @@ public class User implements UserDetails,Serializable {
     @JsonIgnore
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
+
+    @JsonIgnore
+    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Account> accounts;
 
 
     @PrePersist

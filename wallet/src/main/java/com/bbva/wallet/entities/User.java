@@ -22,7 +22,7 @@ import java.util.List;
 @Builder
 @Setter@Getter
 @SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id=?")
-@Where(clause = "soft_delete = false")
+//@Where(clause = "soft_delete = false")
 @Entity
 @Table(name = "users")
 public class User implements UserDetails,Serializable {

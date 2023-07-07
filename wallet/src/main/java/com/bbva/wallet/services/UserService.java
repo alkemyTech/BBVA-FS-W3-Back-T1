@@ -32,11 +32,13 @@ public class UserService {
                 .orElseThrow(() -> new ExceptionUserNotFound());
     }
 
-    public User save(User user){
-        userRepository.findByEmail(user.getEmail())
-                .ifPresent(present -> {
-                    throw new ExceptionUserAlreadyExist();
-                });
+    public User save(User user) {
+        User userExist = userRepository.findByEmail(user.getEmail()).orElseGet(null);
+        if(userExist != null && !userExist.isSoftDelete()){
+            throw new ExceptionUserAlreadyExist();
+        }
+        user.setSoftDelete(false);
+
         return userRepository.save(user);
     }
 
@@ -48,11 +50,14 @@ public class UserService {
         } else {
             throw new ExceptionUserNotFound();
         }
+    }
 
+    public Optional<User> findDeletedUser(String email){
+        return userRepository.findSoftDeletedUser(email);
     }
 
     public List<User> getAll() {
         return userRepository.findAll();
-
     }
+
 }

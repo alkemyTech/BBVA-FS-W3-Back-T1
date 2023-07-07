@@ -31,7 +31,7 @@ public class AccountService {
             throw new ExceptionUserNotFound();
         }
 
-        boolean accountExists = authenticatedUser.getAccounts().stream()
+        boolean accountExists = authenticatedUser.getAccountList().stream()
                 .anyMatch(existingAccount -> existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete());
 
         if (accountExists) {

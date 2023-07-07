@@ -27,7 +27,8 @@ public class AuthenticationService {
     private final AccountRepository accountRepository;
 
     public User singUp(SingUpRequestDTO singUpRequestDTO){
-        Role userRole = roleRepository.findByName(EnumRole.USER).orElseThrow(() -> new IllegalStateException("El rol USER no existe"));
+        Role userRole = roleRepository.findByName(EnumRole.USER)
+                .orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
         User user = User.builder()
                 .email(singUpRequestDTO.email())
                 .firstName(singUpRequestDTO.firstName())

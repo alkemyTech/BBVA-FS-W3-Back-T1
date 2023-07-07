@@ -1,5 +1,12 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.entities.User;
+import com.bbva.wallet.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.exceptions.ExceptionUserAlreadyExist;
@@ -37,5 +44,11 @@ public class UserService {
                     throw new ExceptionUserAlreadyExist();
                 });
         return userRepository.save(user);
+    }
+
+    public List<User> getAll() {
+
+        return userRepository.findAll();
+
     }
 }

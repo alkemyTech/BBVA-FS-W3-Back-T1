@@ -7,9 +7,10 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.exceptions.ExceptionUserAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
 import lombok.RequiredArgsConstructor;
-import java.util.stream.Collectors;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,14 @@ public class UserService {
     }
 
     public void removeUser(Long id){
-        userRepository.deleteById(id);
+        Optional<User> userToDelete = userRepository.findById(id);
+
+        if (userToDelete.isPresent()) {
+            userRepository.deleteById(id);
+
+        } else {
+            throw new ExceptionUserNotFound();
+        }
     }
 
     public List<User> getAll() {

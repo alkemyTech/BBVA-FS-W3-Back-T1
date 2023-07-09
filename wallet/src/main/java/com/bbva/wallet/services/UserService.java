@@ -1,7 +1,13 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.enums.EnumRole;
+import com.bbva.wallet.exceptions.ExceptionUnauthorizedUser;
 import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.utils.ExtractUser;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.exceptions.ExceptionUserAlreadyExist;
@@ -33,7 +39,8 @@ public class UserService {
     }
 
     public User save(User user) {
-        User userExist = userRepository.findByEmail(user.getEmail()).orElseGet(null);
+
+        User userExist = userRepository.findByEmail(user.getEmail()).orElse(null);
         if(userExist != null && !userExist.isSoftDelete()){
             throw new ExceptionUserAlreadyExist();
         }
@@ -42,14 +49,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void removeUser (Long id){
-        Optional<User> userToDelete = userRepository.findById(id);
+    public ResponseEntity<?> removeUser (Long id){
+        User loggedUser = ExtractUser.extract();
 
-        if (userToDelete.isPresent()) {
-            userRepository.deleteById(id);
+        if ("ADMIN".equals(loggedUser.getRoleId().getName().name()) || id.equals(loggedUser.getId())){
+            User userToDelete = userRepository.findById(id).orElseThrow(ExceptionUserNotFound::new);
+            userRepository.delete(userToDelete);
+            return ResponseEntity.ok(userToDelete);
         } else {
-            throw new ExceptionUserNotFound();
+            throw new ExceptionUnauthorizedUser();
         }
+
     }
 
     public Optional<User> findDeletedUser(String email){

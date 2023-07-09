@@ -40,14 +40,13 @@ public class AuthenticationService {
         Optional<User> oldUser = userService.findDeletedUser(singUpRequestDTO.email());
         User savedUser;
         if(oldUser.isEmpty()) {
-            User user = User.builder()
+            savedUser = User.builder()
                     .email(singUpRequestDTO.email())
                     .firstName(singUpRequestDTO.firstName())
                     .lastName(singUpRequestDTO.lastName())
                     .roleId(userRole)
                     .password(passwordEncoder.encode(singUpRequestDTO.password()))
                     .build();
-            savedUser = user;
         } else {
             savedUser = oldUser.get();
             savedUser.setFirstName(singUpRequestDTO.firstName());

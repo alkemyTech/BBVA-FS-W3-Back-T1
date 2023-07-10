@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9626091e-7d56-40a9-b2db-b8fd5cfa07d0",
+		"_postman_id": "3421f8a0-ac7e-4eb6-99c1-61650cf8291d",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
@@ -49,7 +49,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"sole.02@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"eehserf@gml.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,7 +96,7 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{BASE_URL}}/users/17"
+						"url": "{{BASE_URL}}/users/12"
 					},
 					"response": []
 				},
@@ -131,7 +131,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "{{BASE_URL}}/accounts/2"
+						"url": "{{BASE_URL}}/accounts/14"
 					},
 					"response": []
 				},
@@ -160,6 +160,20 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "BASE_URL",
+			"value": ""
+		},
+		{
+			"key": "TOKEN",
+			"value": ""
 		}
 	]
 }

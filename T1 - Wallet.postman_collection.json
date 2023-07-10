@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "647173b2-bc0e-4e9c-9cc8-cc715bf370bd",
+		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27890010"
+		"_exporter_id": "27190580"
 	},
 	"item": [
 		{
@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Eva\",\r\n    \"lastName\": \"Compagnucci\",\r\n    \"email\": \"eehserf@gml.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Sole\",\r\n    \"lastName\": \"Grilletta\",\r\n    \"email\": \"sole.02@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,12 +25,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/register",
-							"protocol": "http",
+							"raw": "{{BASE_URL}}/auth/register",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"auth",
 								"register"
@@ -41,6 +39,17 @@
 				},
 				{
 					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().data.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -49,7 +58,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin1@example.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"eehserf@gml.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -57,12 +66,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/login",
-							"protocol": "http",
+							"raw": "{{BASE_URL}}/auth/login",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"auth",
 								"login"
@@ -77,17 +84,73 @@
 			"name": "/users",
 			"item": [
 				{
+					"name": "remove",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/12",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Users",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users",
-							"protocol": "http",
+							"raw": "{{BASE_URL}}/users",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users"
 							]
@@ -104,16 +167,11 @@
 					"name": "UserAccounts",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "password",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "user",
+									"key": "token",
+									"value": "{{TOKEN}}",
 									"type": "string"
 								}
 							]
@@ -121,15 +179,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/accounts/1",
-							"protocol": "http",
+							"raw": "{{BASE_URL}}/accounts/14",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"accounts",
-								"1"
+								"14"
 							]
 						}
 					},
@@ -143,7 +199,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZWhzZXJmQGdtbC5jb20iLCJpYXQiOjE2ODg3NDAzMzQsImV4cCI6MTY4ODc0MTc3NH0.695C7mzjdiEiBmAAHnqX22DTtYQXMxM5AQRIbXz_Znc",
+									"value": "{{TOKEN}}",
 									"type": "string"
 								}
 							]
@@ -160,11 +216,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/accounts",
+							"raw": "{{BASE_URL}}/accounts",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"accounts"
 							]
@@ -173,6 +228,42 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "FixedTerm",
+			"item": [
+				{
+					"name": "createFixedTerm",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/fixedTerm",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"fixedTerm"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "BASE_URL",
+			"value": ""
+		},
+		{
+			"key": "TOKEN",
+			"value": ""
 		}
 	]
 }

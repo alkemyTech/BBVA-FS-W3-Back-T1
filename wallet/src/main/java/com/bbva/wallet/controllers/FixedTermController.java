@@ -5,6 +5,7 @@ import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.FixedTermService;
 import com.bbva.wallet.utils.Response;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class FixedTermController {
     private final FixedTermService fixedTermService;
 
     @PostMapping
-    public ResponseEntity<Response> createFixedTerm(@RequestBody CreateFixedTermDto dto, Authentication authentication){
+    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid CreateFixedTermDto dto, Authentication authentication){
         User user= (User) authentication.getPrincipal();
         Response<FixedTermDeposit> response = new Response<>();
         response.setData(fixedTermService.createFixedTermDeposit(dto,user));

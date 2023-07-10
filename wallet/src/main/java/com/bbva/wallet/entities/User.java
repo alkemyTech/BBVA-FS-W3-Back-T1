@@ -49,10 +49,6 @@ public class User implements UserDetails,Serializable {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-    private List<Account> accountList;
-
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role roleId;

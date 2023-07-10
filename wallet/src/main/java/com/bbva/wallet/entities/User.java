@@ -47,9 +47,8 @@ public class User implements UserDetails,Serializable {
     @Column(nullable = false)
     private String password;
 
-
     @JsonIgnore
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accountList;
 
     @JsonIgnore
@@ -68,10 +67,6 @@ public class User implements UserDetails,Serializable {
     @JsonIgnore
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
-
-    @JsonIgnore
-    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Account> accounts;
 
 
     @PrePersist

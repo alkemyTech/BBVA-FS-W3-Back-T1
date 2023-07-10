@@ -52,6 +52,8 @@ public class SpringSecurityConfiguration   {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/accounts/{userId}").hasAuthority(EnumRole.ADMIN.name())
+                                .requestMatchers("/accounts/balance").hasAuthority(EnumRole.ADMIN.name())
+                                .requestMatchers("/accounts/balance").hasAuthority(EnumRole.USER.name())
                                 .requestMatchers("/users").hasAuthority(EnumRole.ADMIN.name())
                                 .requestMatchers("docs/swagger-ui/**","/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())

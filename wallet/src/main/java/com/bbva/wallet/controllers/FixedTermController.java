@@ -1,10 +1,12 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.CreateFixedTermDto;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.utils.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FixedTermController {
 
     @PostMapping
-    public ResponseEntity<Response> createFixedTerm(){
+    public ResponseEntity<Response> createFixedTerm(@RequestBody CreateFixedTermDto dto){
         Response<FixedTermDeposit> response = new Response<>();
         return ResponseEntity.ok(response);
     }

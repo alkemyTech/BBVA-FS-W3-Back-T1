@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.Random;
 @Setter
 @Getter
 @Entity
+@Where(clause = "soft_delete = false")
 @Table (name = "accounts")
 public class Account implements Serializable {
 

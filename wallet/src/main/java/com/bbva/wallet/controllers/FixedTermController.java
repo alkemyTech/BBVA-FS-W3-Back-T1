@@ -25,9 +25,9 @@ public class FixedTermController {
     private final FixedTermService fixedTermService;
 
     @PostMapping
-    public ResponseEntity<Response> simulateFixedTerm(){
+    public ResponseEntity<Response> simulateFixedTerm(CreateFixedTermDto dto){
         Response<Account> response = new Response<>();
-//        response.setData();
+//        response.setData(fixedTermService.simulateFixedTerm(dto));
         return ResponseEntity.ok(response);
     }
 }

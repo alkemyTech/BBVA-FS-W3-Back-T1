@@ -34,7 +34,7 @@ public class UserController {
 
     @PreAuthorize("#id == authentication.principal.id")
     @GetMapping("/{id}")
-    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id, Authentication authentication){
+    public ResponseEntity<Response> getUser(@PathVariable("id") Long id, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.getUser(user.getId()));

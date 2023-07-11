@@ -39,7 +39,7 @@ public class TransactionService {
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().equals(authenticatedUser))
+        if (recipientAccount.getUserId().getId() == authenticatedUser.getId())
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -56,9 +56,12 @@ public class TransactionService {
                         .type(TransactionType.PAYMENT)
                         .build();
 
-                Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
-                sourceAccount.setBalance(newBalanceSourceAccount);
-                transactionRepository.save(transactionPayment);
+        Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
+        sourceAccount.setBalance(newBalanceSourceAccount);
+        accountRepository.save(sourceAccount);
+        transactionRepository.save(transactionPayment);
+
+
 
 
                 Transaction transactionIncome = Transaction.builder()
@@ -69,6 +72,7 @@ public class TransactionService {
                         .build();
                 Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
                 recipientAccount.setBalance(newBalanceRecipientAccount);
+                accountRepository.save(recipientAccount);
                 transactionRepository.save(transactionIncome);
 
                 List<Transaction> transactions = new ArrayList<>();

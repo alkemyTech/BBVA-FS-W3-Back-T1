@@ -1,4 +1,4 @@
-package com.bbva.wallet.dtos.balanceDto;
+package com.bbva.wallet.dtos;
 
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;

@@ -1,6 +1,6 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.balanceDto.BalanceDto;
+import com.bbva.wallet.dtos.BalanceDto;
 import com.bbva.wallet.dtos.CurrenciesDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.services.AccountService;

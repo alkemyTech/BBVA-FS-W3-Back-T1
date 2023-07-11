@@ -51,9 +51,8 @@ public class SpringSecurityConfiguration   {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/accounts/balance").hasAnyAuthority(EnumRole.USER.name(), EnumRole.ADMIN.name())
                                 .requestMatchers("/accounts/{userId}").hasAuthority(EnumRole.ADMIN.name())
-                                .requestMatchers("/accounts/balance").hasAuthority(EnumRole.ADMIN.name())
-                                .requestMatchers("/accounts/balance").hasAuthority(EnumRole.USER.name())
                                 .requestMatchers("/users").hasAuthority(EnumRole.ADMIN.name())
                                 .requestMatchers("docs/swagger-ui/**","/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())

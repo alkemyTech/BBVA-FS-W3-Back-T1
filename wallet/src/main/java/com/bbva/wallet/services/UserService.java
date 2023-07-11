@@ -1,9 +1,11 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.exceptions.ExceptionUserAlreadyExist;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public List<Account> getUserAccounts(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
@@ -59,6 +63,13 @@ public class UserService {
 
     public List<User> getAll() {
         return userRepository.findAllActive();
+    }
+
+    public User updateUser(UpdateUserDto userDto,User user){
+        user.setFirstName(userDto.nombre());
+        user.setLastName(userDto.apellido());
+        user.setPassword(passwordEncoder.encode(userDto.contraseña()));
+        return userRepository.save(user);
     }
 
 }

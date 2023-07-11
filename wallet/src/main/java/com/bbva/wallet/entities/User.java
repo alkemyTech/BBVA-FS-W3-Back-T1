@@ -49,7 +49,7 @@ public class User implements UserDetails,Serializable {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accountList;
 
     @JsonIgnore

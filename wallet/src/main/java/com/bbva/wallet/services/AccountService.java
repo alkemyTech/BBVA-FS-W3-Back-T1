@@ -14,6 +14,8 @@ import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountService {
     @Autowired
@@ -49,7 +51,7 @@ public class AccountService {
 
     public Account updateAccount(Long id, User user, Double newTransactionLimit){
        Account account = accountRepository.findById(id).orElseThrow(ExceptionAccountNotFound::new);
-       Boolean isUserAccount = user.getAccountList().contains(account);
+       Boolean isUserAccount = user.getAccountList().stream().anyMatch(account1 -> account1.getId() == id);
        if (!isUserAccount) throw new ExceptionAccountNotFound("El usuario no tiene esta cuenta");
        account.setTransactionLimit(newTransactionLimit);
        return accountRepository.save(account);

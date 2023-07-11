@@ -49,7 +49,7 @@ public class User implements UserDetails,Serializable {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Account> accountList;
 
     @JsonIgnore
@@ -69,9 +69,6 @@ public class User implements UserDetails,Serializable {
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
 
-    @JsonIgnore
-    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Account> accounts;
 
 
     @PrePersist

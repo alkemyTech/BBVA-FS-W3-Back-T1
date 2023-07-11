@@ -37,7 +37,7 @@ public class Account implements Serializable {
     @Column(columnDefinition = "double default 0.0")
     private Double balance;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User userId;
 

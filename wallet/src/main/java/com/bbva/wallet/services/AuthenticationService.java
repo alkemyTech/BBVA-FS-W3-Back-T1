@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -35,15 +37,24 @@ public class AuthenticationService {
     public JwtAuthenticationResponse singUp(SingUpRequestDTO singUpRequestDTO){
         Role userRole = roleRepository.findByName(EnumRole.USER)
                 .orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
-        User user = User.builder()
-                .email(singUpRequestDTO.email())
-                .firstName(singUpRequestDTO.firstName())
-                .lastName(singUpRequestDTO.lastName())
-                .roleId(userRole)
-                .password(passwordEncoder.encode(singUpRequestDTO.password()))
-                .build();
-
-        User savedUser = saveUserWithAccounts(user);
+        Optional<User> oldUser = userService.findDeletedUser(singUpRequestDTO.email());
+        User savedUser;
+        if(oldUser.isEmpty()) {
+            savedUser = User.builder()
+                    .email(singUpRequestDTO.email())
+                    .firstName(singUpRequestDTO.firstName())
+                    .lastName(singUpRequestDTO.lastName())
+                    .roleId(userRole)
+                    .password(passwordEncoder.encode(singUpRequestDTO.password()))
+                    .build();
+        } else {
+            savedUser = oldUser.get();
+            savedUser.setFirstName(singUpRequestDTO.firstName());
+            savedUser.setLastName(singUpRequestDTO.lastName());
+            savedUser.setRoleId(userRole);
+            savedUser.setPassword(passwordEncoder.encode(singUpRequestDTO.password()));
+        }
+        savedUser = saveUserWithAccounts(savedUser);
 
         String jwt = jwtService.generateToken(savedUser);
 

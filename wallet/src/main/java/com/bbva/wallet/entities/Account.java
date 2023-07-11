@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +22,8 @@ import java.util.Random;
 @Setter
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE accounts SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @Table (name = "accounts")
 public class Account implements Serializable {
 
@@ -38,7 +42,7 @@ public class Account implements Serializable {
     @Column(columnDefinition = "double default 0.0")
     private Double balance;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User userId;
 

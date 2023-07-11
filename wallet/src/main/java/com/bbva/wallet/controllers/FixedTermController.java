@@ -5,6 +5,8 @@ import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.FixedTermService;
 import com.bbva.wallet.utils.Response;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

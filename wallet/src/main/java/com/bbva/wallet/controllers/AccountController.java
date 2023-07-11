@@ -32,7 +32,7 @@ public class AccountController {
         response.setData(accountService.createAccount(currenciesDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    @PreAuthorize("hasAutority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Response> getUserAccounts(@PathVariable Long userId ){
         Response<List<Account>> response = new Response<>();

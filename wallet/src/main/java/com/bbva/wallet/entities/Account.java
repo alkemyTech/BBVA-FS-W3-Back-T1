@@ -42,7 +42,6 @@ public class Account implements Serializable {
     private Double balance;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User userId;
 

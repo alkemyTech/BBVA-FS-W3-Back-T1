@@ -66,19 +66,19 @@ public class AccountService {
         }
 
         Optional<Account> accountInArs = authenticatedUser.getAccountList().stream()
-                .filter(account -> account.getCurrency()==Currencies.ARS)
+                .filter(account -> account.getCurrency()==Currencies.ARS && !account.isSoftDelete())
                 .findFirst();
 
         Optional<Account> accountInUsd = authenticatedUser.getAccountList().stream()
-                .filter(account -> account.getCurrency()==Currencies.USD)
+                .filter(account -> account.getCurrency()==Currencies.USD && !account.isSoftDelete())
                 .findFirst();
 
         if (accountInArs.isEmpty() && accountInUsd.isEmpty()){
             throw new ExceptionUserAccountsNotFound();
         }
 
-        List<Transaction> historyTransactionsArs = accountInArs.get().getTransaction();
-        List<Transaction> historyTransactionsUsd = accountInUsd.get().getTransaction();
+        List<Transaction> historyTransactionsArs = accountInArs.isPresent() ? accountInArs.get().getTransaction() : null;
+        List<Transaction> historyTransactionsUsd = accountInUsd.isPresent() ? accountInUsd.get().getTransaction() : null;
 
         List<FixedTermDeposit> fixedTermsAccount = accountInArs.get().getFixedTermDeposits();
 

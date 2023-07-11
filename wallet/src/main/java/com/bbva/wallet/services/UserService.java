@@ -2,8 +2,10 @@ package com.bbva.wallet.services;
 
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.repositories.UserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.exceptions.ExceptionUserAlreadyExist;
@@ -59,6 +61,10 @@ public class UserService {
 
     public List<User> getAll() {
         return userRepository.findAllActive();
+    }
+
+    public Slice<User> getTen(Integer page) {
+        return userRepository.findSliceByPage(PageRequest.of(page, 2));
     }
 
 }

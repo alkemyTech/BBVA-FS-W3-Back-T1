@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "647173b2-bc0e-4e9c-9cc8-cc715bf370bd",
+		"_postman_id": "cd77463f-e2a0-43e6-bd16-9f1f3ca441d2",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -215,28 +215,32 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Send Dollars",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 8,\r\n\"amount\": \"500\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/sendUsd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"sendUsd"
+							]
+						}
+					},
+					"response": []
 				}
 			]
-		},
-		{
-			"name": "Send Dollars",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/transactions/sendUsd",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"transactions",
-						"sendUsd"
-					]
-				}
-			},
-			"response": []
 		}
 	]
 }

@@ -21,25 +21,9 @@ import java.util.function.Predicate;
 @Transactional
 public class FixedTermService {
 
-//    private final FixedTermDepositsRepository fixedTermDepositsRepository;
-//    private final AccountRepository accountRepository;
 
     private static final double INTEREST_PER_DAY = 0.002;
 
-//    public FixedTermDeposit createFixedTermDeposit(CreateFixedTermDto dto, User user){
-//        //verificar que un usuario tenga cuentas asociadas con la currency
-//        Predicate<Account> compareCurrencies = account -> account.getCurrency().equals(Currencies.ARS);
-//        Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrenyNotFound::new);
-//        if (account.getBalance() < dto.amount()){
-//            throw new ExceptionInsufficientBalance();
-//        }
-//        account.setBalance(account.getBalance() - dto.amount());
-//        accountRepository.save(account);
-//
-//        FixedTermDeposit savedFixedTerm = fixedTermDepositsRepository.save(makeFixedTerm(account,dto));
-//
-//        return savedFixedTerm;
-//    }
 
     public OutSimulateFixedTermDto simulateFixedTerm(CreateFixedTermDto dto){
         FixedTermDeposit fix = makeFixedTerm(null,dto);

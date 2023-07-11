@@ -31,16 +31,19 @@ public class FixedTermService {
         //verificar que un usuario tenga cuentas asociadas con la currency
         Predicate<Account> compareCurrencies = account -> account.getCurrency().equals(Currencies.ARS);
         Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrenyNotFound::new);
+        if (account.getBalance() < dto.amount()){
+            throw new ExceptionInsufficientBalance();
+        }
+        account.setBalance(account.getBalance() - dto.amount());
+        accountRepository.save(account);
 
-        FixedTermDeposit savedFixedTerm = makeFixedTerm(account,dto);
+        FixedTermDeposit savedFixedTerm = fixedTermDepositsRepository.save(makeFixedTerm(account,dto));
 
         return savedFixedTerm;
     }
 
     private FixedTermDeposit makeFixedTerm(Account account,CreateFixedTermDto dto) {
-        if (account.getBalance() < dto.amount()){
-            throw new ExceptionInsufficientBalance();
-        }
+
         Timestamp closingDate = Timestamp.valueOf(LocalDateTime.now().plusDays(dto.cantDias()));
         Double interest = dto.amount() * INTEREST_PER_DAY * dto.cantDias();
         var newFixedTerm = FixedTermDeposit.builder()
@@ -49,8 +52,7 @@ public class FixedTermService {
                 .interest(interest)
                 .closingDate(closingDate)
                 .build();
-        account.setBalance(account.getBalance() - dto.amount());
-        accountRepository.save(account);
-        return fixedTermDepositsRepository.save(newFixedTerm);
+
+        return newFixedTerm;
     }
 }

@@ -5,6 +5,7 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
+import com.bbva.wallet.exceptions.ExceptionAccountNotFound;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.UserRepository;
@@ -46,5 +47,11 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-
+    public Account updateAccount(Long id, User user, Double newTransactionLimit){
+       Account account = accountRepository.findById(id).orElseThrow(ExceptionAccountNotFound::new);
+       Boolean isUserAccount = user.getAccountList().contains(account);
+       if (!isUserAccount) throw new ExceptionAccountNotFound("El usuario no tiene esta cuenta");
+       account.setTransactionLimit(newTransactionLimit);
+       return accountRepository.save(account);
+    }
 }

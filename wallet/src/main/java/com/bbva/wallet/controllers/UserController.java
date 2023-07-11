@@ -39,7 +39,7 @@ public class UserController {
 
     @PreAuthorize("#id == authentication.principal.id")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateUser(@RequestBody @Valid UpdateUserDto dto, Authentication authentication){
+    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id,@RequestBody @Valid UpdateUserDto dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.updateUser(dto,user));

@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
+		"_postman_id": "3421f8a0-ac7e-4eb6-99c1-61650cf8291d",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27190580"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27887554"
 	},
 	"item": [
 		{
@@ -24,16 +24,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/auth/register",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
+						"url": "{{BASE_URL}}/auth/register"
 					},
 					"response": []
 				},
@@ -65,16 +56,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/auth/login",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						}
+						"url": "{{BASE_URL}}/auth/login"
 					},
 					"response": []
 				}
@@ -108,26 +90,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/users/12",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"users",
-								"12"
-							]
-						}
+						"url": "{{BASE_URL}}/users/12"
 					},
 					"response": []
 				},
@@ -136,25 +105,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/users",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"users"
-							]
-						}
+						"url": "{{BASE_URL}}/users"
 					},
 					"response": []
 				}
@@ -168,26 +125,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/accounts/14",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts",
-								"14"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts/14"
 					},
 					"response": []
 				},
@@ -196,13 +140,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -215,37 +155,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/accounts",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "FixedTerm",
-			"item": [
-				{
-					"name": "createFixedTerm",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/fixedTerm",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"fixedTerm"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts"
 					},
 					"response": []
 				}

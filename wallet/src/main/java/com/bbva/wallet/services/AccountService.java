@@ -25,7 +25,8 @@ public class AccountService {
     public Account createAccount(CurrenciesDto currenciesDto ){
 
         Currencies currency = currenciesDto.getCurrency();
-        User authenticatedUser= ExtractUser.extract();
+        User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
+                .orElseThrow(() -> new ExceptionUserNotFound());
 
         if(authenticatedUser.isSoftDelete()){
             throw new ExceptionUserNotFound();

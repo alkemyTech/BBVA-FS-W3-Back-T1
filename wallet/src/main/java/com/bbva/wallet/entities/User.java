@@ -5,13 +5,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Setter@Getter
+@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id=?")
 @Entity
 @Table(name = "users")
 public class User implements UserDetails,Serializable {
@@ -70,7 +70,6 @@ public class User implements UserDetails,Serializable {
     private LocalDateTime updateDate;
 
 
-
     @PrePersist
     protected void onCreate() {
         this.creationDate = LocalDateTime.now();
@@ -118,4 +117,8 @@ public class User implements UserDetails,Serializable {
         return !this.softDelete;
     }
 
+    @PreRemove
+    public void deleteUser(){
+        this.softDelete = true;
+    }
 }

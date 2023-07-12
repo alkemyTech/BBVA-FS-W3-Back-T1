@@ -63,8 +63,9 @@ public class UserService {
         return userRepository.findAllActive();
     }
 
-    public Page<User> getTen(Integer page) {
-        return userRepository.findSliceByPage(PageRequest.of(page, 2));
+    public Slice<User> getTen(Integer page) {
+        return userRepository.findSliceByPage(
+                PageRequest.of(page, 10));
     }
 
 }

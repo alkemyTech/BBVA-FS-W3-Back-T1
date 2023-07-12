@@ -24,5 +24,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findAllActive();
 
     @Query("SELECT u FROM User u WHERE u.softDelete = false ORDER BY u.id")
-    Page<User> findSliceByPage(PageRequest pageable);
+    Slice<User> findSliceByPage(PageRequest pageable);
 }

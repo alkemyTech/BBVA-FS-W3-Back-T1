@@ -1,6 +1,7 @@
 package com.bbva.wallet.repositories;
 
 import com.bbva.wallet.entities.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findAllActive();
 
     @Query("SELECT u FROM User u WHERE u.softDelete = false ORDER BY u.id")
-    Slice<User> findSliceByPage(PageRequest pageable);
+    Page<User> findSliceByPage(PageRequest pageable);
 }

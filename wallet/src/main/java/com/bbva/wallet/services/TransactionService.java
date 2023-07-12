@@ -9,7 +9,6 @@ import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
 import com.bbva.wallet.repositories.TransactionRepository;
 import com.bbva.wallet.repositories.UserRepository;
-import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,7 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public Transaction getTransaction(Long id){
-        User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
-                .orElseThrow(ExceptionUserNotFound::new);
-
+    public Transaction getTransaction(Long id, User authenticatedUser){
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(ExceptionTransactionNotExist::new);
 

@@ -1,5 +1,7 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.dtos.PaymentDto;
+import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
@@ -20,12 +22,10 @@ import java.util.Optional;
 @Transactional
 @Service
 public class TransactionService {
-
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-
     public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
         User authenticatedUser = ExtractUser.extract();
         Long recipientAccountId = transactionDto.getId();
@@ -48,8 +48,7 @@ public class TransactionService {
         if (sourceAccount.getTransactionLimit()<amount)
         {throw new ExceptionExceedTransactionLimit();}
 
-
-                Transaction transactionPayment = Transaction.builder()
+        Transaction transactionPayment = Transaction.builder()
                         .amount(amount)
                         .description("Enviaste dinero")
                         .account(sourceAccount)
@@ -62,29 +61,52 @@ public class TransactionService {
         transactionRepository.save(transactionPayment);
 
 
-
-
-                Transaction transactionIncome = Transaction.builder()
+        Transaction transactionIncome = Transaction.builder()
                         .amount(amount)
                         .description("Recibiste dinero")
                         .account(recipientAccount)
                         .type(TransactionType.INCOME)
                         .build();
-                Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
-                recipientAccount.setBalance(newBalanceRecipientAccount);
-                accountRepository.save(recipientAccount);
-                transactionRepository.save(transactionIncome);
 
-                List<Transaction> transactions = new ArrayList<>();
-                transactions.add(transactionPayment);
-                transactions.add(transactionIncome);
-                return transactions;
+        Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
+        recipientAccount.setBalance(newBalanceRecipientAccount);
+        accountRepository.save(recipientAccount);
+        transactionRepository.save(transactionIncome);
 
-
-
-
-
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(transactionPayment);
+        transactions.add(transactionIncome);
+        return transactions;
     }
+    public ResponsePaymentDto pay(PaymentDto paymentDto) {
+        Double amount = paymentDto.getAmount();
+        Long paymentAccountId = paymentDto.getId();
+        Currencies paymentCurrency = paymentDto.getCurrency();
+        Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
 
+        if(paymentAccount.getUserId().isSoftDelete())
+        {throw new ExceptionUserNotFound();}
+
+        if (paymentAccount.getBalance() < amount)
+        {throw new ExceptionInsufficientBalance();}
+
+        if(paymentCurrency != paymentAccount.getCurrency())
+        {throw new ExceptionMismatchCurrencies();}
+
+        Transaction transactionPayment = Transaction.builder()
+                .amount(amount)
+                .description("Pagaste")
+                .account(paymentAccount)
+                .type(TransactionType.PAYMENT)
+                .build();
+
+        Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
+        paymentAccount.setBalance(newBalancePaymentAccount);
+
+        ResponsePaymentDto responsePayment = new ResponsePaymentDto();
+        responsePayment.setUpdatedAccount(accountRepository.save(paymentAccount));
+        responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
+        return responsePayment;
+    }
 }
 

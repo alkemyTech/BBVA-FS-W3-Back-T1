@@ -2,6 +2,8 @@ package com.bbva.wallet.controllers;
 
 
 import com.bbva.wallet.dtos.CurrenciesDto;
+import com.bbva.wallet.dtos.PaymentDto;
+import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
@@ -38,5 +40,14 @@ public class TransactionController {
         Response<List<Transaction>> response = new Response<>();
         response.setData(transactionService.sendMoney(transactionDto,Currencies.USD));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/payment")
+    public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
+        Response<ResponsePaymentDto> response = new Response<>();
+        response.setData(transactionService.pay(paymentDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+
     }
 }

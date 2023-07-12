@@ -1,19 +1,38 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.dtos.LoanDto;
+import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
+import com.bbva.wallet.exceptions.ExceptionAmountNotAllowed;
+import com.bbva.wallet.exceptions.ExceptionMonthNotExist;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class LoanService {
-    private final Double monthlyInterestRate = 60.0;
-    public LoanDto simulateLoan(Double amount, Integer month){
+    @Value("${montlhy.interest.rate}")
+    private Double monthlyInterestRate;
+    public LoanDto simulateLoan(double amount, Integer month){
+        if(amount <= 0.0){
+            throw new ExceptionAmountNotAllowed();
+        }
+        if(month<=0 || month>12){
+            throw new ExceptionMonthNotExist();
+        }
+        LocalDate currentDate = LocalDate.now();
+        LocalDate expirationDate = currentDate.plusMonths(month);
 
-        Double monthlyInstallment = amount*(monthlyInterestRate/100);
+        double monthlyInterest = amount*(monthlyInterestRate/100);
+        double totalAmountDue = amount + (monthlyInterest * month);
+        double monthlyPayment = (amount/month) + monthlyInterest;
 
         LoanDto loanDto = new LoanDto();
         loanDto.setMonthlyInterestRate(monthlyInterestRate);
-        loanDto.setMonthlyInstallment(monthlyInstallment);
-        loanDto.setTotalAmountDue(amount+(monthlyInstallment*month));
+        loanDto.setMonthlyPayment(monthlyPayment);
+        loanDto.setTotalAmountDue(totalAmountDue);
+        loanDto.setExpirationDate(expirationDate);
+
         return loanDto;
     }
 }

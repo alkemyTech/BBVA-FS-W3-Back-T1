@@ -7,18 +7,22 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.exceptions.ExceptionUserNotFound;
+import com.bbva.wallet.repositories.TransactionRepository;
+import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.utils.ExtractUser;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 @Transactional
 @Service
 public class TransactionService {
@@ -26,6 +30,32 @@ public class TransactionService {
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Transaction> getUserTransactions(Long userId){
+        User userTransactions = userRepository.findById(userId).orElseThrow(()->new ExceptionUserNotFound());
+
+        List<Account> userAccounts = userTransactions.getAccountList();
+
+        Optional<Account> arsAccount = userAccounts.stream().filter(account ->
+                account.getCurrency() == Currencies.ARS && !account.isSoftDelete()).findFirst();
+
+        Optional<Account> usdAccount = userAccounts.stream().filter(account ->
+                account.getCurrency() == Currencies.USD && !account.isSoftDelete()).findFirst();
+
+        List<Transaction> arsTransactions = arsAccount.isPresent() ?
+                arsAccount.get().getTransaction() : Collections.emptyList();
+
+        List<Transaction> usdTransactions = usdAccount.isPresent() ?
+                usdAccount.get().getTransaction() : Collections.emptyList();
+
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.addAll(arsTransactions);
+        transactions.addAll(usdTransactions);
+
+        return transactions;
+    }
     public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
         User authenticatedUser = ExtractUser.extract();
         Long recipientAccountId = transactionDto.getId();

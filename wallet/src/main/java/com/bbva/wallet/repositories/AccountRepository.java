@@ -10,7 +10,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Modifying
-    @Query("UPDATE Account a SET a.softDelete = true WHERE a.id = :id")
-    void softDelete(@Param("id") Long id);
 }

@@ -1,5 +1,6 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.BalanceDto;
 import com.bbva.wallet.dtos.CurrenciesDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.services.AccountService;
@@ -34,6 +35,13 @@ public class AccountController {
     public ResponseEntity<Response> getUserAccounts(@PathVariable Long userId ){
         Response<List<Account>> response = new Response<>();
         response.setData(userService.getUserAccounts(userId));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/balance")
+    public ResponseEntity<Response> getUserBalance(){
+        Response<BalanceDto> response = new Response<>();
+        response.setData(accountService.getBalance());
         return ResponseEntity.ok(response);
     }
 }

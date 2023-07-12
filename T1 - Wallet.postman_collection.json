@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3421f8a0-ac7e-4eb6-99c1-61650cf8291d",
+		"_postman_id": "cd77463f-e2a0-43e6-bd16-9f1f3ca441d2",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "27887554"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27890010"
 	},
 	"item": [
 		{
@@ -17,30 +17,30 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Sole\",\r\n    \"lastName\": \"Grilletta\",\r\n    \"email\": \"sole.02@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Eva\",\r\n    \"lastName\": \"Compagnucci\",\r\n    \"email\": \"eehserf@gml.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{BASE_URL}}/auth/register"
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.environment.set(\"TOKEN\", pm.response.json().data.token);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -49,14 +49,25 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"eehserf@gml.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin1@example.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{BASE_URL}}/auth/login"
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
 					},
 					"response": []
 				}
@@ -66,52 +77,21 @@
 			"name": "/users",
 			"item": [
 				{
-					"name": "remove",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{TOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{BASE_URL}}/users/12"
-					},
-					"response": []
-				},
-				{
 					"name": "Get Users",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{TOKEN}}"
-							}
-						},
 						"method": "GET",
 						"header": [],
-						"url": "{{BASE_URL}}/users"
+						"url": {
+							"raw": "http://localhost:8080/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
 					},
 					"response": []
 				}
@@ -124,14 +104,34 @@
 					"name": "UserAccounts",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{TOKEN}}"
-							}
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
 						"header": [],
-						"url": "{{BASE_URL}}/accounts/14"
+						"url": {
+							"raw": "http://localhost:8080/accounts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"accounts",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -140,9 +140,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "{{TOKEN}}"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZWhzZXJmQGdtbC5jb20iLCJpYXQiOjE2ODg3NDAzMzQsImV4cCI6MTY4ODc0MTc3NH0.695C7mzjdiEiBmAAHnqX22DTtYQXMxM5AQRIbXz_Znc",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -155,25 +159,88 @@
 								}
 							}
 						},
-						"url": "{{BASE_URL}}/accounts"
+						"url": {
+							"raw": "localhost:8080/accounts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"accounts"
+							]
+						}
 					},
 					"response": []
 				}
 			]
-		}
-	],
-	"variable": [
-		{
-			"key": "BASE_URL",
-			"value": "http://localhost:8080"
 		},
 		{
-			"key": "BASE_URL",
-			"value": ""
-		},
-		{
-			"key": "TOKEN",
-			"value": ""
+			"name": "/transactions",
+			"item": [
+				{
+					"name": "Send Pesos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZWhzZXJmQGdtbC5jb20iLCJpYXQiOjE2ODkwNzkyMTUsImV4cCI6MTY4OTA4MDY1NX0.sRLuqUVhVVXl0PyNqrGPIYjDtM3vyA2IKrESg2fP1-k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 7,\r\n\"amount\": \"10000\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/sendArs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"sendArs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Dollars",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 8,\r\n\"amount\": \"500\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/sendUsd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"sendUsd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

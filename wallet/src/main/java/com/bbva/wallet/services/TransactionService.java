@@ -14,14 +14,11 @@ import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.utils.ExtractUser;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

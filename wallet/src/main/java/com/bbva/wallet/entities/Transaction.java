@@ -1,10 +1,7 @@
 package com.bbva.wallet.entities;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,6 +16,7 @@ import com.bbva.wallet.enums.TransactionType;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name="transactions")
@@ -43,7 +41,12 @@ public class Transaction implements Serializable {
     private Account account;
 
     @NotNull
-    @CreationTimestamp
     private LocalDateTime transactionDate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.transactionDate= LocalDateTime.now();
+    }
+
 
 }

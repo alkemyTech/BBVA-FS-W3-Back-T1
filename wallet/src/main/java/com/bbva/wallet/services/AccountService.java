@@ -4,6 +4,7 @@ import com.bbva.wallet.dtos.CurrenciesDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
 import com.bbva.wallet.repositories.AccountRepository;
@@ -22,10 +23,9 @@ public class AccountService {
     private UserRepository userRepository;
 
 
-    public Account createAccount(CurrenciesDto currenciesDto ){
+    public Account createAccount(Currencies currency, User user ){
 
-        Currencies currency = currenciesDto.getCurrency();
-        User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
+        User authenticatedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new ExceptionUserNotFound());
 
         if(authenticatedUser.isSoftDelete()){

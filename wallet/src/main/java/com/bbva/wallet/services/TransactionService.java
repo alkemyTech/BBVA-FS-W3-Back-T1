@@ -11,24 +11,14 @@ import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bbva.wallet.dtos.PaymentDto;
 import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
-import com.bbva.wallet.entities.Account;
-import com.bbva.wallet.entities.Transaction;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.exceptions.ExceptionUserNotFound;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.repositories.UserRepository;
-import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,6 +74,7 @@ public class TransactionService {
 
         return transactions;
     }
+
     public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
         User authenticatedUser = ExtractUser.extract();
         Long recipientAccountId = transactionDto.getId();
@@ -136,6 +127,7 @@ public class TransactionService {
         transactions.add(transactionIncome);
         return transactions;
     }
+
     public ResponsePaymentDto pay(PaymentDto paymentDto) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();

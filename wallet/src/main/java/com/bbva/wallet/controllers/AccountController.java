@@ -7,6 +7,7 @@ import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +35,6 @@ public class AccountController {
         response.setData(userService.getUserAccounts(userId));
         return ResponseEntity.ok(response);
     }
+
 }
 

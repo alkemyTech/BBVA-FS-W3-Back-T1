@@ -11,7 +11,12 @@ import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.CurrencyLimit;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -46,6 +51,6 @@ public class AccountService {
         account.setUserId(authenticatedUser);
         return accountRepository.save(account);
     }
-
-
 }
+
+

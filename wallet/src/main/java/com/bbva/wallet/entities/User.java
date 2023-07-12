@@ -70,6 +70,7 @@ public class User implements UserDetails,Serializable {
     private LocalDateTime updateDate;
 
 
+
     @PrePersist
     protected void onCreate() {
         this.creationDate = LocalDateTime.now();

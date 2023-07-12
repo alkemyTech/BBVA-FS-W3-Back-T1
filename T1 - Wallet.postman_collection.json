@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
+		"_postman_id": "7c7ba30f-50d9-456f-8b35-237f1a15e0aa",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27190580"
+		"_exporter_id": "27890010"
 	},
 	"item": [
 		{
@@ -226,32 +226,118 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "UpdateAccount",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
 				}
 			]
 		},
 		{
-			"name": "FixedTerm",
+			"name": "/transactions",
 			"item": [
 				{
-					"name": "createFixedTerm",
+					"name": "Send Pesos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 3,\r\n\"amount\": \"10000\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{BASE_URL}}/fixedTerm",
+							"raw": "{{BASE_URL}}/transactions/sendArs",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
-								"fixedTerm"
+								"transactions",
+								"sendArs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Dollars",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 4,\r\n\"amount\": \"500\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/sendUsd",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"sendUsd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 2,\r\n\"amount\": \"500\",\r\n\"currency\":\"USD\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/payment",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"payment"
 							]
 						}
 					},

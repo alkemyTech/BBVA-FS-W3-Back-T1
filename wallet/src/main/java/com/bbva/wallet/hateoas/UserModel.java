@@ -1,4 +1,4 @@
-package com.bbva.wallet.hateos;
+package com.bbva.wallet.hateoas;
 
 import com.bbva.wallet.entities.User;
 import org.springframework.hateoas.RepresentationModel;

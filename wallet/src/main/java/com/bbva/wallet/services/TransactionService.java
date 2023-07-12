@@ -1,7 +1,9 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionTransactionNotExist;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
@@ -25,11 +27,11 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(ExceptionTransactionNotExist::new);
 
-        if(transaction.getAccount().getUserId().getId().equals(authenticatedUser.getId())){;
+        if(transaction.getAccount().getUserId().getId().equals(authenticatedUser.getId()) || authenticatedUser.getRoleId().getName().equals(EnumRole.ADMIN)){;
             return transaction;
         } else {
             throw new ExceptionUserNotAuthenticated();
         }
-
     }
+
 }

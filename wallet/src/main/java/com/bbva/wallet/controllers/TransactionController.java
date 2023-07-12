@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
         @Autowired
         private TransactionService transactionService;
 
-        @PreAuthorize("hasAuthority('USER')")
         @GetMapping("/{id}")
         public ResponseEntity<Response> getTransaction(@PathVariable Long id){
             Response<Transaction> response = new Response<>();
             response.setData(transactionService.getTransaction(id));
             return ResponseEntity.ok(response);
         }
+
 }

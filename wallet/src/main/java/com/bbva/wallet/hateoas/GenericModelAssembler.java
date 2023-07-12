@@ -1,4 +1,4 @@
-package com.bbva.wallet.hateos;
+package com.bbva.wallet.hateoas;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Slice;

@@ -69,7 +69,8 @@ public class UserService {
     public User updateUser(UpdateUserDto userDto,User user){
         user.setFirstName(userDto.nombre());
         user.setLastName(userDto.apellido());
-        user.setPassword(passwordEncoder.encode(userDto.contraseña()));
+        if (userDto.contraseña().isPresent())
+            user.setPassword(passwordEncoder.encode(userDto.contraseña().get()));
         return userRepository.save(user);
     }
 

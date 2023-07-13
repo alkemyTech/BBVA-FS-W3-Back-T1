@@ -1,6 +1,9 @@
 package com.bbva.wallet.dtos;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 
-public record UpdateUserDto(@NotBlank String nombre,@NotBlank String apellido,@NotBlank String contraseña) {
+import java.util.Optional;
+
+public record UpdateUserDto(@NotBlank String nombre, @NotBlank String apellido, Optional<String> contraseña) {
 }

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "Custom Error"),
+        @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido ")
+})
 @Tag(name = "Accounts")
 @RequiredArgsConstructor
 @RestController
@@ -34,7 +39,7 @@ public class AccountController {
     private final UserService userService;
 
     @Operation(
-            description = "Post endpoint para crear una cuenta al usuario autenticado",
+            description = "Endpoint accesible a usuarios autenticados",
             summary = "Crea una cuenta",
             responses ={
                     @ApiResponse(
@@ -43,14 +48,6 @@ public class AccountController {
                             content = {
                                     @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
                             }
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    ),
-                    @ApiResponse(
-                            description = "Custom Error",
-                            responseCode = "400"
                     )
             }
     )
@@ -62,23 +59,15 @@ public class AccountController {
     }
 
     @Operation(
-            description = "Get: endpoint para traer una cuenta por Id de usuario",
-            summary = "Trae una cuenta por id de usuario (SOLO ADMIN)",
+            description = "Endpoint accesible a usuario autenticado dueño de la cuenta, o admin (a todas las cuentas)",
+            summary = "Traer una cuenta por id de usuario",
             responses ={
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = Account.class), mediaType = "application/json")
                             }
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    ),
-                    @ApiResponse(
-                            description = "Custom Error",
-                            responseCode = "400"
                     )
             }
     )
@@ -90,6 +79,19 @@ public class AccountController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuario autenticado",
+            summary = "Trae las cuentas, transacciones y plazo fijos del usuario autenticado)",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = BalanceDto.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @GetMapping("/balance")
     public ResponseEntity<Response> getUserBalance(){
         Response<BalanceDto> response = new Response<>();
@@ -98,6 +100,19 @@ public class AccountController {
     }
 
 
+    @Operation(
+            description = "Endpoint accesible a usuario autenticado dueño de la cuenta",
+            summary = "Actualiza datos de la cuenta (Solo se puede actualizar el límite)",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Account.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @RequestMapping(value = "/{id}",method = RequestMethod.PATCH)
     public ResponseEntity<Response> updateAccount(@PathVariable Long id, Authentication authentication, @RequestBody UpdateAccountDto dto){
         User user= (User) authentication.getPrincipal();

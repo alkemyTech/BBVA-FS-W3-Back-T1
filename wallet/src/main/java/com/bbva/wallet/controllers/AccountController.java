@@ -57,7 +57,7 @@ public class AccountController {
         return ResponseEntity.ok(response);
     }
 
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<Response> getAll(@RequestParam(required = false) Optional<Integer> page) {
         Response response = new Response<>();

@@ -57,5 +57,10 @@ public class FixedTermService {
         return newFixedTerm;
     }
 
+    public OutSimulateFixedTermDto simulateFixedTerm(CreateFixedTermDto dto){
+        FixedTermDeposit fix = makeFixedTerm(null,dto);
+        return new OutSimulateFixedTermDto(Timestamp.valueOf(LocalDateTime.now()),fix.getClosingDate(),
+                fix.getAmount(),fix.getInterest(),fix.getAmount()+fix.getInterest());
+    }
 }
 

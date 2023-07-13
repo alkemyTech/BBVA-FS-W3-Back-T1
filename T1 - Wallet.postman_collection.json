@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bf9c1eb5-fc9d-4bb0-b48d-60b1546cf789",
+		"_postman_id": "53515df4-75a6-4313-bcc0-097475dd0a32",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -512,6 +512,43 @@
 							"path": [
 								"transactions",
 								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"Probando descripcion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"1"
 							]
 						}
 					},

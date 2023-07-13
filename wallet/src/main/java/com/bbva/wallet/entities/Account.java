@@ -13,6 +13,7 @@ import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @Builder
@@ -61,6 +62,14 @@ public class Account implements Serializable {
     @JsonIgnore
     @Column(name = "soft_delete", nullable = false ,columnDefinition = "boolean default false")
     private boolean softDelete;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Transaction> transaction;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FixedTermDeposit> fixedTermDeposits;
 
     private static final int CBU_LENGTH = 22;
 

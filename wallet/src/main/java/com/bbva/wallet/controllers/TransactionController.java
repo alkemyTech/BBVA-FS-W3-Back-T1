@@ -19,10 +19,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.bbva.wallet.dtos.DepositDTO;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -64,4 +67,10 @@ public class TransactionController {
         response.setData(transactionService.pay(paymentDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PostMapping("/deposit")
+    public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
+
+        return ResponseEntity.ok(transactionService.deposit(depositDTO));
+    }
+
 }

@@ -62,14 +62,15 @@ public class AccountController {
     public ResponseEntity<Response> getAll(@RequestParam(required = false) Optional<Integer> page) {
         Response response = new Response<>();
         CollectionModel<AccountModel> collectionModel;
+        Slice<Account> pagedEntity;
         if (page.isPresent()) {
-            Slice<Account> pagedEntity = accountService.getTen(page.get());
-            collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
-            response.setData(collectionModel);
+             pagedEntity = accountService.getTen(page.get());
         }
         else {
-            response.setData(accountService.getAll());
+            pagedEntity = accountService.getTen(0);
         }
+        collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+        response.setData(collectionModel);
         return ResponseEntity.ok(response);
     }
 }

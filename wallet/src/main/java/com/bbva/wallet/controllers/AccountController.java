@@ -3,12 +3,14 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.BalanceDto;
 import com.bbva.wallet.dtos.CurrenciesDto;
 import com.bbva.wallet.entities.Account;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,10 @@ public class AccountController {
             responses ={
                     @ApiResponse(
                             description = "Success",
-                            responseCode = "200"
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
+                            }
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",

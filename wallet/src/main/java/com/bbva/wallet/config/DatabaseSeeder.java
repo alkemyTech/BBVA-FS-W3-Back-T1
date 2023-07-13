@@ -39,6 +39,8 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             accountRepository.deleteAll();
 
+            userRepository.deleteAll();
+
             //admin sin cuentas
             User adminSinCuentas = new User();
             makeUser(adminSinCuentas,"adminSinCuenta@example.com",roleAdmin);
@@ -73,20 +75,58 @@ public class DatabaseSeeder implements CommandLineRunner {
             savedAccount.setBalance(10000.0);
             accountRepository.save(savedAccount);
 
-            // Crear 10 usuarios administradores
-            for (int i = 0; i < 10; i++) {
+            // Usuario sin cuentas
+            User userSinCuentas = new User();
+            makeUser(userSinCuentas, "userSinCuenta@example.com", roleUser);
+            userSinCuentas = saveUser(userSinCuentas);
+
+            // Usuario con cuenta en pesos
+            User userCuentaEnPesos = new User();
+            makeUser(userCuentaEnPesos, "userCuentaEnPesos@example.com", roleUser);
+            userCuentaEnPesos = saveUser(userCuentaEnPesos);
+            savedAccount = accountService.createAccount(Currencies.ARS, userCuentaEnPesos);
+
+            // Usuario con cuenta en dólares
+            User userCuentaEnDolares = new User();
+            makeUser(userCuentaEnDolares, "userCuentaEnDolares@example.com", roleUser);
+            userCuentaEnDolares = saveUser(userCuentaEnDolares);
+            savedAccount = accountService.createAccount(Currencies.USD, userCuentaEnDolares);
+
+            // Usuario con cuenta en pesos con balance de 100.000$
+            User userPesosBalance100mil = new User();
+            makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
+            userPesosBalance100mil = saveUser(userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
+            savedAccount.setBalance(100_000.0);
+            accountRepository.save(savedAccount);
+
+            // Usuario con cuenta en dólares con balance de 10.000$
+            User userDolares10mil = new User();
+            makeUser(userDolares10mil, "userDolares10mil@example.com", roleUser);
+            userDolares10mil = saveUser(userDolares10mil);
+            savedAccount = accountService.createAccount(Currencies.USD, userDolares10mil);
+            savedAccount.setBalance(10_000.0);
+            accountRepository.save(savedAccount);
+
+
+            // Crear 5 usuarios administradores
+            for (int i = 0; i < 5; i++) {
                 User admin = new User();
                 makeUser(admin,"admin" + i +"@example.com",roleAdmin);
                 userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {admin.setId(oldUser.getId());});
                 userRepository.save(admin);
-                saveUser(admin);
+                User savedadmin = saveUser(admin);
+                accountService.createAccount(Currencies.USD, savedadmin);
+                accountService.createAccount(Currencies.ARS, savedadmin);
             }
 
-            // Crear 10 usuarios regulares
-            for (int i = 0; i < 10; i++) {
+            // Crear 5 usuarios regulares
+            for (int i = 0; i < 5; i++) {
                 User regularUser = new User();
                 makeUser(regularUser,"user" + i + "@example.com",roleUser);
-                saveUser(regularUser);
+                User savedRegularUser = saveUser(regularUser);
+                accountService.createAccount(Currencies.USD, savedRegularUser);
+                accountService.createAccount(Currencies.ARS, savedRegularUser);
             }
         }
     }
@@ -101,7 +141,6 @@ public class DatabaseSeeder implements CommandLineRunner {
         user.setUpdateDate(LocalDateTime.now());
         user.setCreationDate(LocalDateTime.now());
     }
-
     private User saveUser(User user){
         userRepository.findByEmail(user.getEmail()).ifPresent(oldUser -> {user.setId(oldUser.getId());});
         return userRepository.save(user);

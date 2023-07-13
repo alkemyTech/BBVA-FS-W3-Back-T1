@@ -42,15 +42,15 @@ public class UserController {
     public ResponseEntity<Response> getAll(@RequestParam(required = false) Optional<Integer> page) {
         Response response = new Response<>();
         CollectionModel<UserModel> collectionModel;
+        Slice<User> pagedEntity;
         if (page.isPresent()) {
-            Slice<User> pagedEntity = userService.getTen(page.get());
-            collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
-            response.setData(collectionModel);
+            pagedEntity = userService.getTen(page.get());
         }
         else {
-            collectionModel = genericModelAssembler.toCollectionModel(userService.getAll());
-            response.setData(collectionModel);
+            pagedEntity = userService.getTen(0);
         }
+        collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+        response.setData(collectionModel);
         return ResponseEntity.ok(response);
     }
 

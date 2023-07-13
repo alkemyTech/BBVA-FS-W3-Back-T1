@@ -4,18 +4,16 @@ import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
+import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.RoleRepository;
 import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.services.AccountService;
-import com.bbva.wallet.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Component
@@ -26,17 +24,19 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
+    private final AccountRepository accountRepository;
     private final AccountService accountService;
 
     @Value("${develop.seeder}")
-    private Boolean crearUsuarios;
+    private Boolean loadDataBase;
 
     @Override
     public void run(String... args) throws Exception {
-        if (crearUsuarios){
+        if (loadDataBase){
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
 
+            accountRepository.truncateTable();
 
             // Crear 10 usuarios administradores
             //admin sin cuentas

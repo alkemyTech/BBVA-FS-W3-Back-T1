@@ -3,8 +3,6 @@ package com.bbva.wallet.services;
 import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.repositories.UserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.bbva.wallet.entities.Account;
@@ -65,6 +63,9 @@ public class UserService {
         return userRepository.findAllActive();
     }
 
+    public User getUser(Long id){
+        return userRepository.findById(id).orElseThrow(ExceptionUserNotFound::new);
+    }
     public User updateUser(UpdateUserDto userDto,User user){
         user.setFirstName(userDto.nombre());
         user.setLastName(userDto.apellido());

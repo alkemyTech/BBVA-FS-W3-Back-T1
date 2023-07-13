@@ -14,9 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
@@ -33,7 +35,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Iterable<User>> getAll() {
-       return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.ok(userService.getAll());
     }
 
 
@@ -43,6 +45,14 @@ public class UserController {
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.updateUser(dto,user));
+        return ResponseEntity.ok(response);
+    }
+    @PreAuthorize("#id == authentication.principal.id")
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> getUser(@PathVariable("id") Long id, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        Response<User> response = new Response<>();
+        response.setData(userService.getUser(user.getId()));
         return ResponseEntity.ok(response);
     }
 }

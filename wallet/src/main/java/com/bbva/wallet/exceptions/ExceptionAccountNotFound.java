@@ -5,7 +5,10 @@ import com.bbva.wallet.enums.ErrorCodes;
 public class ExceptionAccountNotFound extends CustomException{
 
     public ExceptionAccountNotFound() {
-        super("La cuenta no existe",ErrorCodes.CUENTA_NO_ENCONTRADA);
+        super("La cuenta no existe ",ErrorCodes.CUENTA_NO_ENCONTRADA);
+    }
 
+    public ExceptionAccountNotFound(String message) {
+        super(message,ErrorCodes.CUENTA_NO_ENCONTRADA);
     }
 }

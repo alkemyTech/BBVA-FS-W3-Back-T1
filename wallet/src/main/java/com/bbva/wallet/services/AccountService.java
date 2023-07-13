@@ -101,7 +101,7 @@ public class AccountService {
     }
 
     public Slice<Account> getTen(Integer page) {
-        return accountRepository.findSliceByPage(
+        return accountRepository.findAll(
                 PageRequest.of(page, 10));
     }
 

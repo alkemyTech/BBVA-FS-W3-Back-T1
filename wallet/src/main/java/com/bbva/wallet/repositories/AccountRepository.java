@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    @Query("SELECT u FROM User u ORDER BY u.id")
-    Slice<Account> findSliceByPage(PageRequest pageable);
+
 }

@@ -193,7 +193,7 @@ public class TransactionService {
             accountService.updateDepositBalance(account, amount);
             return transaction;
 
-        } else throw new ExceptionAccountCurrenyNotFound();
+        } else throw new ExceptionAccountCurrencyNotFound();
 
     }
     public Slice<Transaction> getTen(Integer page, Long id) {

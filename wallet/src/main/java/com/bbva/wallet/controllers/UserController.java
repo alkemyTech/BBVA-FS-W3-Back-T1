@@ -1,16 +1,19 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
 import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -44,16 +47,15 @@ public class UserController {
             response.setData(collectionModel);
         }
         else {
-            response.setData(userService.getAll());
+            response.setData(userService.getTen(0));
         }
         return ResponseEntity.ok(response);
 
     }
 
-
     @PreAuthorize("#id == authentication.principal.id")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id,@RequestBody @Valid UpdateUserDto dto, Authentication authentication){
+    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserDto dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.updateUser(dto,user));

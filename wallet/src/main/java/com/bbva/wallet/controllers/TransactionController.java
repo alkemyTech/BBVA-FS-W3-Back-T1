@@ -1,5 +1,6 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.TransactionModel;
@@ -11,19 +12,14 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.bbva.wallet.dtos.PaymentDto;
-import com.bbva.wallet.dtos.ResponsePaymentDto;
-import com.bbva.wallet.dtos.TransactionDto;
 import com.bbva.wallet.enums.Currencies;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.bbva.wallet.dtos.DepositDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -33,10 +29,6 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
     private  GenericModelAssembler<Transaction,TransactionModel> genericModelAssembler;
-
-    public TransactionController() {
-        this.genericModelAssembler = new GenericModelAssembler<>(TransactionController.class, TransactionModel.class);
-    }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){

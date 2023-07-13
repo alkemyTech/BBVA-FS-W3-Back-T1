@@ -21,15 +21,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Custom Error"),
-        @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido ")
+        @ApiResponse(responseCode = "400", description = "Custom Error", content = {
+                @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+        }),
+        @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
 })
 @Tag(name = "Accounts")
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class AccountController {
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = Account.class), mediaType = "application/json")
                             }
                     )
             }
@@ -63,8 +63,8 @@ public class AccountController {
     }
 
     @Operation(
-            description = "Endpoint accesible a usuario autenticado dueño de la cuenta, o admin (a todas las cuentas)",
-            summary = "Traer una cuenta por id de usuario",
+            description = "Endpoint accesible a admins",
+            summary = "Traer cuentas por id de usuario",
             responses ={
                     @ApiResponse(
                             description = "Success",
@@ -75,7 +75,6 @@ public class AccountController {
                     )
             }
     )
-
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Response> getUserAccounts(@PathVariable Long userId ){
@@ -86,7 +85,7 @@ public class AccountController {
 
     @Operation(
             description = "Endpoint accesible a usuario autenticado",
-            summary = "Trae las cuentas, transacciones y plazo fijos del usuario autenticado)",
+            summary = "Trae las cuentas, transacciones y plazo fijos del usuario autenticado",
             responses ={
                     @ApiResponse(
                             description = "Success",
@@ -107,7 +106,7 @@ public class AccountController {
 
     @Operation(
             description = "Endpoint accesible a usuario autenticado dueño de la cuenta",
-            summary = "Actualiza datos de la cuenta (Solo se puede actualizar el límite)",
+            summary = "Actualiza el límite de la cuenta",
             responses ={
                     @ApiResponse(
                             description = "Success",

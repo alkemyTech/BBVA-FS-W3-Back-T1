@@ -7,6 +7,9 @@ import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.FixedTermService;
 import com.bbva.wallet.utils.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "Custom Error", content = {
+                @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+        }),
+        @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
+})
 @Tag(name = "Fixed Terms")
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +36,19 @@ public class FixedTermController {
 
     private final FixedTermService fixedTermService;
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Crea un plazo fijo",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = FixedTermDeposit.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping
     public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid CreateFixedTermDto dto, Authentication authentication){
         User user= (User) authentication.getPrincipal();
@@ -34,6 +57,19 @@ public class FixedTermController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Simula un plazo fijo",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = OutSimulateFixedTermDto.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping("/simulate")
     public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid CreateFixedTermDto dto){
         Response<OutSimulateFixedTermDto> response = new Response<>();

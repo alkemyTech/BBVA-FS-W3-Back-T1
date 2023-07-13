@@ -3,6 +3,7 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.Response;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+@Tag(name = "Transactions")
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {

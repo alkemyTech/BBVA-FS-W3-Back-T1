@@ -6,6 +6,10 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+@Tag(name = "Accounts")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/accounts")
@@ -23,6 +29,24 @@ public class AccountController {
 
     private final UserService userService;
 
+    @Operation(
+            description = "Post endpoint para crear una cuenta al usuario autenticado",
+            summary = "Crea una cuenta",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    ),
+                    @ApiResponse(
+                            description = "Custom Error",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PostMapping
     public ResponseEntity<Response> saveAccount(@RequestBody CurrenciesDto currenciesDto){
         Response<Account> response = new Response<>();

@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
+		"_postman_id": "a75747f7-5bce-44e7-8b86-60889f9c298f",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27190580"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27887554"
 	},
 	"item": [
 		{
@@ -35,16 +35,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/auth/register",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
+						"url": "{{BASE_URL}}/auth/register"
 					},
 					"response": []
 				},
@@ -76,16 +67,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/auth/login",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						}
+						"url": "{{BASE_URL}}/auth/login"
 					},
 					"response": []
 				}
@@ -119,26 +101,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/users/52",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"users",
-								"52"
-							]
-						}
+						"url": "{{BASE_URL}}/users/52"
 					},
 					"response": []
 				},
@@ -147,13 +116,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [
@@ -187,13 +152,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "PATCH",
 						"header": [],
@@ -206,16 +167,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/users/34",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"users",
-								"34"
-							]
-						}
+						"url": "{{BASE_URL}}/users/34"
 					},
 					"response": []
 				},
@@ -224,26 +176,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/users/33",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"users",
-								"33"
-							]
-						}
+						"url": "{{BASE_URL}}/users/33"
 					},
 					"response": []
 				}
@@ -257,26 +196,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/accounts/balance",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts",
-								"balance"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts/balance"
 					},
 					"response": []
 				},
@@ -285,26 +211,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/accounts/49",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts",
-								"49"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts/49"
 					},
 					"response": []
 				},
@@ -313,13 +226,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -332,15 +241,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/accounts",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts"
 					},
 					"response": []
 				},
@@ -349,13 +250,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "PATCH",
 						"header": [],
@@ -368,16 +265,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/accounts/26",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"accounts",
-								"26"
-							]
-						}
+						"url": "{{BASE_URL}}/accounts/26"
 					},
 					"response": []
 				}
@@ -391,13 +279,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -410,15 +294,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/fixedTerm",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"fixedTerm"
-							]
-						}
+						"url": "{{BASE_URL}}/fixedTerm"
 					},
 					"response": []
 				},
@@ -427,13 +303,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -446,16 +318,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/fixedTerm/simulate",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"fixedTerm",
-								"simulate"
-							]
-						}
+						"url": "{{BASE_URL}}/fixedTerm/simulate"
 					},
 					"response": []
 				}
@@ -469,13 +332,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -488,16 +347,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/transactions/sendArs",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"transactions",
-								"sendArs"
-							]
-						}
+						"url": "{{BASE_URL}}/transactions/sendArs"
 					},
 					"response": []
 				},
@@ -506,13 +356,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -525,16 +371,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/transactions/sendUsd",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"transactions",
-								"sendUsd"
-							]
-						}
+						"url": "{{BASE_URL}}/transactions/sendUsd"
 					},
 					"response": []
 				},
@@ -543,13 +380,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
@@ -562,16 +395,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/transactions/payment",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"transactions",
-								"payment"
-							]
-						}
+						"url": "{{BASE_URL}}/transactions/payment"
 					},
 					"response": []
 				},
@@ -580,26 +404,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/transactions/7",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"transactions",
-								"7"
-							]
-						}
+						"url": "{{BASE_URL}}/transactions/7"
 					},
 					"response": []
 				},
@@ -608,13 +419,9 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
 						},
 						"method": "PATCH",
 						"header": [],
@@ -627,16 +434,31 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/transactions/1",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"transactions",
-								"1"
-							]
-						}
+						"url": "{{BASE_URL}}/transactions/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{TOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currency\":\"USD\",\r\n    \"amount\":\"10000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL}}/transactions/deposit"
 					},
 					"response": []
 				}

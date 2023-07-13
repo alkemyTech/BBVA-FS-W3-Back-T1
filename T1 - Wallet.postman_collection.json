@@ -207,13 +207,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/users/34",
+							"raw": "{{BASE_URL}}/users/33",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"34"
+								"33"
 							]
 						}
 					},
@@ -439,7 +439,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"amount\": 10000,\r\n    \"cantDias\": 30\r\n}",
+							"raw": "{\r\n    \"amount\": 1000,\r\n    \"cantDias\": 30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -591,13 +591,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/7",
+							"raw": "{{BASE_URL}}/transactions/105",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
-								"7"
+								"105"
 							]
 						}
 					},

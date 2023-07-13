@@ -6,6 +6,8 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.exceptions.ExceptionAccountCurrenyNotFound;
+import com.bbva.wallet.exceptions.ExceptionInsufficientBalance;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.FixedTermDepositsRepository;
 import jakarta.transaction.Transactional;
@@ -21,14 +23,24 @@ import java.util.function.Predicate;
 @Transactional
 public class FixedTermService {
 
+    private final FixedTermDepositsRepository fixedTermDepositsRepository;
+    private final AccountRepository accountRepository;
 
     private static final double INTEREST_PER_DAY = 0.002;
 
+    public FixedTermDeposit createFixedTermDeposit(CreateFixedTermDto dto, User user){
+        //verificar que un usuario tenga cuentas asociadas con la currency
+        Predicate<Account> compareCurrencies = account -> account.getCurrency().equals(Currencies.ARS);
+        Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrenyNotFound::new);
+        if (account.getBalance() < dto.amount()){
+            throw new ExceptionInsufficientBalance();
+        }
+        account.setBalance(account.getBalance() - dto.amount());
+        accountRepository.save(account);
 
-    public OutSimulateFixedTermDto simulateFixedTerm(CreateFixedTermDto dto){
-        FixedTermDeposit fix = makeFixedTerm(null,dto);
-        return new OutSimulateFixedTermDto(Timestamp.valueOf(LocalDateTime.now()),fix.getClosingDate(),
-                fix.getAmount(),fix.getInterest(),fix.getAmount()+fix.getInterest());
+        FixedTermDeposit savedFixedTerm = fixedTermDepositsRepository.save(makeFixedTerm(account,dto));
+
+        return savedFixedTerm;
     }
 
     private FixedTermDeposit makeFixedTerm(Account account,CreateFixedTermDto dto) {
@@ -44,4 +56,6 @@ public class FixedTermService {
 
         return newFixedTerm;
     }
+
 }
+

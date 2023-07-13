@@ -25,6 +25,14 @@ public class FixedTermController {
 
     private final FixedTermService fixedTermService;
 
+    @PostMapping
+    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid CreateFixedTermDto dto, Authentication authentication){
+        User user= (User) authentication.getPrincipal();
+        Response<FixedTermDeposit> response = new Response<>();
+        response.setData(fixedTermService.createFixedTermDeposit(dto,user));
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/simulate")
     public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid CreateFixedTermDto dto){
         Response<OutSimulateFixedTermDto> response = new Response<>();

@@ -51,7 +51,6 @@ public class SpringSecurityConfiguration   {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("/auth/**","/v3/**","/docs/**").permitAll()
-                                .requestMatchers("/accounts/{userId}").hasAuthority(EnumRole.ADMIN.name())
                                 .requestMatchers("/users").hasAuthority(EnumRole.ADMIN.name())
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

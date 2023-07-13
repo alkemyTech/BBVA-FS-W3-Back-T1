@@ -48,7 +48,8 @@ public class UserController {
             response.setData(collectionModel);
         }
         else {
-            response.setData(userService.getAll());
+            collectionModel = genericModelAssembler.toCollectionModel(userService.getAll());
+            response.setData(collectionModel);
         }
         return ResponseEntity.ok(response);
     }

@@ -7,8 +7,10 @@ import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.RoleRepository;
+import com.bbva.wallet.repositories.TransactionRepository;
 import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.services.AccountService;
+import com.bbva.wallet.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +30,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
 
+    private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
+
     @Value("${develop.seeder}")
     private Boolean loadDataBase;
 
@@ -40,6 +45,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             accountRepository.deleteAll();
 
             userRepository.deleteAll();
+
+            transactionRepository.deleteAll();
 
             //admin sin cuentas
             User adminSinCuentas = new User();
@@ -129,6 +136,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 accountService.createAccount(Currencies.ARS, savedRegularUser);
             }
         }
+
+
+
+
+
     }
 
     private void makeUser(User user,String email,Role role){

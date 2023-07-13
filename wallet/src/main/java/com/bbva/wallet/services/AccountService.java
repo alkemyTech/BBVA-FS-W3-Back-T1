@@ -91,7 +91,11 @@ public class AccountService {
         List<Transaction> historyTransactionsArs = accountInArs.isPresent() ? accountInArs.get().getTransaction() : null;
         List<Transaction> historyTransactionsUsd = accountInUsd.isPresent() ? accountInUsd.get().getTransaction() : null;
 
-        List<FixedTermDeposit> fixedTermsAccount = accountInArs.get().getFixedTermDeposits();
+        List<FixedTermDeposit> fixedTermsAccount;
+        if(accountInArs.isPresent())
+             fixedTermsAccount = accountInArs.get().getFixedTermDeposits();
+        else
+            fixedTermsAccount = List.of();
 
         BalanceDto balanceResponse = new BalanceDto();
                 balanceResponse.setAccountArs(accountInArs.orElse(null));

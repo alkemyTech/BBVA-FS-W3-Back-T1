@@ -3,8 +3,10 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.EnumRole;
+import com.bbva.wallet.exceptions.ExceptionTransactionNotExist;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
 import com.bbva.wallet.exceptions.ExceptionUserNotFound;
+import com.bbva.wallet.repositories.TransactionRepository;
 import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.ExtractUser;
@@ -23,15 +25,21 @@ import org.springframework.web.bind.annotation.RestController;
         private TransactionService transactionService;
         @Autowired
         private UserRepository userRepository;
+        @Autowired
+        private TransactionRepository transactionRepository;
 
         @GetMapping("/{id}")
         public ResponseEntity<Response> getTransaction(@PathVariable Long id){
             User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
                     .orElseThrow(ExceptionUserNotFound::new);
+            Transaction transaction = transactionRepository.findById(id)
+                    .orElseThrow(ExceptionTransactionNotExist::new);
 
             Response<Transaction> response = new Response<>();
-            response.setData(transactionService.getTransaction(id, authenticatedUser));
-            return ResponseEntity.ok(response);
+            if(transaction.getAccount().getUserId().getId().equals(authenticatedUser.getId()) ||
+                    authenticatedUser.getRoleId().getName().equals(EnumRole.ADMIN)){
+                response.setData(transactionService.getTransaction(transaction));
+                return ResponseEntity.ok(response);
+            }else throw new ExceptionUserNotAuthenticated();
         }
-
 }

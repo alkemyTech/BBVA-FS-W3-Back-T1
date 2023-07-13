@@ -79,6 +79,9 @@ public class TransactionService {
         transactions.addAll(arsTransactions);
         transactions.addAll(usdTransactions);
 
+        if(transactions.isEmpty()){
+            throw new ExceptionUserWithNoTransactions();
+        }
         return transactions;
     }
 

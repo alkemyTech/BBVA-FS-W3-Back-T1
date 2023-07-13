@@ -1,7 +1,6 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.dtos.LoanDto;
-import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionAmountNotAllowed;
 import com.bbva.wallet.exceptions.ExceptionMonthNotExist;
 import org.springframework.beans.factory.annotation.Value;

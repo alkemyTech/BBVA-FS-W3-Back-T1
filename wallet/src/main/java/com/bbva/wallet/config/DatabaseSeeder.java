@@ -1,5 +1,6 @@
 package com.bbva.wallet.config;
 
+import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
@@ -36,9 +37,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
 
-            accountRepository.truncateTable();
+            accountRepository.deleteAll();
 
-            // Crear 10 usuarios administradores
             //admin sin cuentas
             User adminSinCuentas = new User();
             makeUser(adminSinCuentas,"adminSinCuenta@example.com",roleAdmin);
@@ -48,26 +48,32 @@ public class DatabaseSeeder implements CommandLineRunner {
             User adminCuentaEnPesos = new User();
             makeUser(adminCuentaEnPesos,"adminCuentaEnPesos@example.com",roleAdmin);
             adminCuentaEnPesos = saveUser(adminCuentaEnPesos);
-            accountService.createAccount(Currencies.ARS,adminCuentaEnPesos);
+            Account savedAccount= accountService.createAccount(Currencies.ARS,adminCuentaEnPesos);
+
 
             //admin solo con cuenta en dolares
             User adminCuentaEnDolares = new User();
             makeUser(adminCuentaEnDolares,"adminCuentaEnDolares@example.com",roleAdmin);
             adminCuentaEnDolares = saveUser(adminCuentaEnDolares);
-            accountService.createAccount(Currencies.USD,adminCuentaEnDolares);
+            savedAccount= accountService.createAccount(Currencies.USD,adminCuentaEnDolares);
 
             //admin con cuenta en pesos con balance en 100.000$
             User adminPesosBalance100mil = new User();
             makeUser(adminPesosBalance100mil,"adminPesosBalance100mil@example.com",roleAdmin);
             adminPesosBalance100mil= saveUser(adminPesosBalance100mil);
-            accountService.createAccount(Currencies.USD,adminPesosBalance100mil).setBalance(100000.0);
+            savedAccount= accountService.createAccount(Currencies.USD,adminPesosBalance100mil);
+            savedAccount.setBalance(100_000.0);
+            accountRepository.save(savedAccount);
 
             //admin con cuenta en dolares con balance en 10.000$
             User adminDolares10mil = new User();
             makeUser(adminDolares10mil,"adminDolares10mil@example.com",roleAdmin);
             adminDolares10mil= saveUser(adminDolares10mil);
-            accountService.createAccount(Currencies.USD,adminDolares10mil).setBalance(10000.0);
+            savedAccount= accountService.createAccount(Currencies.USD,adminDolares10mil);
+            savedAccount.setBalance(10000.0);
+            accountRepository.save(savedAccount);
 
+            // Crear 10 usuarios administradores
             for (int i = 0; i < 10; i++) {
                 User admin = new User();
                 makeUser(admin,"admin" + i +"@example.com",roleUser);

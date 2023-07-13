@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     @Modifying
-    @Query(value = "TRUNCATE TABLE accounts", nativeQuery = true)
-    void truncateTable();
+    @Query(value = "DELETE FROM accounts", nativeQuery = true)
+    void deleteAll();
+
 }

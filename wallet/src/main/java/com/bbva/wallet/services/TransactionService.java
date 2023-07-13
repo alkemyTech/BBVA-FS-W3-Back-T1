@@ -23,6 +23,7 @@ import com.bbva.wallet.dtos.DepositDTO;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -188,11 +189,16 @@ public class TransactionService {
                     .build();
 
             transactionRepository.save(transaction);
-            accountService.updateDepositBalance(account, amount);
 
+            accountService.updateDepositBalance(account, amount);
             return transaction;
 
         } else throw new ExceptionAccountCurrenyNotFound();
 
+    }
+    public Slice<Transaction> getTen(Integer page, Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
+        Pageable pageable = PageRequest.of(page, 10);
+        return transactionRepository.findByAccount_UserId_Id(id, pageable);
     }
 }

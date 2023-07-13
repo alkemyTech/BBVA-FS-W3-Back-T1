@@ -1,16 +1,16 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.TransactionDescriptionDto;
 import com.bbva.wallet.entities.Transaction;
+import com.bbva.wallet.hateoas.GenericModelAssembler;
+import com.bbva.wallet.hateoas.TransactionModel;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.bbva.wallet.dtos.PaymentDto;
 import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +32,11 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+    private  GenericModelAssembler<Transaction,TransactionModel> genericModelAssembler;
+
+    public TransactionController() {
+        this.genericModelAssembler = new GenericModelAssembler<>(TransactionController.class, TransactionModel.class);
+    }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
@@ -41,9 +47,17 @@ public class TransactionController {
 
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
     @GetMapping("/{userId}")
-    public ResponseEntity<Response> getUserTransactions(@PathVariable Long userId){
-        Response <List<Transaction>> response = new Response<>();
-        response.setData(transactionService.getUserTransactions(userId));
+    public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page, @PathVariable Long userId){
+        Response response = new Response<>();
+        CollectionModel<TransactionModel> collectionModel;
+        if(page.isPresent()){
+            Slice<Transaction> pagedEntity = transactionService.getTen(page.get(), userId);
+            collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+            response.setData(collectionModel);
+        }
+        else{
+            response.setData(transactionService.getUserTransactions(userId));
+        }
         return ResponseEntity.ok(response);
     }
 

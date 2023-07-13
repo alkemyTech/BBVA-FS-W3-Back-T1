@@ -47,7 +47,6 @@ public class User implements UserDetails,Serializable {
     @Column(nullable = false)
     private String password;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accountList;

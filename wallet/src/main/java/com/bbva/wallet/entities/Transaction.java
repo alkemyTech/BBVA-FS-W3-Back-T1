@@ -1,10 +1,7 @@
 package com.bbva.wallet.entities;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,13 +9,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.bbva.wallet.enums.TransactionType;
 
-
-
-
-
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name="transactions")

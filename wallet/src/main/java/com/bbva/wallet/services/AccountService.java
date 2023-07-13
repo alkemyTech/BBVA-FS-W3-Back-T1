@@ -107,4 +107,10 @@ public class AccountService {
         return balanceResponse;
     }
 
+    public void updateDepositBalance(Account account, Double amount) {
+        account.setBalance(account.getBalance() + amount);
+        accountRepository.save(account);
+    }
+
+
 }

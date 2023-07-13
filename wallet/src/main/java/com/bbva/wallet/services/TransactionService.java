@@ -19,11 +19,14 @@ import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
 import jakarta.transaction.Transactional;
+import com.bbva.wallet.dtos.DepositDTO;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -34,6 +37,10 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
 
     public Transaction editTransaction(Long id, String description){
 
@@ -134,14 +141,17 @@ public class TransactionService {
         Currencies paymentCurrency = paymentDto.getCurrency();
         Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
 
-        if(paymentAccount.getUserId().isSoftDelete())
-        {throw new ExceptionUserNotFound();}
+        if (paymentAccount.getUserId().isSoftDelete()) {
+            throw new ExceptionUserNotFound();
+        }
 
-        if (paymentAccount.getBalance() < amount)
-        {throw new ExceptionInsufficientBalance();}
+        if (paymentAccount.getBalance() < amount) {
+            throw new ExceptionInsufficientBalance();
+        }
 
-        if(paymentCurrency != paymentAccount.getCurrency())
-        {throw new ExceptionMismatchCurrencies();}
+        if (paymentCurrency != paymentAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
+        }
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
@@ -157,5 +167,32 @@ public class TransactionService {
         responsePayment.setUpdatedAccount(accountRepository.save(paymentAccount));
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
+    }
+    public Transaction deposit(DepositDTO deposit){
+        Currencies currency = deposit.currency();
+        Double amount = deposit.amount();
+
+        User authenticatedUser = userService.findById(ExtractUser.extract().getId())
+                .orElseThrow(() -> new ExceptionUserNotFound());
+
+        Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);
+
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+
+            Transaction transaction = Transaction.builder()
+                    .amount(amount)
+                    .type(TransactionType.DEPOSIT)
+                    .account(account)
+                    .transactionDate(LocalDateTime.now())
+                    .build();
+
+            transactionRepository.save(transaction);
+            accountService.updateDepositBalance(account, amount);
+
+            return transaction;
+
+        } else throw new ExceptionAccountCurrenyNotFound();
+
     }
 }

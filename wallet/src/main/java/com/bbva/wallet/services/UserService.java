@@ -59,9 +59,7 @@ public class UserService {
         return userRepository.findSoftDeletedUser(email);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAllActive();
-    }
+    public List<User> getAll() { return userRepository.findAllActive(); }
 
     public User getUser(Long id){
         return userRepository.findById(id).orElseThrow(ExceptionUserNotFound::new);
@@ -72,6 +70,11 @@ public class UserService {
         if (userDto.contraseña().isPresent())
             user.setPassword(passwordEncoder.encode(userDto.contraseña().get()));
         return userRepository.save(user);
+    }
+
+
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
     }
 
 }

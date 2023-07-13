@@ -1,7 +1,6 @@
 package com.bbva.wallet.repositories;
 
 import com.bbva.wallet.entities.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
+
     @Query("SELECT u FROM User u WHERE u.softDelete = true AND u.email = :email")
     Optional<User> findSoftDeletedUser(@Param("email") String email);
 

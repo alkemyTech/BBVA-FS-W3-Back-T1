@@ -6,6 +6,7 @@ import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+@Tag(name = "Users")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")

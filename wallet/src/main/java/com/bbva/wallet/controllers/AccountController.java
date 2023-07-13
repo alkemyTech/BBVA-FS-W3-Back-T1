@@ -59,6 +59,27 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            description = "Get: endpoint para traer una cuenta por Id de usuario",
+            summary = "Trae una cuenta por id de usuario (SOLO ADMIN)",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
+                            }
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    ),
+                    @ApiResponse(
+                            description = "Custom Error",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Response> getUserAccounts(@PathVariable Long userId ){
@@ -67,6 +88,27 @@ public class AccountController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Post endpoint para crear una cuenta al usuario autenticado",
+            summary = "Crea una cuenta",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = User.class), mediaType = "application/json")
+                            }
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    ),
+                    @ApiResponse(
+                            description = "Custom Error",
+                            responseCode = "400"
+                    )
+            }
+    )
     @GetMapping("/balance")
     public ResponseEntity<Response> getUserBalance(){
         Response<BalanceDto> response = new Response<>();

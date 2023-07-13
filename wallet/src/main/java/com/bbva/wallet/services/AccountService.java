@@ -16,6 +16,9 @@ import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.CurrencyLimit;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,6 +94,15 @@ public class AccountService {
                 balanceResponse.setFixedTerms(fixedTermsAccount);
 
         return balanceResponse;
+    }
+
+    public List<Account> getAll() {
+        return accountRepository.findAll();
+    }
+
+    public Slice<Account> getTen(Integer page) {
+        return accountRepository.findSliceByPage(
+                PageRequest.of(page, 10));
     }
 
 }

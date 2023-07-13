@@ -207,13 +207,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/users/51",
+							"raw": "{{BASE_URL}}/users/34",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"51"
+								"34"
 							]
 						}
 					},
@@ -235,13 +235,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/users/25",
+							"raw": "{{BASE_URL}}/users/33",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"25"
+								"33"
 							]
 						}
 					},

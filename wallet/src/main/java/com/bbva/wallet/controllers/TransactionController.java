@@ -17,12 +17,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -30,6 +28,9 @@ public class TransactionController {
     private TransactionService transactionService;
     private  GenericModelAssembler<Transaction,TransactionModel> genericModelAssembler;
 
+    public TransactionController() {
+        this.genericModelAssembler = new GenericModelAssembler<>(TransactionController.class, TransactionModel.class);
+    }
     @PatchMapping("/{id}")
     public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
         Response <Transaction> response = new Response<>();
@@ -42,14 +43,16 @@ public class TransactionController {
     public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page, @PathVariable Long userId){
         Response response = new Response<>();
         CollectionModel<TransactionModel> collectionModel;
+        Slice<Transaction> pagedEntity;
         if(page.isPresent()){
-            Slice<Transaction> pagedEntity = transactionService.getTen(page.get(), userId);
-            collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
-            response.setData(collectionModel);
+            pagedEntity= transactionService.getTen(page.get(), userId);
         }
         else{
-            response.setData(transactionService.getUserTransactions(userId));
+            pagedEntity= transactionService.getTen(0, userId);
         }
+
+        collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+        response.setData(collectionModel);
         return ResponseEntity.ok(response);
     }
 

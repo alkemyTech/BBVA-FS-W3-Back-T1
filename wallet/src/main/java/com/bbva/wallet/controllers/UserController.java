@@ -2,10 +2,10 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.hateoas.GenericModelAssembler;
+import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.Response;
-import com.bbva.wallet.hateoas.UserModel;
-import com.bbva.wallet.hateoas.GenericModelAssembler;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +41,16 @@ public class UserController {
     public ResponseEntity<Response> getAll(@RequestParam(required = false) Optional<Integer> page) {
         Response response = new Response<>();
         CollectionModel<UserModel> collectionModel;
+        Slice<User> pagedEntity;
         if (page.isPresent()) {
-            Slice<User> pagedEntity = userService.getTen(page.get());
-            collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
-            response.setData(collectionModel);
+            pagedEntity = userService.getTen(page.get());
         }
         else {
-            response.setData(userService.getTen(0));
+            pagedEntity = userService.getTen(0);
         }
+        collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+        response.setData(collectionModel);
         return ResponseEntity.ok(response);
-
     }
 
     @PreAuthorize("#id == authentication.principal.id")

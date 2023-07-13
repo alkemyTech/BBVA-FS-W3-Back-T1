@@ -1,5 +1,6 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.TransactionDescriptionDto;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.Response;
@@ -18,14 +19,25 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.bbva.wallet.dtos.DepositDTO;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
+        Response <Transaction> response = new Response<>();
+        response.setData(transactionService.editTransaction(id, transactionDescriptionDto.getDescription()));
+        return ResponseEntity.ok(response);
+    }
 
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
     @GetMapping("/{userId}")
@@ -55,4 +67,10 @@ public class TransactionController {
         response.setData(transactionService.pay(paymentDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PostMapping("/deposit")
+    public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
+
+        return ResponseEntity.ok(transactionService.deposit(depositDTO));
+    }
+
 }

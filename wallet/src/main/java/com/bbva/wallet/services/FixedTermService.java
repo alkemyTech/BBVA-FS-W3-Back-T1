@@ -1,6 +1,7 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.dtos.CreateFixedTermDto;
+import com.bbva.wallet.dtos.OutSimulateFixedTermDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
@@ -55,4 +56,11 @@ public class FixedTermService {
 
         return newFixedTerm;
     }
+
+    public OutSimulateFixedTermDto simulateFixedTerm(CreateFixedTermDto dto){
+        FixedTermDeposit fix = makeFixedTerm(null,dto);
+        return new OutSimulateFixedTermDto(Timestamp.valueOf(LocalDateTime.now()),fix.getClosingDate(),
+                fix.getAmount(),fix.getInterest(),fix.getAmount()+fix.getInterest());
+    }
 }
+

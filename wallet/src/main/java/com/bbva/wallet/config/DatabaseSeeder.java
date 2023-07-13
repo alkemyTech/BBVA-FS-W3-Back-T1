@@ -76,7 +76,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Crear 10 usuarios administradores
             for (int i = 0; i < 10; i++) {
                 User admin = new User();
-                makeUser(admin,"admin" + i +"@example.com",roleUser);
+                makeUser(admin,"admin" + i +"@example.com",roleAdmin);
                 userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {admin.setId(oldUser.getId());});
                 userRepository.save(admin);
                 saveUser(admin);

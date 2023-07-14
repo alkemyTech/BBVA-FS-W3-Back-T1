@@ -9,7 +9,6 @@ import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +37,7 @@ public class AccountController {
         response.setData(accountService.createAccount(currenciesDto.getCurrency(),user));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Response> getUserAccounts(@PathVariable Long userId ){

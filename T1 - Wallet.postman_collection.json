@@ -207,13 +207,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/users/34",
+							"raw": "{{BASE_URL}}/users/33",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"users",
-								"34"
+								"33"
 							]
 						}
 					},
@@ -439,7 +439,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"amount\": 10000,\r\n    \"cantDias\": 30\r\n}",
+							"raw": "{\r\n    \"amount\": 1000,\r\n    \"cantDias\": 30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -576,6 +576,35 @@
 					"response": []
 				},
 				{
+					"name": "Get Transactions by User Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/user/16",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"user",
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Transactions",
 					"request": {
 						"auth": {
@@ -591,13 +620,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/7",
+							"raw": "{{BASE_URL}}/transactions/105",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
-								"7"
+								"105"
 							]
 						}
 					},
@@ -635,6 +664,85 @@
 							"path": [
 								"transactions",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currency\": \"ARS\",\r\n    \"amount\": 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/deposit",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/loan",
+			"item": [
+				{
+					"name": "Simulate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"months\":\"10\",\r\n    \"amount\":\"1000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/loan/simulate",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"loan",
+								"simulate"
 							]
 						}
 					},

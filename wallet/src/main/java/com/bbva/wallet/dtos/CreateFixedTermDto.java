@@ -15,5 +15,4 @@ public record CreateFixedTermDto(
         @NotNull
         @Min(value = 30, message = "El plazo fijo debe ser de al menos 30 días")
         Integer cantDias
-) {
-}
+) { }

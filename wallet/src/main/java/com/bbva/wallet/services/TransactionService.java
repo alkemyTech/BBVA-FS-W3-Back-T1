@@ -95,7 +95,7 @@ public class TransactionService {
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId() == authenticatedUser.getId())
+        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -136,13 +136,19 @@ public class TransactionService {
     }
 
     public ResponsePaymentDto pay(PaymentDto paymentDto) {
+        User authenticatedUser = ExtractUser.extract();
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
-        Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
+        Account paymentAccount = accountRepository.findById(paymentAccountId).filter(account -> account.getCurrency() == paymentCurrency)
+                .orElseThrow(() -> new ExceptionAccountNotFound());
 
         if (paymentAccount.getUserId().isSoftDelete()) {
             throw new ExceptionUserNotFound();
+        }
+
+        if(!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())){
+            throw new ExceptionAccountNotFound();
         }
 
         if (paymentAccount.getBalance() < amount) {

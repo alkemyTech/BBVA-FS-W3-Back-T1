@@ -138,8 +138,7 @@ public class TransactionService {
         return transactions;
     }
 
-    public ResponsePaymentDto pay(PaymentDto paymentDto) {
-        User authenticatedUser = ExtractUser.extract();
+    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();

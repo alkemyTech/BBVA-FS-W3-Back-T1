@@ -2,7 +2,9 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.TransactionDescriptionDto;
 import com.bbva.wallet.entities.Transaction;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.TransactionService;
+import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +66,8 @@ public class TransactionController {
     @PostMapping("/payment")
     public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
         Response<ResponsePaymentDto> response = new Response<>();
-        response.setData(transactionService.pay(paymentDto));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/deposit")

@@ -1,5 +1,6 @@
 package com.bbva.wallet.services;
 
+import com.bbva.wallet.dtos.DepositDTO;
 import com.bbva.wallet.dtos.PaymentDto;
 import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
@@ -7,17 +8,17 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.exceptions.ExceptionUserNotFound;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.repositories.UserRepository;
-import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
+import com.bbva.wallet.repositories.TransactionRepository;
+import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.utils.ExtractUser;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +33,32 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+
+    public Transaction getTransaction(Long id){
+
+        return transactionRepository.findById(id)
+                .orElseThrow(ExceptionTransactionNotExist::new);
+    }
+
+    public Transaction editTransaction(Long id, String description){
+
+        User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
+                .orElseThrow(ExceptionUserNotAuthenticated::new);
+
+        Transaction transactionToEdit = transactionRepository.findById(id)
+                .orElseThrow(ExceptionTransactionNotExist::new);
+
+        if(transactionToEdit.getAccount().getUserId().getId().equals(authenticatedUser.getId())){
+            transactionToEdit.setDescription(description);
+            return transactionRepository.save(transactionToEdit);
+        } else {
+            throw new ExceptionUserNotAuthenticated();
+        }
+    }
 
     public List<Transaction> getUserTransactions(Long userId){
         User userTransactions = userRepository.findById(userId).orElseThrow(()->new ExceptionUserNotFound());
@@ -54,8 +81,12 @@ public class TransactionService {
         transactions.addAll(arsTransactions);
         transactions.addAll(usdTransactions);
 
+        if(transactions.isEmpty()){
+            throw new ExceptionUserWithNoTransactions();
+        }
         return transactions;
     }
+
     public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
         User authenticatedUser = ExtractUser.extract();
         Long recipientAccountId = transactionDto.getId();
@@ -69,7 +100,7 @@ public class TransactionService {
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId() == authenticatedUser.getId())
+        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -108,20 +139,30 @@ public class TransactionService {
         transactions.add(transactionIncome);
         return transactions;
     }
-    public ResponsePaymentDto pay(PaymentDto paymentDto) {
+
+    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
-        Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
+        Account paymentAccount = accountRepository.findById(paymentAccountId)
+                .orElseThrow(() -> new ExceptionAccountNotFound());
 
-        if(paymentAccount.getUserId().isSoftDelete())
-        {throw new ExceptionUserNotFound();}
+        if (paymentAccount.getUserId().isSoftDelete()) {
+            throw new ExceptionUserNotFound();
+        }
 
-        if (paymentAccount.getBalance() < amount)
-        {throw new ExceptionInsufficientBalance();}
+        if(!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())){
+            throw new ExceptionAccountNotFound();
+        }
 
-        if(paymentCurrency != paymentAccount.getCurrency())
-        {throw new ExceptionMismatchCurrencies();}
+        if (paymentCurrency != paymentAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
+        }
+
+        if (paymentAccount.getBalance() < amount) {
+            throw new ExceptionInsufficientBalance();
+        }
+
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
@@ -138,5 +179,30 @@ public class TransactionService {
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-}
+    public Transaction deposit(DepositDTO deposit){
+        Currencies currency = deposit.currency();
+        Double amount = deposit.amount();
 
+        User authenticatedUser = userService.findById(ExtractUser.extract().getId())
+                .orElseThrow(() -> new ExceptionUserNotFound());
+
+        Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);
+
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+
+            Transaction transaction = Transaction.builder()
+                    .amount(amount)
+                    .type(TransactionType.DEPOSIT)
+                    .account(account)
+                    .transactionDate(LocalDateTime.now())
+                    .build();
+
+            transactionRepository.save(transaction);
+            accountService.updateDepositBalance(account, amount);
+
+            return transaction;
+
+        } else throw new ExceptionAccountCurrenyNotFound();
+    }
+}

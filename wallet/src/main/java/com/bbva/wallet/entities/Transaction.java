@@ -9,10 +9,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.bbva.wallet.enums.TransactionType;
 
-
-
-
-
 @Setter
 @Getter
 @AllArgsConstructor

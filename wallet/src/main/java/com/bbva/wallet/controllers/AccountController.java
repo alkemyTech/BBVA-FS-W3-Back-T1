@@ -1,7 +1,7 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.BalanceDto;
-import com.bbva.wallet.dtos.CurrenciesDto;
+import com.bbva.wallet.dtos.CreateAccountCurrencyRequestDTO;
+import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.dtos.UpdateAccountDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class AccountController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Response> saveAccount(@RequestBody CurrenciesDto currenciesDto){
+    public ResponseEntity<Response> saveAccount(@RequestBody CreateAccountCurrencyRequestDTO currenciesDto){
         Response<Account> response = new Response<>();
         User user = ExtractUser.extract();
         response.setData(accountService.createAccount(currenciesDto.getCurrency(),user));
@@ -46,7 +45,7 @@ public class AccountController {
 
     @GetMapping("/balance")
     public ResponseEntity<Response> getUserBalance(){
-        Response<BalanceDto> response = new Response<>();
+        Response<AccountBalanceResponseDTO> response = new Response<>();
         response.setData(accountService.getBalance());
         return ResponseEntity.ok(response);
     }

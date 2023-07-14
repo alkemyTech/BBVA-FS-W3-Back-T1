@@ -3,7 +3,6 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
@@ -40,7 +39,7 @@ import java.util.List;
         }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
+    public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionPatchDescriptionRequestDTO transactionDescriptionDto){
         Response <Transaction> response = new Response<>();
         response.setData(transactionService.editTransaction(id, transactionDescriptionDto.getDescription()));
         return ResponseEntity.ok(response);
@@ -76,7 +75,7 @@ import java.util.List;
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/deposit")
-    public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
+    public ResponseEntity<Transaction> deposit(@RequestBody @Valid TransactionDepositRequestDTO depositDTO){
 
         return ResponseEntity.ok(transactionService.deposit(depositDTO));
     }

@@ -1,13 +1,11 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.BalanceDto;
-import com.bbva.wallet.dtos.CurrenciesDto;
+import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionAccountNotFound;
 import com.bbva.wallet.exceptions.ExceptionUserAccountsNotFound;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,7 +65,7 @@ public class AccountService {
        account.setTransactionLimit(newTransactionLimit);
        return accountRepository.save(account);
     }
-    public BalanceDto getBalance(){
+    public AccountBalanceResponseDTO getBalance(){
         User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
                 .orElseThrow(ExceptionUserNotFound::new);
 
@@ -97,7 +94,7 @@ public class AccountService {
         else
             fixedTermsAccount = List.of();
 
-        BalanceDto balanceResponse = new BalanceDto();
+        AccountBalanceResponseDTO balanceResponse = new AccountBalanceResponseDTO();
                 balanceResponse.setAccountArs(accountInArs.orElse(null));
                 balanceResponse.setAccountUsd(accountInUsd.orElse(null));
                 balanceResponse.setHistoryArs(historyTransactionsArs);

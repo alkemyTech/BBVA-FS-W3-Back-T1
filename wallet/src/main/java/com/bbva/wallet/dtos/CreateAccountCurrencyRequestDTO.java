@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CurrenciesDto {
+public class CreateAccountCurrencyRequestDTO {
     private Currencies currency;
 }

@@ -1,6 +1,6 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.DepositDTO;
+import com.bbva.wallet.dtos.TransactionDepositRequestDTO;
 import com.bbva.wallet.dtos.PaymentDto;
 import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
@@ -179,7 +179,7 @@ public class TransactionService {
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-    public Transaction deposit(DepositDTO deposit){
+    public Transaction deposit(TransactionDepositRequestDTO deposit){
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
 
@@ -196,6 +196,7 @@ public class TransactionService {
                     .type(TransactionType.DEPOSIT)
                     .account(account)
                     .transactionDate(LocalDateTime.now())
+                    .description(deposit.description())
                     .build();
 
             transactionRepository.save(transaction);

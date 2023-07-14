@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class LoanRequestBodyDto {
+public class LoanSimulateRequestDTO {
     private Integer months;
     private Double amount;
 }

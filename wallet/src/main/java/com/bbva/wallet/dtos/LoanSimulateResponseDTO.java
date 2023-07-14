@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class LoanDto {
+public class LoanSimulateResponseDTO {
     private double monthlyPayment;
     private double totalAmountDue;
     private double monthlyInterestRate;

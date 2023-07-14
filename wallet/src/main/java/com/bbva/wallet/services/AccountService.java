@@ -6,7 +6,6 @@ import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionAccountNotFound;
 import com.bbva.wallet.exceptions.ExceptionUserAccountsNotFound;
@@ -18,7 +17,6 @@ import com.bbva.wallet.utils.CurrencyLimit;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +67,7 @@ public class AccountService {
        account.setTransactionLimit(newTransactionLimit);
        return accountRepository.save(account);
     }
-    public BalanceDto getBalance(){
+    public AccountBalanceResponseDTO getBalance(){
         User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
                 .orElseThrow(ExceptionUserNotFound::new);
 

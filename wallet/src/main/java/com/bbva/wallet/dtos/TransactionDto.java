@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class TransactionDto {
-    @Schema(description = "ID de la cuenta", example = "30")
+    @Schema(description = "ID de la cuenta destino", example = "31")
     private Long id;
 
     @Schema(description = "Monto a enviar", example = "2000")

@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class PaymentDto {
-    @Schema(description = "ID de la cuenta que realiza el pago", example = "20")
+    @Schema(description = "ID de la cuenta que realiza el pago", example = "37")
     private Long id;
 
     @Schema(description = "Monto a pagar", example = "200")

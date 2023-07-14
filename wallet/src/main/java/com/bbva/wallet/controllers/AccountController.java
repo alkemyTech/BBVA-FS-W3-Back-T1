@@ -2,7 +2,7 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.CreateAccountCurrencyRequestDTO;
 import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
-import com.bbva.wallet.dtos.UpdateAccountDto;
+import com.bbva.wallet.dtos.AccountUpdateRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.AccountService;
@@ -52,7 +52,7 @@ public class AccountController {
 
 
     @RequestMapping(value = "/{id}",method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateAccount(@PathVariable Long id, Authentication authentication, @RequestBody UpdateAccountDto dto){
+    public ResponseEntity<Response> updateAccount(@PathVariable Long id, Authentication authentication, @RequestBody AccountUpdateRequestDTO dto){
         User user= (User) authentication.getPrincipal();
         Response<Account> response = new Response<>();
         response.setData(accountService.updateAccount(id,user,dto.transactionLimit()));

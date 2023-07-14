@@ -54,22 +54,22 @@ import java.util.List;
     }
 
     @PostMapping("/sendArs")
-    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
         response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/sendUsd")
-    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
         response.setData(transactionService.sendMoney(transactionDto,Currencies.USD));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/payment")
-    public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
-        Response<ResponsePaymentDto> response = new Response<>();
+    public ResponseEntity<Response> pay(@Valid @RequestBody TransactionPaymentRequestDTO paymentDto){
+        Response<TransactionPaymentResponseDTO> response = new Response<>();
         User authenticatedUser = ExtractUser.extract();
         response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

@@ -1,6 +1,5 @@
 package com.bbva.wallet.dtos;
 
-import com.bbva.wallet.enums.Currencies;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
@@ -9,13 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDto {
-
+public class TransactionSendMoneyDTO {
     private Long id;
-
     @Positive
     private Double amount;
-
-    private Currencies currency;
 
 }

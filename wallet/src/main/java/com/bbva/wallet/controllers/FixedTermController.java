@@ -1,6 +1,6 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.FixedTermCreateRequestDto;
+import com.bbva.wallet.dtos.FixedTermCreateRequestDTO;
 import com.bbva.wallet.dtos.FixedTermSimulateResponseDTO;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
@@ -23,7 +23,7 @@ public class FixedTermController {
     private final FixedTermService fixedTermService;
 
     @PostMapping
-    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid FixedTermCreateRequestDto dto, Authentication authentication){
+    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid FixedTermCreateRequestDTO dto, Authentication authentication){
         User user= (User) authentication.getPrincipal();
         Response<FixedTermDeposit> response = new Response<>();
         response.setData(fixedTermService.createFixedTermDeposit(dto,user));
@@ -31,7 +31,7 @@ public class FixedTermController {
     }
 
     @PostMapping("/simulate")
-    public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid FixedTermCreateRequestDto dto){
+    public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid FixedTermCreateRequestDTO dto){
         Response<FixedTermSimulateResponseDTO> response = new Response<>();
         response.setData(fixedTermService.simulateFixedTerm(dto));
         return ResponseEntity.ok(response);

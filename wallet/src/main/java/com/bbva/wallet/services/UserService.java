@@ -1,11 +1,9 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.UpdateUserDto;
+import com.bbva.wallet.dtos.UserUpdateRequestDTO;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.repositories.UserRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,7 +66,7 @@ public class UserService {
     public User getUser(Long id){
         return userRepository.findById(id).orElseThrow(ExceptionUserNotFound::new);
     }
-    public User updateUser(UpdateUserDto userDto,User user){
+    public User updateUser(UserUpdateRequestDTO userDto, User user){
         user.setFirstName(userDto.nombre());
         user.setLastName(userDto.apellido());
         if (userDto.contraseña().isPresent())

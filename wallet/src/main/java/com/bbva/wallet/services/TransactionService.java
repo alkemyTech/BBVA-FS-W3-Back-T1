@@ -1,9 +1,9 @@
 package com.bbva.wallet.services;
 
 import com.bbva.wallet.dtos.TransactionDepositRequestDTO;
-import com.bbva.wallet.dtos.PaymentDto;
-import com.bbva.wallet.dtos.ResponsePaymentDto;
-import com.bbva.wallet.dtos.TransactionDto;
+import com.bbva.wallet.dtos.TransactionPaymentRequestDTO;
+import com.bbva.wallet.dtos.TransactionPaymentResponseDTO;
+import com.bbva.wallet.dtos.TransactionSendMoneyDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
@@ -87,7 +87,7 @@ public class TransactionService {
         return transactions;
     }
 
-    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
+    public List<Transaction> sendMoney(TransactionSendMoneyDTO transactionDto, Currencies currency) {
         User authenticatedUser = ExtractUser.extract();
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
@@ -140,7 +140,7 @@ public class TransactionService {
         return transactions;
     }
 
-    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
+    public TransactionPaymentResponseDTO pay(TransactionPaymentRequestDTO paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
@@ -174,7 +174,7 @@ public class TransactionService {
         Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
         paymentAccount.setBalance(newBalancePaymentAccount);
 
-        ResponsePaymentDto responsePayment = new ResponsePaymentDto();
+        TransactionPaymentResponseDTO responsePayment = new TransactionPaymentResponseDTO();
         responsePayment.setUpdatedAccount(accountRepository.save(paymentAccount));
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;

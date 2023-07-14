@@ -1,6 +1,6 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.FixedTermCreateRequestDto;
+import com.bbva.wallet.dtos.FixedTermCreateRequestDTO;
 import com.bbva.wallet.dtos.FixedTermSimulateResponseDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
@@ -28,7 +28,7 @@ public class FixedTermService {
 
     private static final double INTEREST_PER_DAY = 0.002;
 
-    public FixedTermDeposit createFixedTermDeposit(FixedTermCreateRequestDto dto, User user){
+    public FixedTermDeposit createFixedTermDeposit(FixedTermCreateRequestDTO dto, User user){
         //verificar que un usuario tenga cuentas asociadas con la currency
         Predicate<Account> compareCurrencies = account -> account.getCurrency().equals(Currencies.ARS);
         Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrenyNotFound::new);
@@ -43,7 +43,7 @@ public class FixedTermService {
         return savedFixedTerm;
     }
 
-    private FixedTermDeposit makeFixedTerm(Account account, FixedTermCreateRequestDto dto) {
+    private FixedTermDeposit makeFixedTerm(Account account, FixedTermCreateRequestDTO dto) {
 
         Timestamp closingDate = Timestamp.valueOf(LocalDateTime.now().plusDays(dto.cantDias()));
         Double interest = dto.amount() * INTEREST_PER_DAY * dto.cantDias();
@@ -57,7 +57,7 @@ public class FixedTermService {
         return newFixedTerm;
     }
 
-    public FixedTermSimulateResponseDTO simulateFixedTerm(FixedTermCreateRequestDto dto){
+    public FixedTermSimulateResponseDTO simulateFixedTerm(FixedTermCreateRequestDTO dto){
         FixedTermDeposit fix = makeFixedTerm(null,dto);
         return new FixedTermSimulateResponseDTO(Timestamp.valueOf(LocalDateTime.now()),fix.getClosingDate(),
                 fix.getAmount(),fix.getInterest(),fix.getAmount()+fix.getInterest());

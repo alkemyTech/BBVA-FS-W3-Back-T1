@@ -1,14 +1,11 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.CreateFixedTermDto;
-import com.bbva.wallet.dtos.OutSimulateFixedTermDto;
-import com.bbva.wallet.entities.Account;
+import com.bbva.wallet.dtos.FixedTermCreateRequestDto;
+import com.bbva.wallet.dtos.FixedTermSimulateResponseDTO;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.services.FixedTermService;
 import com.bbva.wallet.utils.Response;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +23,7 @@ public class FixedTermController {
     private final FixedTermService fixedTermService;
 
     @PostMapping
-    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid CreateFixedTermDto dto, Authentication authentication){
+    public ResponseEntity<Response> createFixedTerm(@RequestBody @Valid FixedTermCreateRequestDto dto, Authentication authentication){
         User user= (User) authentication.getPrincipal();
         Response<FixedTermDeposit> response = new Response<>();
         response.setData(fixedTermService.createFixedTermDeposit(dto,user));
@@ -34,8 +31,8 @@ public class FixedTermController {
     }
 
     @PostMapping("/simulate")
-    public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid CreateFixedTermDto dto){
-        Response<OutSimulateFixedTermDto> response = new Response<>();
+    public ResponseEntity<Response> simulateFixedTerm(@RequestBody @Valid FixedTermCreateRequestDto dto){
+        Response<FixedTermSimulateResponseDTO> response = new Response<>();
         response.setData(fixedTermService.simulateFixedTerm(dto));
         return ResponseEntity.ok(response);
     }

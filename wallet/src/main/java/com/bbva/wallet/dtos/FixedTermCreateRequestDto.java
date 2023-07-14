@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record CreateFixedTermDto(
+public record FixedTermCreateRequestDto(
         @Schema(description = "Monto de dinero a colocar en el plazo fijo", example = "1000.0")
         @Positive
         @NotNull

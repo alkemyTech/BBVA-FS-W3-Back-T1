@@ -1,5 +1,6 @@
 package com.bbva.wallet.entities;
 
+import com.bbva.wallet.enums.Currencies;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import java.util.Collection;
 import java.util.List;
-
+import java.util.Collection;
+import java.util.Optional;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,7 +48,6 @@ public class User implements UserDetails,Serializable {
     @Column(nullable = false)
     private String password;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accountList;
@@ -68,7 +68,6 @@ public class User implements UserDetails,Serializable {
     @JsonIgnore
     @Column(name = "update_date",nullable = false)
     private LocalDateTime updateDate;
-
 
     @PrePersist
     protected void onCreate() {
@@ -121,4 +120,11 @@ public class User implements UserDetails,Serializable {
     public void deleteUser(){
         this.softDelete = true;
     }
+
+    public Optional<Account> hasThisCurrencyAccount(Currencies currency) {
+        return this.accountList.stream()
+                .filter(acc-> acc.getCurrency().equals(currency))
+                .findFirst();
+    }
+
 }

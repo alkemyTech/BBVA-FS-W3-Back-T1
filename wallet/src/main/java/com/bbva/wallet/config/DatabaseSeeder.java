@@ -23,9 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (loadDataBase) {
+        if (loadDataBase){
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
 
@@ -59,12 +56,12 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             //admin sin cuentas
             User adminSinCuentas = new User();
-            makeUser(adminSinCuentas, "adminSinCuenta@example.com", roleAdmin);
+            makeUser(adminSinCuentas,"adminSinCuenta@example.com",roleAdmin);
             adminSinCuentas = saveUser(adminSinCuentas);
 
             //admin solo con cuenta en pesos
             User adminCuentaEnPesos = new User();
-            makeUser(adminCuentaEnPesos, "adminCuentaEnPesos@example.com", roleAdmin);
+            makeUser(adminCuentaEnPesos,"adminCuentaEnPesos@example.com",roleAdmin);
             adminCuentaEnPesos = saveUser(adminCuentaEnPesos);
             Account savedAccount = accountService.createAccount(Currencies.ARS, adminCuentaEnPesos);
             DepositDTO depositDTO = new DepositDTO(Currencies.ARS,20000.0,"");
@@ -74,7 +71,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             //admin solo con cuenta en dolares
             User adminCuentaEnDolares = new User();
-            makeUser(adminCuentaEnDolares, "adminCuentaEnDolares@example.com", roleAdmin);
+            makeUser(adminCuentaEnDolares,"adminCuentaEnDolares@example.com",roleAdmin);
             adminCuentaEnDolares = saveUser(adminCuentaEnDolares);
             savedAccount = accountService.createAccount(Currencies.USD, adminCuentaEnDolares);
             depositDTO = new DepositDTO(Currencies.USD,500.0,"");
@@ -96,9 +93,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             //admin con cuenta en dolares con balance en 10.000$
             User adminDolares10mil = new User();
-            makeUser(adminDolares10mil, "adminDolares10mil@example.com", roleAdmin);
-            adminDolares10mil = saveUser(adminDolares10mil);
-            savedAccount = accountService.createAccount(Currencies.USD, adminDolares10mil);
+            makeUser(adminDolares10mil,"adminDolares10mil@example.com",roleAdmin);
+            adminDolares10mil= saveUser(adminDolares10mil);
+            savedAccount= accountService.createAccount(Currencies.USD,adminDolares10mil);
             savedAccount.setBalance(10000.0);
             accountRepository.save(savedAccount);
             paymentDto = new PaymentDto(savedAccount.getId(), 300.0,Currencies.USD);
@@ -129,7 +126,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userPesosBalance100mil = new User();
             makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
             userPesosBalance100mil = saveUser(userPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.ARS, userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 
@@ -145,10 +142,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Crear 5 usuarios administradores
             for (int i = 0; i < 5; i++) {
                 User admin = new User();
-                makeUser(admin, "admin" + i + "@example.com", roleAdmin);
-                userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {
-                    admin.setId(oldUser.getId());
-                });
+                makeUser(admin,"admin" + i +"@example.com",roleAdmin);
+                userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {admin.setId(oldUser.getId());});
                 userRepository.save(admin);
                 User savedadmin = saveUser(admin);
                 accountService.createAccount(Currencies.USD, savedadmin);
@@ -158,35 +153,16 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Crear 5 usuarios regulares
             for (int i = 0; i < 5; i++) {
                 User regularUser = new User();
-                makeUser(regularUser, "user" + i + "@example.com", roleUser);
+                makeUser(regularUser,"user" + i + "@example.com",roleUser);
                 User savedRegularUser = saveUser(regularUser);
                 accountService.createAccount(Currencies.USD, savedRegularUser);
                 accountService.createAccount(Currencies.ARS, savedRegularUser);
             }
-
-            Random random = new Random();
-            List<Account> accounts = accountRepository.findAll();
-            List<TransactionType> transactionTypes = Arrays.asList(TransactionType.values());
-
-            for (int i = 0; i < 20; i++) {
-                int randomIndexListAccounts = random.nextInt(accounts.size());
-                Account randomElementListAccount = accounts.get(randomIndexListAccounts);
-                int randomIndexListTransactionType = random.nextInt(transactionTypes.size());
-                TransactionType randomElementListTransactionType = transactionTypes.get(randomIndexListTransactionType);
-
-                Transaction transaction = new Transaction();
-                transaction.setType(randomElementListTransactionType);
-                transaction.setAmount(Math.random() * 300000 + 1);
-                transaction.setAccount(randomElementListAccount);
-                transaction.setTransactionDate(LocalDateTime.now());
-                transactionRepository.save(transaction);
-            }
         }
-
     }
 
-    private void makeUser(User user, String email, Role role) {
-        user.setFirstName("FistName");
+    private void makeUser(User user,String email,Role role){
+        user.setFirstName("FistName" );
         user.setLastName("LastName");
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode("123"));
@@ -195,20 +171,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         user.setUpdateDate(LocalDateTime.now());
         user.setCreationDate(LocalDateTime.now());
     }
-
-    private User saveUser(User user) {
-        userRepository.findByEmail(user.getEmail()).ifPresent(oldUser -> {
-            user.setId(oldUser.getId());
-        });
+    private User saveUser(User user){
+        userRepository.findByEmail(user.getEmail()).ifPresent(oldUser -> {user.setId(oldUser.getId());});
         return userRepository.save(user);
     }
-
 }
-
-
-
-
-
-
-
-

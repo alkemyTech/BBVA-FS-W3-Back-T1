@@ -1,28 +1,26 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.entities.Account;
-import com.bbva.wallet.entities.Transaction;
-import com.bbva.wallet.entities.User;
-import com.bbva.wallet.exceptions.ExceptionTransactionNotExist;
-import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
-import com.bbva.wallet.exceptions.ExceptionUserNotFound;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.repositories.UserRepository;
-import com.bbva.wallet.utils.ExtractUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.bbva.wallet.dtos.DepositDTO;
 import com.bbva.wallet.dtos.PaymentDto;
 import com.bbva.wallet.dtos.ResponsePaymentDto;
 import com.bbva.wallet.dtos.TransactionDto;
+import com.bbva.wallet.entities.Account;
+import com.bbva.wallet.entities.Transaction;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.exceptions.*;
 import com.bbva.wallet.repositories.AccountRepository;
+import com.bbva.wallet.repositories.TransactionRepository;
+import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.utils.ExtractUser;
 import jakarta.transaction.Transactional;
-import com.bbva.wallet.dtos.DepositDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +39,12 @@ public class TransactionService {
     private UserService userService;
     @Autowired
     private AccountService accountService;
+
+    public Transaction getTransaction(Long id){
+
+        return transactionRepository.findById(id)
+                .orElseThrow(ExceptionTransactionNotExist::new);
+    }
 
     public Transaction editTransaction(Long id, String description){
 
@@ -79,6 +83,9 @@ public class TransactionService {
         transactions.addAll(arsTransactions);
         transactions.addAll(usdTransactions);
 
+        if(transactions.isEmpty()){
+            throw new ExceptionUserWithNoTransactions();
+        }
         return transactions;
     }
 
@@ -136,23 +143,29 @@ public class TransactionService {
         return transactions;
     }
 
-    public ResponsePaymentDto pay(PaymentDto paymentDto) {
+    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
-        Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
+        Account paymentAccount = accountRepository.findById(paymentAccountId)
+                .orElseThrow(() -> new ExceptionAccountNotFound());
 
         if (paymentAccount.getUserId().isSoftDelete()) {
             throw new ExceptionUserNotFound();
+        }
+
+        if(!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())){
+            throw new ExceptionAccountNotFound();
+        }
+
+        if (paymentCurrency != paymentAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
         }
 
         if (paymentAccount.getBalance() < amount) {
             throw new ExceptionInsufficientBalance();
         }
 
-        if (paymentCurrency != paymentAccount.getCurrency()) {
-            throw new ExceptionMismatchCurrencies();
-        }
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
@@ -189,11 +202,16 @@ public class TransactionService {
                     .build();
 
             transactionRepository.save(transaction);
-            accountService.updateDepositBalance(account, amount);
 
+            accountService.updateDepositBalance(account, amount);
             return transaction;
 
-        } else throw new ExceptionAccountCurrenyNotFound();
+        } else throw new ExceptionAccountCurrencyNotFound();
+    }
 
+    public Slice<Transaction> getTen(Integer page, Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
+        Pageable pageable = PageRequest.of(page, 10);
+        return transactionRepository.findByAccount_UserId_Id(id, pageable);
     }
 }

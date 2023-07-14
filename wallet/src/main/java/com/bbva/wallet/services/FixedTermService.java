@@ -6,7 +6,7 @@ import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.exceptions.ExceptionAccountCurrenyNotFound;
+import com.bbva.wallet.exceptions.ExceptionAccountCurrencyNotFound;
 import com.bbva.wallet.exceptions.ExceptionInsufficientBalance;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.FixedTermDepositsRepository;
@@ -31,7 +31,7 @@ public class FixedTermService {
     public FixedTermDeposit createFixedTermDeposit(FixedTermCreateRequestDTO dto, User user){
         //verificar que un usuario tenga cuentas asociadas con la currency
         Predicate<Account> compareCurrencies = account -> account.getCurrency().equals(Currencies.ARS);
-        Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrenyNotFound::new);
+        Account account = user.getAccountList().stream().filter(compareCurrencies).findFirst().orElseThrow(ExceptionAccountCurrencyNotFound::new);
         if (account.getBalance() < dto.amount()){
             throw new ExceptionInsufficientBalance();
         }

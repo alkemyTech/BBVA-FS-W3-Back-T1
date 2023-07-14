@@ -6,6 +6,7 @@ import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionAccountNotFound;
 import com.bbva.wallet.exceptions.ExceptionUserAccountsNotFound;
@@ -16,6 +17,9 @@ import com.bbva.wallet.repositories.UserRepository;
 import com.bbva.wallet.utils.CurrencyLimit;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,7 +69,7 @@ public class AccountService {
        account.setTransactionLimit(newTransactionLimit);
        return accountRepository.save(account);
     }
-    public AccountBalanceResponseDTO getBalance(){
+    public BalanceDto getBalance(){
         User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
                 .orElseThrow(ExceptionUserNotFound::new);
 
@@ -102,6 +106,15 @@ public class AccountService {
                 balanceResponse.setFixedTerms(fixedTermsAccount);
 
         return balanceResponse;
+    }
+
+    public List<Account> getAll() {
+        return accountRepository.findAll();
+    }
+
+    public Slice<Account> getTen(Integer page) {
+        return accountRepository.findAll(
+                PageRequest.of(page, 10));
     }
 
     public void updateDepositBalance(Account account, Double amount) {

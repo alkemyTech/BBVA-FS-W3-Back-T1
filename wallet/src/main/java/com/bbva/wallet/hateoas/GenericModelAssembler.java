@@ -33,10 +33,10 @@ public class GenericModelAssembler<T, M extends RepresentationModel<M>> extends 
     @Override
     public CollectionModel<M> toCollectionModel(Iterable<? extends T> entities) {
 
-        List<M> userModels = new ArrayList<>();
-        entities.forEach(entity -> userModels.add(toModel(entity)));
+        List<M> entityModels = new ArrayList<>();
+        entities.forEach(entity -> entityModels.add(toModel(entity)));
 
-        CollectionModel<M> collectionModel = CollectionModel.of(userModels);
+        CollectionModel<M> collectionModel = CollectionModel.of(entityModels);
 
         if (entities instanceof Slice) {
             Slice<T> page = (Slice<T>)  entities;

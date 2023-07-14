@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
         }),
         @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
 })
-@Tag(name = "Accounts")
+@Tag(name = "Loan")
 @RestController
 @RequestMapping("/loan")
 public class LoanController {

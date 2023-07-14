@@ -4,6 +4,6 @@ import com.bbva.wallet.enums.ErrorCodes;
 
 public class ExceptionMonthNotExist extends CustomException{
     public ExceptionMonthNotExist(){
-        super("Debe ingresar una cantidad en meses válida (1-12)", ErrorCodes.CANTIDAD_MESES_INVALIDA);
+        super("No puede ingresar un valor en meses negativo ni cero", ErrorCodes.CANTIDAD_MESES_INVALIDA);
     }
 }

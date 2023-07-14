@@ -2,9 +2,11 @@ package com.bbva.wallet.config;
 
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
+import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
+import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.repositories.AccountRepository;
 import com.bbva.wallet.repositories.RoleRepository;
 import com.bbva.wallet.repositories.TransactionRepository;
@@ -18,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -31,14 +36,14 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final AccountService accountService;
 
     private final TransactionRepository transactionRepository;
-    private final TransactionService transactionService;
+
 
     @Value("${develop.seeder}")
     private Boolean loadDataBase;
 
     @Override
     public void run(String... args) throws Exception {
-        if (loadDataBase){
+        if (loadDataBase) {
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
 
@@ -50,35 +55,35 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             //admin sin cuentas
             User adminSinCuentas = new User();
-            makeUser(adminSinCuentas,"adminSinCuenta@example.com",roleAdmin);
+            makeUser(adminSinCuentas, "adminSinCuenta@example.com", roleAdmin);
             adminSinCuentas = saveUser(adminSinCuentas);
 
             //admin solo con cuenta en pesos
             User adminCuentaEnPesos = new User();
-            makeUser(adminCuentaEnPesos,"adminCuentaEnPesos@example.com",roleAdmin);
+            makeUser(adminCuentaEnPesos, "adminCuentaEnPesos@example.com", roleAdmin);
             adminCuentaEnPesos = saveUser(adminCuentaEnPesos);
-            Account savedAccount= accountService.createAccount(Currencies.ARS,adminCuentaEnPesos);
+            Account savedAccount = accountService.createAccount(Currencies.ARS, adminCuentaEnPesos);
 
 
             //admin solo con cuenta en dolares
             User adminCuentaEnDolares = new User();
-            makeUser(adminCuentaEnDolares,"adminCuentaEnDolares@example.com",roleAdmin);
+            makeUser(adminCuentaEnDolares, "adminCuentaEnDolares@example.com", roleAdmin);
             adminCuentaEnDolares = saveUser(adminCuentaEnDolares);
-            savedAccount= accountService.createAccount(Currencies.USD,adminCuentaEnDolares);
+            savedAccount = accountService.createAccount(Currencies.USD, adminCuentaEnDolares);
 
             //admin con cuenta en pesos con balance en 100.000$
             User adminPesosBalance100mil = new User();
-            makeUser(adminPesosBalance100mil,"adminPesosBalance100mil@example.com",roleAdmin);
-            adminPesosBalance100mil= saveUser(adminPesosBalance100mil);
-            savedAccount= accountService.createAccount(Currencies.USD,adminPesosBalance100mil);
+            makeUser(adminPesosBalance100mil, "adminPesosBalance100mil@example.com", roleAdmin);
+            adminPesosBalance100mil = saveUser(adminPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.USD, adminPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 
             //admin con cuenta en dolares con balance en 10.000$
             User adminDolares10mil = new User();
-            makeUser(adminDolares10mil,"adminDolares10mil@example.com",roleAdmin);
-            adminDolares10mil= saveUser(adminDolares10mil);
-            savedAccount= accountService.createAccount(Currencies.USD,adminDolares10mil);
+            makeUser(adminDolares10mil, "adminDolares10mil@example.com", roleAdmin);
+            adminDolares10mil = saveUser(adminDolares10mil);
+            savedAccount = accountService.createAccount(Currencies.USD, adminDolares10mil);
             savedAccount.setBalance(10000.0);
             accountRepository.save(savedAccount);
 
@@ -119,8 +124,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Crear 5 usuarios administradores
             for (int i = 0; i < 5; i++) {
                 User admin = new User();
-                makeUser(admin,"admin" + i +"@example.com",roleAdmin);
-                userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {admin.setId(oldUser.getId());});
+                makeUser(admin, "admin" + i + "@example.com", roleAdmin);
+                userRepository.findByEmail(admin.getEmail()).ifPresent(oldUser -> {
+                    admin.setId(oldUser.getId());
+                });
                 userRepository.save(admin);
                 User savedadmin = saveUser(admin);
                 accountService.createAccount(Currencies.USD, savedadmin);
@@ -130,21 +137,35 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Crear 5 usuarios regulares
             for (int i = 0; i < 5; i++) {
                 User regularUser = new User();
-                makeUser(regularUser,"user" + i + "@example.com",roleUser);
+                makeUser(regularUser, "user" + i + "@example.com", roleUser);
                 User savedRegularUser = saveUser(regularUser);
                 accountService.createAccount(Currencies.USD, savedRegularUser);
                 accountService.createAccount(Currencies.ARS, savedRegularUser);
             }
+
+            Random random = new Random();
+            List<Account> accounts = accountRepository.findAll();
+            List<TransactionType> transactionTypes = Arrays.asList(TransactionType.values());
+
+            for (int i = 0; i < 20; i++) {
+                int randomIndexListAccounts = random.nextInt(accounts.size());
+                Account randomElementListAccount = accounts.get(randomIndexListAccounts);
+                int randomIndexListTransactionType = random.nextInt(transactionTypes.size());
+                TransactionType randomElementListTransactionType = transactionTypes.get(randomIndexListTransactionType);
+
+                Transaction transaction = new Transaction();
+                transaction.setType(randomElementListTransactionType);
+                transaction.setAmount(Math.random() * 300000 + 1);
+                transaction.setAccount(randomElementListAccount);
+                transaction.setTransactionDate(LocalDateTime.now());
+                transactionRepository.save(transaction);
+            }
         }
-
-
-
-
 
     }
 
-    private void makeUser(User user,String email,Role role){
-        user.setFirstName("FistName" );
+    private void makeUser(User user, String email, Role role) {
+        user.setFirstName("FistName");
         user.setLastName("LastName");
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode("123"));
@@ -153,8 +174,20 @@ public class DatabaseSeeder implements CommandLineRunner {
         user.setUpdateDate(LocalDateTime.now());
         user.setCreationDate(LocalDateTime.now());
     }
-    private User saveUser(User user){
-        userRepository.findByEmail(user.getEmail()).ifPresent(oldUser -> {user.setId(oldUser.getId());});
+
+    private User saveUser(User user) {
+        userRepository.findByEmail(user.getEmail()).ifPresent(oldUser -> {
+            user.setId(oldUser.getId());
+        });
         return userRepository.save(user);
     }
+
 }
+
+
+
+
+
+
+
+

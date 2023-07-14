@@ -3,6 +3,10 @@ package com.bbva.wallet.services;
 import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.bbva.wallet.entities.Account;
@@ -59,9 +63,7 @@ public class UserService {
         return userRepository.findSoftDeletedUser(email);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAllActive();
-    }
+    public List<User> getAll() { return userRepository.findAllActive(); }
 
     public User getUser(Long id){
         return userRepository.findById(id).orElseThrow(ExceptionUserNotFound::new);
@@ -72,6 +74,16 @@ public class UserService {
         if (userDto.contraseña().isPresent())
             user.setPassword(passwordEncoder.encode(userDto.contraseña().get()));
         return userRepository.save(user);
+    }
+
+
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+    }
+
+    public Slice<User> getTen(Integer page) {
+        return userRepository.findSliceByPage(
+                PageRequest.of(page, 10));
     }
 
 }

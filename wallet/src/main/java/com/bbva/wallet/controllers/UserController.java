@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
@@ -54,10 +53,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
     @PreAuthorize("#id == authentication.principal.id")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id,@RequestBody @Valid UpdateUserDto dto, Authentication authentication){
+    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserDto dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.updateUser(dto,user));
@@ -71,4 +69,6 @@ public class UserController {
         response.setData(userService.getUser(user.getId()));
         return ResponseEntity.ok(response);
     }
+
+
 }

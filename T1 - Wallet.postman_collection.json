@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
+		"_postman_id": "0299a2b9-8acd-4ec9-ad8f-380da7528cc1",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27190580"
+		"_exporter_id": "27886107"
 	},
 	"item": [
 		{
@@ -635,6 +635,48 @@
 							"path": [
 								"transactions",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/loan",
+			"item": [
+				{
+					"name": "Simulate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"months\":\"10\",\r\n    \"amount\":\"1000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/loan/simulate",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"loan",
+								"simulate"
 							]
 						}
 					},

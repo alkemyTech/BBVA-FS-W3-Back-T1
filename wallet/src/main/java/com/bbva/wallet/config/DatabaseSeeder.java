@@ -1,5 +1,8 @@
 package com.bbva.wallet.config;
 
+import com.bbva.wallet.dtos.DepositDTO;
+import com.bbva.wallet.dtos.PaymentDto;
+import com.bbva.wallet.dtos.TransactionDto;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.Transaction;
@@ -36,6 +39,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final AccountService accountService;
 
     private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
 
 
     @Value("${develop.seeder}")
@@ -63,6 +67,9 @@ public class DatabaseSeeder implements CommandLineRunner {
             makeUser(adminCuentaEnPesos, "adminCuentaEnPesos@example.com", roleAdmin);
             adminCuentaEnPesos = saveUser(adminCuentaEnPesos);
             Account savedAccount = accountService.createAccount(Currencies.ARS, adminCuentaEnPesos);
+            DepositDTO depositDTO = new DepositDTO(Currencies.ARS,20000.0,"");
+            Transaction depositTransaction =transactionService.deposit(depositDTO);
+            transactionRepository.save(depositTransaction);
 
 
             //admin solo con cuenta en dolares
@@ -70,14 +77,22 @@ public class DatabaseSeeder implements CommandLineRunner {
             makeUser(adminCuentaEnDolares, "adminCuentaEnDolares@example.com", roleAdmin);
             adminCuentaEnDolares = saveUser(adminCuentaEnDolares);
             savedAccount = accountService.createAccount(Currencies.USD, adminCuentaEnDolares);
+            depositDTO = new DepositDTO(Currencies.USD,500.0,"");
+            depositTransaction =transactionService.deposit(depositDTO);
+            transactionRepository.save(depositTransaction);
+
 
             //admin con cuenta en pesos con balance en 100.000$
             User adminPesosBalance100mil = new User();
             makeUser(adminPesosBalance100mil, "adminPesosBalance100mil@example.com", roleAdmin);
             adminPesosBalance100mil = saveUser(adminPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.USD, adminPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.ARS, adminPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
+            PaymentDto paymentDto = new PaymentDto(savedAccount.getId(), 15000.0,Currencies.ARS);
+            Transaction paymentTransaction = transactionService.pay(paymentDto).getTransactionPayment();
+            transactionRepository.save(paymentTransaction);
+
 
             //admin con cuenta en dolares con balance en 10.000$
             User adminDolares10mil = new User();
@@ -86,6 +101,9 @@ public class DatabaseSeeder implements CommandLineRunner {
             savedAccount = accountService.createAccount(Currencies.USD, adminDolares10mil);
             savedAccount.setBalance(10000.0);
             accountRepository.save(savedAccount);
+            paymentDto = new PaymentDto(savedAccount.getId(), 300.0,Currencies.USD);
+            paymentTransaction = transactionService.pay(paymentDto).getTransactionPayment();
+            transactionRepository.save(paymentTransaction);
 
             // Usuario sin cuentas
             User userSinCuentas = new User();
@@ -97,6 +115,9 @@ public class DatabaseSeeder implements CommandLineRunner {
             makeUser(userCuentaEnPesos, "userCuentaEnPesos@example.com", roleUser);
             userCuentaEnPesos = saveUser(userCuentaEnPesos);
             savedAccount = accountService.createAccount(Currencies.ARS, userCuentaEnPesos);
+            //TransactionDto transactionDto= new TransactionDto(Currencies.ARS,20000.0,"");
+           // Transaction sendTransaction =transactionService.deposit(transactionDto);
+           // transactionRepository.save(sendTransaction);
 
             // Usuario con cuenta en dólares
             User userCuentaEnDolares = new User();
@@ -108,7 +129,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userPesosBalance100mil = new User();
             makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
             userPesosBalance100mil = saveUser(userPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.ARS, userPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 

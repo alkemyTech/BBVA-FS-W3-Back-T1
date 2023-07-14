@@ -95,7 +95,7 @@ public class TransactionService {
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId() == authenticatedUser.getId())
+        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -103,6 +103,7 @@ public class TransactionService {
 
         if (sourceAccount.getTransactionLimit()<amount)
         {throw new ExceptionExceedTransactionLimit();}
+
 
         Transaction transactionPayment = Transaction.builder()
                         .amount(amount)

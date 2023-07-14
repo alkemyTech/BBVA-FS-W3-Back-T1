@@ -140,7 +140,7 @@ public class TransactionService {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
-        Account paymentAccount = accountRepository.findById(paymentAccountId).filter(account -> account.getCurrency() == paymentCurrency)
+        Account paymentAccount = accountRepository.findById(paymentAccountId)
                 .orElseThrow(() -> new ExceptionAccountNotFound());
 
         if (paymentAccount.getUserId().isSoftDelete()) {
@@ -151,13 +151,14 @@ public class TransactionService {
             throw new ExceptionAccountNotFound();
         }
 
+        if (paymentCurrency != paymentAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
+        }
+
         if (paymentAccount.getBalance() < amount) {
             throw new ExceptionInsufficientBalance();
         }
 
-        if (paymentCurrency != paymentAccount.getCurrency()) {
-            throw new ExceptionMismatchCurrencies();
-        }
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)

@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "4a60c76d-e56d-40a5-91d1-991ff3b755de",
+		"_postman_id": "dcdeab13-5417-499b-87ec-80118a6b1fae",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27886107"
+		"_exporter_id": "27190580"
 	},
 	"item": [
 		{
@@ -605,6 +605,34 @@
 					"response": []
 				},
 				{
+					"name": "Get Transactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/105",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"105"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Patch Transaction",
 					"request": {
 						"auth": {
@@ -642,7 +670,7 @@
 					"response": []
 				},
 				{
-					"name": "Get transaction",
+					"name": "deposit",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -654,16 +682,25 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currency\": \"ARS\",\r\n    \"amount\": 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/1",
+							"raw": "{{BASE_URL}}/transactions/deposit",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
-								"1"
+								"deposit"
 							]
 						}
 					},

@@ -63,7 +63,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User adminPesosBalance100mil = new User();
             makeUser(adminPesosBalance100mil,"adminPesosBalance100mil@example.com",roleAdmin);
             adminPesosBalance100mil= saveUser(adminPesosBalance100mil);
-            savedAccount= accountService.createAccount(Currencies.USD,adminPesosBalance100mil);
+            savedAccount= accountService.createAccount(Currencies.ARS,adminPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 
@@ -96,7 +96,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userPesosBalance100mil = new User();
             makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
             userPesosBalance100mil = saveUser(userPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.ARS, userPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 

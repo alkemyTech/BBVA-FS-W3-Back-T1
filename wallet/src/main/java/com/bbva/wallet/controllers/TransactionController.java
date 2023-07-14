@@ -3,6 +3,7 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
@@ -70,7 +71,8 @@ import java.util.List;
     @PostMapping("/payment")
     public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
         Response<ResponsePaymentDto> response = new Response<>();
-        response.setData(transactionService.pay(paymentDto));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/deposit")
@@ -78,4 +80,5 @@ import java.util.List;
 
         return ResponseEntity.ok(transactionService.deposit(depositDTO));
     }
+
 }

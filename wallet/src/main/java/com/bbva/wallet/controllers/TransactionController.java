@@ -4,6 +4,11 @@ import com.bbva.wallet.dtos.TransactionDescriptionDto;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,14 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "Custom Error", content = {
+                @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+        }),
+        @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
+})
+
+@Tag(name = "Transactions")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
@@ -33,6 +46,19 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Modifica la descripción de una transacción",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Transaction.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PatchMapping("/{id}")
     public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
         Response <Transaction> response = new Response<>();
@@ -40,6 +66,19 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a administradores y al usuario dueño de la cuenta",
+            summary = "Obtiene las transacciones de un usuario",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
     @GetMapping("/{userId}")
     public ResponseEntity<Response> getUserTransactions(@PathVariable Long userId){
@@ -48,6 +87,19 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Realiza un envío de dinero en pesos",
+            responses ={
+                    @ApiResponse(
+                            description = "Created",
+                            responseCode = "201",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping("/sendArs")
     public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionDto transactionDto) {
         Response<List<Transaction>> response = new Response<>();
@@ -55,6 +107,19 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Realiza un envío de dinero en dólares",
+            responses ={
+                    @ApiResponse(
+                            description = "Created",
+                            responseCode = "201",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Response.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping("/sendUsd")
     public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionDto transactionDto) {
         Response<List<Transaction>> response = new Response<>();
@@ -62,12 +127,38 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Realiza un pago",
+            responses ={
+                    @ApiResponse(
+                            description = "Created",
+                            responseCode = "201",
+                            content = {
+                                    @Content(schema = @Schema(implementation = ResponsePaymentDto.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping("/payment")
     public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
         Response<ResponsePaymentDto> response = new Response<>();
         response.setData(transactionService.pay(paymentDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Realiza un depósito en su cuenta",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Transaction.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PostMapping("/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
 

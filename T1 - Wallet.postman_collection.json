@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0299a2b9-8acd-4ec9-ad8f-380da7528cc1",
+		"_postman_id": "4a60c76d-e56d-40a5-91d1-991ff3b755de",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -576,7 +576,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Transactions",
+					"name": "Get Transactions by User Id",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -591,13 +591,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/105",
+							"raw": "{{BASE_URL}}/transactions/user/16",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
-								"105"
+								"user",
+								"16"
 							]
 						}
 					},
@@ -627,6 +628,34 @@
 								}
 							}
 						},
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "{{BASE_URL}}/transactions/1",
 							"host": [

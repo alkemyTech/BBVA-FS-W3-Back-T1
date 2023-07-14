@@ -4,16 +4,22 @@ import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.TransactionModel;
+import com.bbva.wallet.entities.User;
+import com.bbva.wallet.enums.Currencies;
+import com.bbva.wallet.enums.EnumRole;
+import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
+
 import com.bbva.wallet.services.TransactionService;
+import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.bbva.wallet.enums.Currencies;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/transactions")
+
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
@@ -38,8 +46,20 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> getTransaction(@PathVariable Long id){
+        User authenticatedUser = ExtractUser.extract();
+        Transaction transaction = transactionService.getTransaction(id);
+        Response<Transaction> response = new Response<>();
+        if(transaction.getAccount().getUserId().getId().equals(authenticatedUser.getId()) ||
+                authenticatedUser.getRoleId().getName().equals(EnumRole.ADMIN)){
+            response.setData(transaction);
+            return ResponseEntity.ok(response);
+        }else throw new ExceptionUserNotAuthenticated();
+    }
+
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page, @PathVariable Long userId){
         Response response = new Response<>();
         CollectionModel<TransactionModel> collectionModel;
@@ -53,6 +73,7 @@ public class TransactionController {
 
         collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
         response.setData(collectionModel);
+
         return ResponseEntity.ok(response);
     }
 
@@ -73,7 +94,8 @@ public class TransactionController {
     @PostMapping("/payment")
     public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
         Response<ResponsePaymentDto> response = new Response<>();
-        response.setData(transactionService.pay(paymentDto));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/deposit")

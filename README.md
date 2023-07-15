@@ -203,11 +203,11 @@ Todos los usuarios Y administradores tienen la contraseña establecida como `123
    - Monto: $420.00
    - Tipo : PAYMENT
    - Cuenta : accountUSDUserwithTransactions
+     
+   - Monto: $420.00
+   - Tipo : INCOME
+   - Cuenta : accountUserConCuentaEnDolares
    
-    - Monto: $420.00
-    - Tipo : INCOME
-    - Cuenta : accountUserCuentaEnDolares
-
 18. **Ingreso de dinero a la Cuenta en ARS que envia el userCuentaEnPesos**
 
    - Monto: $5,000.00

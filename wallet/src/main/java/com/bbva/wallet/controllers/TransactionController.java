@@ -54,6 +54,19 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados(Si le pertenece la transaccion), o ADMIN (Todas las transacciones)",
+            summary = "Obtiene la transacción por id",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Transaction.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<Response> getTransaction(@PathVariable Long id){
         User authenticatedUser = ExtractUser.extract();

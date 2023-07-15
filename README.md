@@ -96,4 +96,4 @@ Todos los usuarios Y administradores tienen la contraseña establecida como `123
 - Los últimos 5 usuarios creados (user0, user1, user2, user3, user4) tienen ambas cuentas (USD y ARS) sin saldo.
 - Los últimos 5 administradores creados (admin0, admin1, admin2, admin3, admin4) tienen ambas cuentas (USD y ARS) sin saldo.
 
-Por favor, asegúrate de actualizar las configuraciones necesarias, como el archivo `application.properties`, antes de ejecutar el seeder de la base de datos. Además, ten en cuenta que al ejecutar el seeder, se eliminarán físicamente las tablas de usuarios y cuentas.
+Por favor, asegúrate de actualizar las configuraciones necesarias, como el archivo `application.properties`, antes de ejecutar el seeder de la base de datos. Además, ten en cuenta que al ejecutar el seeder, se eliminarán físicamente las tablas de usuarios,cuentas y transacciones.

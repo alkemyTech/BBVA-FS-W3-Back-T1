@@ -64,20 +64,12 @@ public class DatabaseSeeder implements CommandLineRunner {
             makeUser(adminCuentaEnPesos,"adminCuentaEnPesos@example.com",roleAdmin);
             adminCuentaEnPesos = saveUser(adminCuentaEnPesos);
             Account savedAccount = accountService.createAccount(Currencies.ARS, adminCuentaEnPesos);
-            DepositDTO depositDTO = new DepositDTO(Currencies.ARS,20000.0,"");
-            Transaction depositTransaction =transactionService.deposit(depositDTO);
-            transactionRepository.save(depositTransaction);
-
 
             //admin solo con cuenta en dolares
             User adminCuentaEnDolares = new User();
             makeUser(adminCuentaEnDolares,"adminCuentaEnDolares@example.com",roleAdmin);
             adminCuentaEnDolares = saveUser(adminCuentaEnDolares);
             savedAccount = accountService.createAccount(Currencies.USD, adminCuentaEnDolares);
-            depositDTO = new DepositDTO(Currencies.USD,500.0,"");
-            depositTransaction =transactionService.deposit(depositDTO);
-            transactionRepository.save(depositTransaction);
-
 
             //admin con cuenta en pesos con balance en 100.000$
             User adminPesosBalance100mil = new User();
@@ -86,10 +78,6 @@ public class DatabaseSeeder implements CommandLineRunner {
             savedAccount = accountService.createAccount(Currencies.ARS, adminPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
-            PaymentDto paymentDto = new PaymentDto(savedAccount.getId(), 15000.0,Currencies.ARS);
-            Transaction paymentTransaction = transactionService.pay(paymentDto).getTransactionPayment();
-            transactionRepository.save(paymentTransaction);
-
 
             //admin con cuenta en dolares con balance en 10.000$
             User adminDolares10mil = new User();
@@ -98,9 +86,6 @@ public class DatabaseSeeder implements CommandLineRunner {
             savedAccount= accountService.createAccount(Currencies.USD,adminDolares10mil);
             savedAccount.setBalance(10000.0);
             accountRepository.save(savedAccount);
-            paymentDto = new PaymentDto(savedAccount.getId(), 300.0,Currencies.USD);
-            paymentTransaction = transactionService.pay(paymentDto).getTransactionPayment();
-            transactionRepository.save(paymentTransaction);
 
             // Usuario sin cuentas
             User userSinCuentas = new User();
@@ -111,16 +96,13 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userCuentaEnPesos = new User();
             makeUser(userCuentaEnPesos, "userCuentaEnPesos@example.com", roleUser);
             userCuentaEnPesos = saveUser(userCuentaEnPesos);
-            savedAccount = accountService.createAccount(Currencies.ARS, userCuentaEnPesos);
-            //TransactionDto transactionDto= new TransactionDto(Currencies.ARS,20000.0,"");
-           // Transaction sendTransaction =transactionService.deposit(transactionDto);
-           // transactionRepository.save(sendTransaction);
+            Account accountUserCuentaEnPesos = accountService.createAccount(Currencies.ARS, userCuentaEnPesos);
 
             // Usuario con cuenta en dólares
             User userCuentaEnDolares = new User();
             makeUser(userCuentaEnDolares, "userCuentaEnDolares@example.com", roleUser);
             userCuentaEnDolares = saveUser(userCuentaEnDolares);
-            savedAccount = accountService.createAccount(Currencies.USD, userCuentaEnDolares);
+            Account accountUserCuentaEnDolares = accountService.createAccount(Currencies.USD, userCuentaEnDolares);
 
             // Usuario con cuenta en pesos con balance de 100.000$
             User userPesosBalance100mil = new User();
@@ -158,6 +140,76 @@ public class DatabaseSeeder implements CommandLineRunner {
                 accountService.createAccount(Currencies.USD, savedRegularUser);
                 accountService.createAccount(Currencies.ARS, savedRegularUser);
             }
+
+
+            //Crear 1 usuario regular con cuenta en pesos y dolares que realiza 20 transacciones
+            User userWithTransactions = new User();
+            makeUser(userWithTransactions,"userwithtransactions@example.com",roleUser);
+            User savedUserWithTransactions = saveUser(userWithTransactions);
+
+           Account accountUSDUserWithTransactions = accountService.createAccount(Currencies.USD,savedUserWithTransactions);
+           Account accountARSUserWithTransactions = accountService.createAccount(Currencies.ARS,savedUserWithTransactions);
+
+            DepositDTO depositDTO = new DepositDTO(Currencies.USD,25000.0,"Depositaste dolares");
+            transactionService.deposit(depositDTO);
+
+            depositDTO = new DepositDTO(Currencies.ARS,190000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTO);
+
+            PaymentDto paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),300.0,Currencies.USD);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            TransactionDto sendMoneyDTO = new TransactionDto(accountUserCuentaEnDolares.getId(),900.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userWithTransactions);
+
+            sendMoneyDTO = new TransactionDto(accountUserCuentaEnPesos.getId(),30000.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userWithTransactions);
+
+            depositDTO = new DepositDTO(Currencies.ARS,50000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTO);
+
+            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            sendMoneyDTO = new TransactionDto(accountUSDUserWithTransactions.getId(),100.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userCuentaEnDolares);
+
+             paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            sendMoneyDTO = new TransactionDto(accountARSUserWithTransactions.getId(),14000.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userCuentaEnPesos);
+
+            depositDTO = new DepositDTO(Currencies.USD,2200.0,"Depositaste dolares");
+            transactionService.deposit(depositDTO);
+
+            depositDTO = new DepositDTO(Currencies.ARS,230000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTO);
+
+            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),37000.0,Currencies.ARS);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),550.0,Currencies.USD);
+            transactionService.pay(paymentDTO,userWithTransactions);
+
+            depositDTO = new DepositDTO(Currencies.USD,3400.0,"Depositaste dolares");
+            transactionService.deposit(depositDTO);
+
+            sendMoneyDTO = new TransactionDto(accountUserCuentaEnDolares.getId(),420.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userWithTransactions);
+
+            sendMoneyDTO = new TransactionDto(accountARSUserWithTransactions.getId(),70000.0);
+            transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userCuentaEnPesos);
+
+            depositDTO = new DepositDTO(Currencies.ARS,350000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTO);
+
+            depositDTO = new DepositDTO(Currencies.USD,3800.0,"Depositaste dolares");
+            transactionService.deposit(depositDTO);
+
         }
     }
 

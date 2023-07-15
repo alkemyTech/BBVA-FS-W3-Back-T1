@@ -89,20 +89,19 @@ public class TransactionService {
         return transactions;
     }
 
-    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
-        User authenticatedUser = ExtractUser.extract();
+    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency,User user) {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
-        Account sourceAccount = authenticatedUser.getAccountList().stream().filter(account -> account.getCurrency() == currency).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
+        Account sourceAccount = user.getAccountList().stream().filter(account -> account.getCurrency() == currency).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
 
-        if(authenticatedUser.isSoftDelete())
+        if(user.isSoftDelete())
         {throw new ExceptionUserNotFound();}
 
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
+        if (recipientAccount.getUserId().getId().equals(user.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)

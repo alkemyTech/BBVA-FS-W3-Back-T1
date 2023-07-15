@@ -184,6 +184,7 @@ public class TransactionService {
     public Transaction deposit(DepositDTO deposit,User user){
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
+        String description = deposit.description();
 
         User authenticatedUser = userService.findById(user.getId())
                 .orElseThrow(() -> new ExceptionUserNotFound());
@@ -197,6 +198,7 @@ public class TransactionService {
                     .amount(amount)
                     .type(TransactionType.DEPOSIT)
                     .account(account)
+                    .description(description)
                     .transactionDate(LocalDateTime.now())
                     .build();
 

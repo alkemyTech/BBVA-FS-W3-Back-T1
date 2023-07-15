@@ -151,65 +151,65 @@ public class DatabaseSeeder implements CommandLineRunner {
            Account accountUSDUserWithTransactions = accountService.createAccount(Currencies.USD,savedUserWithTransactions);
            Account accountARSUserWithTransactions = accountService.createAccount(Currencies.ARS,savedUserWithTransactions);
 
-            DepositDTO depositDTO = new DepositDTO(Currencies.USD,25000.0,"Depositaste dolares");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            DepositDTO depositDTOUSD= new DepositDTO(Currencies.USD,25000.0,"Depositaste dolares");
+            transactionService.deposit(depositDTOUSD,userWithTransactions);
 
-            depositDTO = new DepositDTO(Currencies.ARS,500000.0,"Depositaste pesos");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            DepositDTO depositDTOARS = new DepositDTO(Currencies.ARS,500000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            PaymentDto paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),300.0,Currencies.USD);
-            transactionService.pay(paymentDTO,userWithTransactions);
+            PaymentDto paymentDTOUSD = new PaymentDto(accountUSDUserWithTransactions.getId(),300.0,Currencies.USD);
+            transactionService.pay(paymentDTOUSD,userWithTransactions);
 
-            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS);
-            transactionService.pay(paymentDTO,userWithTransactions);
+            PaymentDto paymentDTOARS = new PaymentDto(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS);
+            transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            TransactionDto sendMoneyDTO = new TransactionDto(accountUserCuentaEnDolares.getId(),900.0);
-            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userWithTransactions);
+            TransactionDto sendMoneyDTOUSD = new TransactionDto(accountUserCuentaEnDolares.getId(),900.0);
+            transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userWithTransactions);
 
-            sendMoneyDTO = new TransactionDto(accountUserCuentaEnPesos.getId(),60000.0);
-            transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userWithTransactions);
+            TransactionDto sendMoneyDTOARS = new TransactionDto(accountUserCuentaEnPesos.getId(),60000.0);
+            transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userWithTransactions);
 
-            depositDTO = new DepositDTO(Currencies.ARS,50000.0,"Depositaste pesos");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOARS = new DepositDTO(Currencies.ARS,50000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS);
-            transactionService.pay(paymentDTO,userWithTransactions);
+            paymentDTOARS = new PaymentDto(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS);
+            transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            sendMoneyDTO = new TransactionDto(accountUSDUserWithTransactions.getId(),100.0);
-            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userCuentaEnDolares);
+            sendMoneyDTOUSD = new TransactionDto(accountUSDUserWithTransactions.getId(),100.0);
+            transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userCuentaEnDolares);
 
-             paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD);
-            transactionService.pay(paymentDTO,userWithTransactions);
+             paymentDTOUSD = new PaymentDto(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD);
+            transactionService.pay(paymentDTOUSD,userWithTransactions);
 
-           sendMoneyDTO = new TransactionDto(accountARSUserWithTransactions.getId(),2000.0);
-            transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userCuentaEnPesos);
+            sendMoneyDTOARS = new TransactionDto(accountARSUserWithTransactions.getId(),2000.0);
+            transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userCuentaEnPesos);
 
-            depositDTO = new DepositDTO(Currencies.USD,2200.0,"Depositaste dolares");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOUSD = new DepositDTO(Currencies.USD,2200.0,"Depositaste dolares");
+            transactionService.deposit(depositDTOUSD,userWithTransactions);
 
-            depositDTO = new DepositDTO(Currencies.ARS,230000.0,"Depositaste pesos");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOARS = new DepositDTO(Currencies.ARS,230000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            paymentDTO = new PaymentDto(accountARSUserWithTransactions.getId(),37000.0,Currencies.ARS);
-            transactionService.pay(paymentDTO,userWithTransactions);
+            paymentDTOARS = new PaymentDto(accountARSUserWithTransactions.getId(),37000.0,Currencies.ARS);
+            transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            paymentDTO = new PaymentDto(accountUSDUserWithTransactions.getId(),550.0,Currencies.USD);
-            transactionService.pay(paymentDTO,userWithTransactions);
+            paymentDTOUSD = new PaymentDto(accountUSDUserWithTransactions.getId(),550.0,Currencies.USD);
+            transactionService.pay(paymentDTOUSD,userWithTransactions);
 
-            depositDTO = new DepositDTO(Currencies.USD,3400.0,"Depositaste dolares");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOUSD = new DepositDTO(Currencies.USD,3400.0,"Depositaste dolares");
+            transactionService.deposit(depositDTOUSD,userWithTransactions);
 
-            sendMoneyDTO = new TransactionDto(accountUserCuentaEnDolares.getId(),420.0);
-            transactionService.sendMoney(sendMoneyDTO,Currencies.USD,userWithTransactions);
+            sendMoneyDTOUSD = new TransactionDto(accountUserCuentaEnDolares.getId(),420.0);
+            transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userWithTransactions);
 
-            sendMoneyDTO = new TransactionDto(accountARSUserWithTransactions.getId(),5000.0);
-           transactionService.sendMoney(sendMoneyDTO,Currencies.ARS,userCuentaEnPesos);
+            sendMoneyDTOARS = new TransactionDto(accountARSUserWithTransactions.getId(),5000.0);
+           transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userCuentaEnPesos);
 
-            depositDTO = new DepositDTO(Currencies.ARS,350000.0,"Depositaste pesos");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOARS = new DepositDTO(Currencies.ARS,350000.0,"Depositaste pesos");
+            transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            depositDTO = new DepositDTO(Currencies.USD,3800.0,"Depositaste dolares");
-            transactionService.deposit(depositDTO,userWithTransactions);
+            depositDTOUSD = new DepositDTO(Currencies.USD,3800.0,"Depositaste dolares");
+            transactionService.deposit(depositDTOUSD,userWithTransactions);
 
         }
     }

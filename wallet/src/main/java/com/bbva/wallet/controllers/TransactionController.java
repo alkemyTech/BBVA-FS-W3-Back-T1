@@ -2,10 +2,13 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
+import com.bbva.wallet.hateoas.GenericModelAssembler;
+import com.bbva.wallet.hateoas.TransactionModel;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
+
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
@@ -16,11 +19,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
+import org.springframework.data.domain.Slice;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,9 +58,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
-public class TransactionController {
-    @Autowired
-    private TransactionService transactionService;
+    public class TransactionController {
+        @Autowired
+        private TransactionService transactionService;
 
     @Operation(
             description = "Endpoint accesible a usuarios autenticados(Si le pertenece la transaccion), o ADMIN (Todas las transacciones)",
@@ -113,10 +121,21 @@ public class TransactionController {
             }
     )
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
-    @GetMapping("/{userId}")
-    public ResponseEntity<Response> getUserTransactions(@PathVariable Long userId){
-        Response <List<Transaction>> response = new Response<>();
-        response.setData(transactionService.getUserTransactions(userId));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page, @PathVariable Long userId){
+        Response response = new Response<>();
+        CollectionModel<TransactionModel> collectionModel;
+        Slice<Transaction> pagedEntity;
+        if(page.isPresent()){
+            pagedEntity= transactionService.getTen(page.get(), userId);
+        }
+        else{
+            pagedEntity= transactionService.getTen(0, userId);
+        }
+
+        collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
+        response.setData(collectionModel);
+
         return ResponseEntity.ok(response);
     }
 
@@ -176,7 +195,8 @@ public class TransactionController {
     @PostMapping("/payment")
     public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
         Response<ResponsePaymentDto> response = new Response<>();
-        response.setData(transactionService.pay(paymentDto));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @Operation(

@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "4a60c76d-e56d-40a5-91d1-991ff3b755de",
+		"_postman_id": "0da17d84-37ad-479c-8bff-3a8a9a1d4799",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27886107"
+		"_exporter_id": "27887554"
 	},
 	"item": [
 		{
@@ -582,6 +582,15 @@
 							"type": "bearer",
 							"bearer": [
 								{
+									"key": "0",
+									"value": {
+										"key": "token",
+										"value": "{{TOKEN}}",
+										"type": "string"
+									},
+									"type": "any"
+								},
+								{
 									"key": "token",
 									"value": "{{TOKEN}}",
 									"type": "string"
@@ -591,14 +600,48 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/user/16",
+							"raw": "{{BASE_URL}}/transactions/user/31?page=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
 								"user",
-								"16"
+								"31"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/transactions/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"transactions",
+								"1"
 							]
 						}
 					},
@@ -642,7 +685,7 @@
 					"response": []
 				},
 				{
-					"name": "Get transaction",
+					"name": "Deposit",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -654,16 +697,25 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currency\":\"USD\",\r\n    \"amount\":10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/1",
+							"raw": "{{BASE_URL}}/transactions/deposit",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
-								"1"
+								"deposit"
 							]
 						}
 					},
@@ -681,9 +733,13 @@
 							"type": "bearer",
 							"bearer": [
 								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
+									"key": "0",
+									"value": {
+										"key": "token",
+										"value": "{{TOKEN}}",
+										"type": "string"
+									},
+									"type": "any"
 								}
 							]
 						},

@@ -19,10 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import org.springframework.data.domain.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -100,7 +102,7 @@ public class TransactionService {
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId() == authenticatedUser.getId())
+        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -140,23 +142,29 @@ public class TransactionService {
         return transactions;
     }
 
-    public ResponsePaymentDto pay(PaymentDto paymentDto) {
+    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
-        Account paymentAccount = accountRepository.findById(paymentAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
+        Account paymentAccount = accountRepository.findById(paymentAccountId)
+                .orElseThrow(() -> new ExceptionAccountNotFound());
 
         if (paymentAccount.getUserId().isSoftDelete()) {
             throw new ExceptionUserNotFound();
+        }
+
+        if(!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())){
+            throw new ExceptionAccountNotFound();
+        }
+
+        if (paymentCurrency != paymentAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
         }
 
         if (paymentAccount.getBalance() < amount) {
             throw new ExceptionInsufficientBalance();
         }
 
-        if (paymentCurrency != paymentAccount.getCurrency()) {
-            throw new ExceptionMismatchCurrencies();
-        }
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
@@ -193,10 +201,16 @@ public class TransactionService {
                     .build();
 
             transactionRepository.save(transaction);
-            accountService.updateDepositBalance(account, amount);
 
+            accountService.updateDepositBalance(account, amount);
             return transaction;
 
-        } else throw new ExceptionAccountCurrenyNotFound();
+        } else throw new ExceptionAccountCurrencyNotFound();
+    }
+
+    public Slice<Transaction> getTen(Integer page, Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
+        Pageable pageable = PageRequest.of(page, 10);
+        return transactionRepository.findByAccount_UserId_Id(id, pageable);
     }
 }

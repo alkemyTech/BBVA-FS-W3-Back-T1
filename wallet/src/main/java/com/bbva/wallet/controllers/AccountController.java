@@ -48,7 +48,7 @@ public class AccountController {
         User user = ExtractUser.extract();
         response.setData(accountService.createAccount(currenciesDto.getCurrency(),user));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-  }
+    }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
@@ -73,6 +73,7 @@ public class AccountController {
         response.setData(accountService.updateAccount(id,user,dto.transactionLimit()));
         return ResponseEntity.ok(response);
     }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping

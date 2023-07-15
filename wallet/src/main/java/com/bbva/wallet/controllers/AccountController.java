@@ -42,7 +42,6 @@ import java.util.Optional;
         @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
 })
 @Tag(name = "Accounts")
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {

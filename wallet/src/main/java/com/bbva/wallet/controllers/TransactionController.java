@@ -9,6 +9,7 @@ import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
 
+import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
@@ -45,6 +46,8 @@ import com.bbva.wallet.dtos.DepositDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.*;
 
 @ApiResponses(value = {
@@ -55,12 +58,16 @@ import org.springframework.web.bind.annotation.*;
 })
 
 @Tag(name = "Transactions")
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/transactions")
     public class TransactionController {
         @Autowired
         private TransactionService transactionService;
+    private  GenericModelAssembler<Transaction,TransactionModel> genericModelAssembler;
+
+    public TransactionController() {
+        this.genericModelAssembler = new GenericModelAssembler<>(TransactionController.class, TransactionModel.class);
+    }
 
     @Operation(
             description = "Endpoint accesible a usuarios autenticados(Si le pertenece la transaccion), o ADMIN (Todas las transacciones)",

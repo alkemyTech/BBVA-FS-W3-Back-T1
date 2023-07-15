@@ -159,74 +159,74 @@ Todos los usuarios Y administradores tienen la contraseña establecida como `123
    - Cuenta : accountUserCuentaEnDolares
     
 10. **Pago con Cuenta en USD**
-   - Monto: $360.00
-   - Tipo : PAYMENT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $360.00
+    - Tipo : PAYMENT
+    - Cuenta : accountUSDUserwithTransactions
 
 11. **Ingreso de dinero a la Cuenta en ARS que envia el userCuentaEnPesos**
 
-   - Monto: $2,000.00
-   - Tipo : INCOME
-   - Cuenta : accountARSUserwithTransactions
+    - Monto: $2,000.00
+    - Tipo : INCOME
+    - Cuenta : accountARSUserwithTransactions
    
-   - Monto: $2,000.00
-   - Tipo : PAYMENT
-   - Cuenta : accountUserCuentaEnPesos
+    - Monto: $2,000.00
+    - Tipo : PAYMENT
+    - Cuenta : accountUserCuentaEnPesos
 
 12. **Deposito en Cuenta USD**
-   - Monto: $2,200.00
-   - Tipo : DEPOSIT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $2,200.00
+    - Tipo : DEPOSIT
+    - Cuenta : accountUSDUserwithTransactions
 
 13. **Deposito en Cuenta ARS**
-   - Monto: $230,000.00
-   - Tipo : DEPOSIT
-   - Cuenta : accountARSUserwithTransactions
+    - Monto: $230,000.00
+    - Tipo : DEPOSIT
+    - Cuenta : accountARSUserwithTransactions
     
 14. **Pago con Cuenta en ARS**
-   - Monto: $37,000.00
-   - Tipo : PAYMENT
-   - Cuenta : accountARSUserwithTransactions
+    - Monto: $37,000.00
+    - Tipo : PAYMENT
+    - Cuenta : accountARSUserwithTransactions
     
 15. **Pago con Cuenta en USD**
-   - Monto: $550.00
-   - Tipo : PAYMENT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $550.00
+    - Tipo : PAYMENT
+    - Cuenta : accountUSDUserwithTransactions
 
 16. **Deposito en Cuenta USD**
-   - Monto: $3,400.00
-   - Tipo : DEPOSIT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $3,400.00
+    - Tipo : DEPOSIT
+    - Cuenta : accountUSDUserwithTransactions
 
 17. **Envio de dinero al userCuentaEnDolares desde Cuenta en USD**
 
-   - Monto: $420.00
-   - Tipo : PAYMENT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $420.00
+    - Tipo : PAYMENT
+    - Cuenta : accountUSDUserwithTransactions
      
-   - Monto: $420.00
-   - Tipo : INCOME
-   - Cuenta : accountUserConCuentaEnDolares
+    - Monto: $420.00
+    - Tipo : INCOME
+    - Cuenta : accountUserConCuentaEnDolares
    
 18. **Ingreso de dinero a la Cuenta en ARS que envia el userCuentaEnPesos**
 
-   - Monto: $5,000.00
-   - Tipo : INCOME
-   - Cuenta : accountARSUserwithTransactions
+    - Monto: $5,000.00
+    - Tipo : INCOME
+    - Cuenta : accountARSUserwithTransactions
    
-   - Monto: $5,000.00
-   - Tipo : PAYMENT
-   - Cuenta : accountUserCuentaEnPesos
+    - Monto: $5,000.00
+    - Tipo : PAYMENT
+    - Cuenta : accountUserCuentaEnPesos
     
 19. **Deposito en Cuenta ARS**
-   - Monto: $350,000.00
-   - Tipo : DEPOSIT
-   - Cuenta : accountARSUserwithTransactions
+    - Monto: $350,000.00
+    - Tipo : DEPOSIT
+    - Cuenta : accountARSUserwithTransactions
    
 20. **Deposito en Cuenta USD**
-   - Monto: $3,800.00
-   - Tipo : DEPOSIT
-   - Cuenta : accountUSDUserwithTransactions
+    - Monto: $3,800.00
+    - Tipo : DEPOSIT
+    - Cuenta : accountUSDUserwithTransactions
    
 
 ## Información Adicional

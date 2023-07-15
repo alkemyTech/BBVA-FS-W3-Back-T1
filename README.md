@@ -87,7 +87,7 @@ Todos los usuarios Y administradores tienen la contraseña establecida como `123
       - Moneda: ARS (Pesos)
       - Saldo: Ninguno
       
-15. **userwithTransactions**
+15. **userWithTransactions**
     - Email: userwithtransactions@example.com
     - Rol: USER
     - Cuentas:

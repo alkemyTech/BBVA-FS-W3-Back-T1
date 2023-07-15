@@ -102,8 +102,8 @@ public class TransactionController {
     }
     @PostMapping("/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
-
-        return ResponseEntity.ok(transactionService.deposit(depositDTO));
+        User authenticatedUser = ExtractUser.extract();
+        return ResponseEntity.ok(transactionService.deposit(depositDTO,authenticatedUser));
     }
 
 }

@@ -93,7 +93,7 @@ public class TransactionService {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
-        Account sourceAccount = user.getAccountList().stream().filter(account -> account.getCurrency() == currency).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
+        Account sourceAccount = accountRepository.findAll().stream().filter(account -> account.getCurrency() == currency && account.getUserId().getId().equals(user.getId())).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
 
         if(user.isSoftDelete())
         {throw new ExceptionUserNotFound();}
@@ -181,11 +181,11 @@ public class TransactionService {
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-    public Transaction deposit(DepositDTO deposit){
+    public Transaction deposit(DepositDTO deposit,User user){
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
 
-        User authenticatedUser = userService.findById(ExtractUser.extract().getId())
+        User authenticatedUser = userService.findById(user.getId())
                 .orElseThrow(() -> new ExceptionUserNotFound());
 
         Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);

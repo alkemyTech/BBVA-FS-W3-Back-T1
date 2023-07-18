@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class TransactionSendMoneyDTO {
     private Long id;
-    @Positive
+    @Positive(message = "El monto a enviar debe ser mayor a cero.")
     private Double amount;
 
 }

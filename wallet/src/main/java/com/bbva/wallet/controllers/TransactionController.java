@@ -82,14 +82,16 @@ public class TransactionController {
     @PostMapping("/sendArs")
     public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
-        response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/sendUsd")
     public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
-        response.setData(transactionService.sendMoney(transactionDto,Currencies.USD));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.sendMoney(transactionDto,Currencies.USD,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -102,8 +104,8 @@ public class TransactionController {
     }
     @PostMapping("/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody @Valid TransactionDepositRequestDTO depositDTO){
-
-        return ResponseEntity.ok(transactionService.deposit(depositDTO));
+        User authenticatedUser = ExtractUser.extract();
+        return ResponseEntity.ok(transactionService.deposit(depositDTO,authenticatedUser));
     }
 
 }

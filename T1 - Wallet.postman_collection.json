@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "0da17d84-37ad-479c-8bff-3a8a9a1d4799",
+		"_postman_id": "b9321e1d-aa2e-463c-8eec-210e248aea25",
 		"name": "T1 - Wallet",
 		"description": "Caso de Negocio | Wallet | BBVA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27887554"
+		"_exporter_id": "27890010"
 	},
 	"item": [
 		{
@@ -376,6 +376,39 @@
 							"path": [
 								"accounts",
 								"26"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Page accounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/accounts?page=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},

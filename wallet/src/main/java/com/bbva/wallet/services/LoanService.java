@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Service
 public class LoanService {
-    @Value("${montlhy.interest.rate}")
+    @Value("${monthly.interest.rate}")
     private Double monthlyInterestRate;
     public LoanSimulateResponseDTO simulateLoan(double amount, Integer month){
         if(amount <= 0.0){

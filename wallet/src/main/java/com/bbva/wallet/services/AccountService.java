@@ -18,10 +18,14 @@ import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,29 +40,30 @@ public class AccountService {
     private TransactionRepository transactionRepository;
 
 
-    public Account createAccount(Currencies currency, User user ){
 
-        User authenticatedUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new ExceptionUserNotFound());
+        public Account createAccount(Currencies currency, User user ){
 
-        if(authenticatedUser.isSoftDelete()){
-            throw new ExceptionUserNotFound();
+            User authenticatedUser = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new ExceptionUserNotFound());
+
+            if (authenticatedUser.isSoftDelete()) {
+                throw new ExceptionUserNotFound();
+            }
+
+            boolean accountExists = authenticatedUser.getAccountList().stream()
+                    .anyMatch(existingAccount -> existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete());
+
+            if (accountExists) {
+                throw new ExceptionAccountAlreadyExist();
+            }
+
+            Account account = new Account();
+            account.setCurrency(currency);
+            account.setTransactionLimit(CurrencyLimit.getTransactionLimitForCurrency(currency));
+            account.setBalance(0.0);
+            account.setUserId(authenticatedUser);
+            return accountRepository.save(account);
         }
-
-        boolean accountExists = authenticatedUser.getAccountList().stream()
-                .anyMatch(existingAccount -> existingAccount.getCurrency().equals(currency) && !existingAccount.isSoftDelete());
-
-        if (accountExists) {
-            throw new ExceptionAccountAlreadyExist();
-        }
-
-        Account account = new Account();
-        account.setCurrency(currency);
-        account.setTransactionLimit(CurrencyLimit.getTransactionLimitForCurrency(currency));
-        account.setBalance(0.0);
-        account.setUserId(authenticatedUser);
-        return accountRepository.save(account);
-    }
 
     public Account updateAccount(Long id, User user, Double newTransactionLimit){
        Account account = accountRepository.findById(id).orElseThrow(ExceptionAccountNotFound::new);
@@ -103,8 +108,8 @@ public class AccountService {
                 balanceResponse.setHistoryUsd(historyTransactionsUsd);
                 balanceResponse.setFixedTerms(fixedTermsAccount);
 
-        return balanceResponse;
-    }
+            return balanceResponse;
+        }
 
     public List<Account> getAll() {
         return accountRepository.findAll();

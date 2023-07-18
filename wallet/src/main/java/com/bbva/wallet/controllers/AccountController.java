@@ -13,8 +13,10 @@ import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -70,6 +72,7 @@ public class AccountController {
         response.setData(accountService.updateAccount(id,user,dto.transactionLimit()));
         return ResponseEntity.ok(response);
     }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping

@@ -13,7 +13,7 @@ public class TransactionPaymentRequestDTO {
 
     private Long id;
 
-    @Positive
+    @Positive(message = "El monto a pagar debe ser mayor a cero.")
     private Double amount;
 
     private Currencies currency;

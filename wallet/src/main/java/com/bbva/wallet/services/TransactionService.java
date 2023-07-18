@@ -3,7 +3,7 @@ package com.bbva.wallet.services;
 import com.bbva.wallet.dtos.TransactionDepositRequestDTO;
 import com.bbva.wallet.dtos.TransactionPaymentRequestDTO;
 import com.bbva.wallet.dtos.TransactionPaymentResponseDTO;
-import com.bbva.wallet.dtos.TransactionSendMoneyDTO;
+import com.bbva.wallet.dtos.TransactionSendMoneyRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
@@ -89,7 +89,7 @@ public class TransactionService {
         return transactions;
     }
 
-    public List<Transaction> sendMoney(TransactionSendMoneyDTO transactionDto, Currencies currency,User user) {
+    public List<Transaction> sendMoney(TransactionSendMoneyRequestDTO transactionDto, Currencies currency, User user) {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());

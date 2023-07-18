@@ -2,7 +2,7 @@ package com.bbva.wallet.config;
 
 import com.bbva.wallet.dtos.TransactionDepositRequestDTO;
 import com.bbva.wallet.dtos.TransactionPaymentRequestDTO;
-import com.bbva.wallet.dtos.TransactionSendMoneyDTO;
+import com.bbva.wallet.dtos.TransactionSendMoneyRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.User;
@@ -161,10 +161,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             TransactionPaymentRequestDTO paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS);
             transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            TransactionSendMoneyDTO sendMoneyDTOUSD = new TransactionSendMoneyDTO(accountUserCuentaEnDolares.getId(),900.0);
+            TransactionSendMoneyRequestDTO sendMoneyDTOUSD = new TransactionSendMoneyRequestDTO(accountUserCuentaEnDolares.getId(),900.0);
             transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userWithTransactions);
 
-            TransactionSendMoneyDTO sendMoneyDTOARS = new TransactionSendMoneyDTO(accountUserCuentaEnPesos.getId(),60000.0);
+            TransactionSendMoneyRequestDTO sendMoneyDTOARS = new TransactionSendMoneyRequestDTO(accountUserCuentaEnPesos.getId(),60000.0);
             transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userWithTransactions);
 
             depositDTOARS = new TransactionDepositRequestDTO(Currencies.ARS,50000.0,"Depositaste pesos");
@@ -173,13 +173,13 @@ public class DatabaseSeeder implements CommandLineRunner {
             paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS);
             transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            sendMoneyDTOUSD = new TransactionSendMoneyDTO(accountUSDUserWithTransactions.getId(),100.0);
+            sendMoneyDTOUSD = new TransactionSendMoneyRequestDTO(accountUSDUserWithTransactions.getId(),100.0);
             transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userCuentaEnDolares);
 
              paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD);
             transactionService.pay(paymentDTOUSD,userWithTransactions);
 
-            sendMoneyDTOARS = new TransactionSendMoneyDTO(accountARSUserWithTransactions.getId(),2000.0);
+            sendMoneyDTOARS = new TransactionSendMoneyRequestDTO(accountARSUserWithTransactions.getId(),2000.0);
             transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userCuentaEnPesos);
 
             depositDTOUSD = new TransactionDepositRequestDTO(Currencies.USD,2200.0,"Depositaste dolares");
@@ -197,10 +197,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             depositDTOUSD = new TransactionDepositRequestDTO(Currencies.USD,3400.0,"Depositaste dolares");
             transactionService.deposit(depositDTOUSD,userWithTransactions);
 
-            sendMoneyDTOUSD = new TransactionSendMoneyDTO(accountUserCuentaEnDolares.getId(),420.0);
+            sendMoneyDTOUSD = new TransactionSendMoneyRequestDTO(accountUserCuentaEnDolares.getId(),420.0);
             transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userWithTransactions);
 
-            sendMoneyDTOARS = new TransactionSendMoneyDTO(accountARSUserWithTransactions.getId(),5000.0);
+            sendMoneyDTOARS = new TransactionSendMoneyRequestDTO(accountARSUserWithTransactions.getId(),5000.0);
            transactionService.sendMoney(sendMoneyDTOARS,Currencies.ARS,userCuentaEnPesos);
 
             depositDTOARS = new TransactionDepositRequestDTO(Currencies.ARS,350000.0,"Depositaste pesos");

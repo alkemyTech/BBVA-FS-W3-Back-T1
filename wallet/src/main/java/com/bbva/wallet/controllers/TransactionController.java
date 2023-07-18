@@ -5,7 +5,6 @@ import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.TransactionModel;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
@@ -14,7 +13,6 @@ import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Slice;
@@ -80,7 +78,7 @@ public class TransactionController {
     }
 
     @PostMapping("/sendArs")
-    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
+    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionSendMoneyRequestDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
         User authenticatedUser = ExtractUser.extract();
         response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS,authenticatedUser));
@@ -88,7 +86,7 @@ public class TransactionController {
     }
 
     @PostMapping("/sendUsd")
-    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionSendMoneyDTO transactionDto) {
+    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionSendMoneyRequestDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
         User authenticatedUser = ExtractUser.extract();
         response.setData(transactionService.sendMoney(transactionDto,Currencies.USD,authenticatedUser));

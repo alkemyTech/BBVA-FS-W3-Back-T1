@@ -89,20 +89,19 @@ public class TransactionService {
         return transactions;
     }
 
-    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
-        User authenticatedUser = ExtractUser.extract();
+    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency,User user) {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
-        Account sourceAccount = authenticatedUser.getAccountList().stream().filter(account -> account.getCurrency() == currency).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
+        Account sourceAccount = accountRepository.findAll().stream().filter(account -> account.getCurrency() == currency && account.getUserId().getId().equals(user.getId())).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
 
-        if(authenticatedUser.isSoftDelete())
+        if(user.isSoftDelete())
         {throw new ExceptionUserNotFound();}
 
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
+        if (recipientAccount.getUserId().getId().equals(user.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -110,6 +109,7 @@ public class TransactionService {
 
         if (sourceAccount.getTransactionLimit()<amount)
         {throw new ExceptionExceedTransactionLimit();}
+
 
         Transaction transactionPayment = Transaction.builder()
                         .amount(amount)
@@ -181,11 +181,12 @@ public class TransactionService {
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-    public Transaction deposit(DepositDTO deposit){
+    public Transaction deposit(DepositDTO deposit,User user){
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
+        String description = deposit.description();
 
-        User authenticatedUser = userService.findById(ExtractUser.extract().getId())
+        User authenticatedUser = userService.findById(user.getId())
                 .orElseThrow(() -> new ExceptionUserNotFound());
 
         Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);
@@ -197,6 +198,7 @@ public class TransactionService {
                     .amount(amount)
                     .type(TransactionType.DEPOSIT)
                     .account(account)
+                    .description(description)
                     .transactionDate(LocalDateTime.now())
                     .build();
 

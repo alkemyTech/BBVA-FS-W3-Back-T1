@@ -138,6 +138,19 @@ public class AccountController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            description = "Endpoint accesible a admin",
+            summary = "Trae de a 10 cuentas por página",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Account.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<Response> getAll(@RequestParam(required = false) Optional<Integer> page) {

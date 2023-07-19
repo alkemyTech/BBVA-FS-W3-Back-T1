@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = "http://localhost:5173")
 @ApiResponse(responseCode = "403", description = "No autenticado / Token inválido", content = @Content)
 @Tag(name = "Authentications")
 @RestController

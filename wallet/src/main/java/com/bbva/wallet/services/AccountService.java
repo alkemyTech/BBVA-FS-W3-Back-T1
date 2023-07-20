@@ -1,13 +1,11 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.BalanceDto;
-import com.bbva.wallet.dtos.CurrenciesDto;
+import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
-import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionAccountAlreadyExist;
 import com.bbva.wallet.exceptions.ExceptionAccountNotFound;
 import com.bbva.wallet.exceptions.ExceptionUserAccountsNotFound;
@@ -19,7 +17,6 @@ import com.bbva.wallet.utils.CurrencyLimit;
 import com.bbva.wallet.utils.ExtractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,50 +65,48 @@ public class AccountService {
             return accountRepository.save(account);
         }
 
+    public Account updateAccount(Long id, User user, Double newTransactionLimit){
+       Account account = accountRepository.findById(id).orElseThrow(ExceptionAccountNotFound::new);
+       Boolean isUserAccount = user.getAccountList().stream().anyMatch(account1 -> account1.getId() == id);
+       if (!isUserAccount) throw new ExceptionAccountNotFound("El usuario no tiene esta cuenta");
+       account.setTransactionLimit(newTransactionLimit);
+       return accountRepository.save(account);
+    }
+    public AccountBalanceResponseDTO getBalance(){
+        User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
+                .orElseThrow(ExceptionUserNotFound::new);
 
-        public Account updateAccount (Long id, User user, Double newTransactionLimit){
-            Account account = accountRepository.findById(id).orElseThrow(ExceptionAccountNotFound::new);
-            Boolean isUserAccount = user.getAccountList().stream().anyMatch(account1 -> account1.getId() == id);
-            if (!isUserAccount) throw new ExceptionAccountNotFound("El usuario no tiene esta cuenta");
-            account.setTransactionLimit(newTransactionLimit);
-            return accountRepository.save(account);
+        if(authenticatedUser.isSoftDelete()){
+            throw new ExceptionUserNotFound();
         }
 
-        public BalanceDto getBalance () {
-            User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
-                    .orElseThrow(ExceptionUserNotFound::new);
+        Optional<Account> accountInArs = authenticatedUser.getAccountList().stream()
+                .filter(account -> account.getCurrency()==Currencies.ARS && !account.isSoftDelete())
+                .findFirst();
 
-            if (authenticatedUser.isSoftDelete()) {
-                throw new ExceptionUserNotFound();
-            }
+        Optional<Account> accountInUsd = authenticatedUser.getAccountList().stream()
+                .filter(account -> account.getCurrency()==Currencies.USD && !account.isSoftDelete())
+                .findFirst();
 
-            Optional<Account> accountInArs = authenticatedUser.getAccountList().stream()
-                    .filter(account -> account.getCurrency() == Currencies.ARS && !account.isSoftDelete())
-                    .findFirst();
+        if (accountInArs.isEmpty() && accountInUsd.isEmpty()){
+            throw new ExceptionUserAccountsNotFound();
+        }
 
-            Optional<Account> accountInUsd = authenticatedUser.getAccountList().stream()
-                    .filter(account -> account.getCurrency() == Currencies.USD && !account.isSoftDelete())
-                    .findFirst();
+        List<Transaction> historyTransactionsArs = accountInArs.isPresent() ? accountInArs.get().getTransaction() : null;
+        List<Transaction> historyTransactionsUsd = accountInUsd.isPresent() ? accountInUsd.get().getTransaction() : null;
 
-            if (accountInArs.isEmpty() && accountInUsd.isEmpty()) {
-                throw new ExceptionUserAccountsNotFound();
-            }
+        List<FixedTermDeposit> fixedTermsAccount;
+        if(accountInArs.isPresent())
+             fixedTermsAccount = accountInArs.get().getFixedTermDeposits();
+        else
+            fixedTermsAccount = List.of();
 
-            List<Transaction> historyTransactionsArs = accountInArs.isPresent() ? accountInArs.get().getTransaction() : null;
-            List<Transaction> historyTransactionsUsd = accountInUsd.isPresent() ? accountInUsd.get().getTransaction() : null;
-
-            List<FixedTermDeposit> fixedTermsAccount;
-            if (accountInArs.isPresent())
-                fixedTermsAccount = accountInArs.get().getFixedTermDeposits();
-            else
-                fixedTermsAccount = List.of();
-
-            BalanceDto balanceResponse = new BalanceDto();
-            balanceResponse.setAccountArs(accountInArs.orElse(null));
-            balanceResponse.setAccountUsd(accountInUsd.orElse(null));
-            balanceResponse.setHistoryArs(historyTransactionsArs);
-            balanceResponse.setHistoryUsd(historyTransactionsUsd);
-            balanceResponse.setFixedTerms(fixedTermsAccount);
+        AccountBalanceResponseDTO balanceResponse = new AccountBalanceResponseDTO();
+                balanceResponse.setAccountArs(accountInArs.orElse(null));
+                balanceResponse.setAccountUsd(accountInUsd.orElse(null));
+                balanceResponse.setHistoryArs(historyTransactionsArs);
+                balanceResponse.setHistoryUsd(historyTransactionsUsd);
+                balanceResponse.setFixedTerms(fixedTermsAccount);
 
             return balanceResponse;
         }

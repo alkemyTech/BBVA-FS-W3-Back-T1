@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionDescriptionDto {
+public class TransactionPatchDescriptionRequestDTO {
     private String description;
 }

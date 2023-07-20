@@ -1,7 +1,7 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.LoanDto;
-import com.bbva.wallet.dtos.LoanRequestBodyDto;
+import com.bbva.wallet.dtos.LoanSimulateRequestDTO;
+import com.bbva.wallet.dtos.LoanSimulateResponseDTO;
 import com.bbva.wallet.services.LoanService;
 import com.bbva.wallet.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ public class LoanController {
     @Autowired
     private LoanService loanService;
     @PostMapping("/simulate")
-    public ResponseEntity<Response>simulateLoan(@RequestBody LoanRequestBodyDto loanRequestBodyDto){
-        Response<LoanDto> response = new Response<>();
+    public ResponseEntity<Response> simulateLoan(@RequestBody LoanSimulateRequestDTO loanRequestBodyDto){
+        Response<LoanSimulateResponseDTO> response = new Response<>();
         response.setData(loanService.simulateLoan(loanRequestBodyDto.getAmount(), loanRequestBodyDto.getMonths()));
         return ResponseEntity.ok(response);
     }

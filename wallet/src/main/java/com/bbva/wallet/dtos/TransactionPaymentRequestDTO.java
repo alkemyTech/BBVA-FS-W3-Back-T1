@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDto {
+public class TransactionPaymentRequestDTO {
 
     private Long id;
 

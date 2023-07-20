@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponsePaymentDto {
+public class TransactionPaymentResponseDTO {
     private Account updatedAccount;
     private Transaction transactionPayment;
 }

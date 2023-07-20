@@ -64,7 +64,7 @@ public class FixedTermController {
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(schema = @Schema(implementation = OutSimulateFixedTermDto.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = FixedTermSimulateResponseDTO.class), mediaType = "application/json")
                             }
                     )
             }

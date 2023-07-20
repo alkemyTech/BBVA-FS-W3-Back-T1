@@ -8,8 +8,6 @@ import com.bbva.wallet.hateoas.TransactionModel;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
-
-import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.services.TransactionService;
 import com.bbva.wallet.utils.ExtractUser;
 import com.bbva.wallet.utils.Response;
@@ -21,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
@@ -34,21 +31,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.bbva.wallet.dtos.PaymentDto;
-import com.bbva.wallet.dtos.ResponsePaymentDto;
-import com.bbva.wallet.dtos.TransactionDto;
-import com.bbva.wallet.enums.Currencies;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import com.bbva.wallet.dtos.DepositDTO;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.web.bind.annotation.*;
 
 @ApiResponses(value = {
         @ApiResponse(responseCode = "400", description = "Custom Error", content = {
@@ -196,7 +181,7 @@ import org.springframework.web.bind.annotation.*;
                             description = "Created",
                             responseCode = "201",
                             content = {
-                                    @Content(schema = @Schema(implementation = ResponsePaymentDto.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = TransactionPaymentResponseDTO.class), mediaType = "application/json")
                             }
                     )
             }

@@ -5,10 +5,8 @@ import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.dtos.AccountUpdateRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.AccountModel;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
-import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.ExtractUser;
@@ -19,10 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Positive;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -33,8 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
-
 
 @ApiResponses(value = {
         @ApiResponse(responseCode = "400", description = "Custom Error", content = {
@@ -105,7 +98,7 @@ public class AccountController {
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(schema = @Schema(implementation = BalanceDto.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = AccountBalanceResponseDTO.class), mediaType = "application/json")
                             }
                     )
             }

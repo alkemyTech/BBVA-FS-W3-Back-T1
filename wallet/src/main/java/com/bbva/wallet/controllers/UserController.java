@@ -1,7 +1,5 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.UpdateUserDto;
-import com.bbva.wallet.entities.FixedTermDeposit;
 import com.bbva.wallet.dtos.UserUpdateRequestDTO;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.GenericModelAssembler;

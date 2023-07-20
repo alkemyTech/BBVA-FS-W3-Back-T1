@@ -1,12 +1,8 @@
 package com.bbva.wallet.controllers;
 
-import com.bbva.wallet.dtos.LoanDto;
-import com.bbva.wallet.dtos.LoanRequestBodyDto;
-import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.dtos.LoanSimulateRequestDTO;
 import com.bbva.wallet.dtos.LoanSimulateResponseDTO;
 import com.bbva.wallet.services.LoanService;
-import com.bbva.wallet.utils.Response;
 import com.bbva.wallet.utils.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,7 +38,7 @@ public class LoanController {
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(schema = @Schema(implementation = LoanDto.class), mediaType = "application/json")
+                                    @Content(schema = @Schema(implementation = LoanSimulateResponseDTO.class), mediaType = "application/json")
                             }
                     )
             }

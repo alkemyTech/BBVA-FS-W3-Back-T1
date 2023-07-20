@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class TransactionSendMoneyRequestDTO {
-    @Schema(description = "ID de la cuenta destino", example = "31")
+    @Schema(description = "ID de la cuenta destino", example = "18")
     private Long id;
 
     @Schema(description = "Monto a enviar", example = "2000")

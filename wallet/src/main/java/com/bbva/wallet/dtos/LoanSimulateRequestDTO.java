@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class LoanRequestBodyDto {
+public class LoanSimulateRequestDTO {
     @Schema(description = "Plazo en meses (Mayor a 0)", example = "12")
     private Integer months;
     @Schema(description = "Cantidad de dinero (Mayor a 0)", example = "10000")

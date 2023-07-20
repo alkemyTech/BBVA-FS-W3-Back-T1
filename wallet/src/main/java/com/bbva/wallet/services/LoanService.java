@@ -1,6 +1,6 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.LoanDto;
+import com.bbva.wallet.dtos.LoanSimulateResponseDTO;
 import com.bbva.wallet.exceptions.ExceptionAmountNotAllowed;
 import com.bbva.wallet.exceptions.ExceptionMonthNotExist;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +10,9 @@ import java.time.LocalDate;
 
 @Service
 public class LoanService {
-    @Value("${montlhy.interest.rate}")
+    @Value("${monthly.interest.rate}")
     private Double monthlyInterestRate;
-    public LoanDto simulateLoan(double amount, Integer month){
+    public LoanSimulateResponseDTO simulateLoan(double amount, Integer month){
         if(amount <= 0.0){
             throw new ExceptionAmountNotAllowed();
         }
@@ -26,7 +26,7 @@ public class LoanService {
         double totalAmountDue = amount + (monthlyInterest * month);
         double monthlyPayment = (amount/month) + monthlyInterest;
 
-        LoanDto loanDto = new LoanDto();
+        LoanSimulateResponseDTO loanDto = new LoanSimulateResponseDTO();
         loanDto.setMonthlyInterestRate(monthlyInterestRate);
         loanDto.setMonthlyPayment(monthlyPayment);
         loanDto.setTotalAmountDue(totalAmountDue);

@@ -2,9 +2,9 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.TransactionModel;
-import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
 import com.bbva.wallet.exceptions.ExceptionUserNotAuthenticated;
@@ -108,7 +108,7 @@ import org.springframework.web.bind.annotation.*;
             }
     )
     @PatchMapping("/{id}")
-    public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionDescriptionDto transactionDescriptionDto){
+    public ResponseEntity<Response>editTransaction(@PathVariable Long id, @RequestBody TransactionPatchDescriptionRequestDTO transactionDescriptionDto){
         Response <Transaction> response = new Response<>();
         response.setData(transactionService.editTransaction(id, transactionDescriptionDto.getDescription()));
         return ResponseEntity.ok(response);
@@ -160,9 +160,10 @@ import org.springframework.web.bind.annotation.*;
             }
     )
     @PostMapping("/sendArs")
-    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Response> sendPesos(@Valid @RequestBody TransactionSendMoneyRequestDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
-        response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.sendMoney(transactionDto,Currencies.ARS,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -180,9 +181,10 @@ import org.springframework.web.bind.annotation.*;
             }
     )
     @PostMapping("/sendUsd")
-    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Response> sendDollars(@Valid @RequestBody TransactionSendMoneyRequestDTO transactionDto) {
         Response<List<Transaction>> response = new Response<>();
-        response.setData(transactionService.sendMoney(transactionDto,Currencies.USD));
+        User authenticatedUser = ExtractUser.extract();
+        response.setData(transactionService.sendMoney(transactionDto,Currencies.USD,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -200,8 +202,8 @@ import org.springframework.web.bind.annotation.*;
             }
     )
     @PostMapping("/payment")
-    public ResponseEntity<Response> pay(@Valid @RequestBody PaymentDto paymentDto){
-        Response<ResponsePaymentDto> response = new Response<>();
+    public ResponseEntity<Response> pay(@Valid @RequestBody TransactionPaymentRequestDTO paymentDto){
+        Response<TransactionPaymentResponseDTO> response = new Response<>();
         User authenticatedUser = ExtractUser.extract();
         response.setData(transactionService.pay(paymentDto,authenticatedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -220,9 +222,9 @@ import org.springframework.web.bind.annotation.*;
             }
     )
     @PostMapping("/deposit")
-    public ResponseEntity<Transaction> deposit(@RequestBody @Valid DepositDTO depositDTO){
-
-        return ResponseEntity.ok(transactionService.deposit(depositDTO));
+    public ResponseEntity<Transaction> deposit(@RequestBody @Valid TransactionDepositRequestDTO depositDTO){
+        User authenticatedUser = ExtractUser.extract();
+        return ResponseEntity.ok(transactionService.deposit(depositDTO,authenticatedUser));
     }
 
 }

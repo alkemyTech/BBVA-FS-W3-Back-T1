@@ -1,9 +1,9 @@
 package com.bbva.wallet.services;
 
-import com.bbva.wallet.dtos.DepositDTO;
-import com.bbva.wallet.dtos.PaymentDto;
-import com.bbva.wallet.dtos.ResponsePaymentDto;
-import com.bbva.wallet.dtos.TransactionDto;
+import com.bbva.wallet.dtos.TransactionDepositRequestDTO;
+import com.bbva.wallet.dtos.TransactionPaymentRequestDTO;
+import com.bbva.wallet.dtos.TransactionPaymentResponseDTO;
+import com.bbva.wallet.dtos.TransactionSendMoneyRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
@@ -89,20 +89,19 @@ public class TransactionService {
         return transactions;
     }
 
-    public List<Transaction> sendMoney(TransactionDto transactionDto, Currencies currency) {
-        User authenticatedUser = ExtractUser.extract();
+    public List<Transaction> sendMoney(TransactionSendMoneyRequestDTO transactionDto, Currencies currency, User user) {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
-        Account sourceAccount = authenticatedUser.getAccountList().stream().filter(account -> account.getCurrency() == currency).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
+        Account sourceAccount = accountRepository.findAll().stream().filter(account -> account.getCurrency() == currency && account.getUserId().getId().equals(user.getId())).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
 
-        if(authenticatedUser.isSoftDelete())
+        if(user.isSoftDelete())
         {throw new ExceptionUserNotFound();}
 
         if(currency != recipientAccount.getCurrency())
         {throw new ExceptionMismatchCurrencies();}
 
-        if (recipientAccount.getUserId().getId().equals(authenticatedUser.getId()))
+        if (recipientAccount.getUserId().getId().equals(user.getId()))
         {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
 
         if (sourceAccount.getBalance() < amount)
@@ -142,7 +141,7 @@ public class TransactionService {
         return transactions;
     }
 
-    public ResponsePaymentDto pay(PaymentDto paymentDto, User authenticatedUser) {
+    public TransactionPaymentResponseDTO pay(TransactionPaymentRequestDTO paymentDto, User authenticatedUser) {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
@@ -176,16 +175,17 @@ public class TransactionService {
         Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
         paymentAccount.setBalance(newBalancePaymentAccount);
 
-        ResponsePaymentDto responsePayment = new ResponsePaymentDto();
+        TransactionPaymentResponseDTO responsePayment = new TransactionPaymentResponseDTO();
         responsePayment.setUpdatedAccount(accountRepository.save(paymentAccount));
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-    public Transaction deposit(DepositDTO deposit){
+    public Transaction deposit(TransactionDepositRequestDTO deposit,User user){
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
+        String description = deposit.description();
 
-        User authenticatedUser = userService.findById(ExtractUser.extract().getId())
+        User authenticatedUser = userService.findById(user.getId())
                 .orElseThrow(() -> new ExceptionUserNotFound());
 
         Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);
@@ -198,6 +198,7 @@ public class TransactionService {
                     .type(TransactionType.DEPOSIT)
                     .account(account)
                     .transactionDate(LocalDateTime.now())
+                    .description(deposit.description())
                     .build();
 
             transactionRepository.save(transaction);

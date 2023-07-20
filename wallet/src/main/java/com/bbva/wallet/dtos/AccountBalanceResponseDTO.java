@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BalanceDto {
+public class AccountBalanceResponseDTO {
    private Account accountArs;
    private Account accountUsd;
    private List<Transaction> historyArs;

@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionDescriptionDto {
+public class TransactionPatchDescriptionRequestDTO {
     @Schema(description = "Nueva descripción para la transacción", example = "Pago de servicio")
     private String description;
 }

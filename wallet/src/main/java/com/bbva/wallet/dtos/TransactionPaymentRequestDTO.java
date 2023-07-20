@@ -10,12 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDto {
+public class TransactionPaymentRequestDTO {
     @Schema(description = "ID de la cuenta que realiza el pago", example = "37")
     private Long id;
 
     @Schema(description = "Monto a pagar", example = "200")
-    @Positive
+    @Positive(message = "El monto a pagar debe ser mayor a cero.")
     private Double amount;
 
     @Schema(description = "Moneda del pago", example = "ARS")

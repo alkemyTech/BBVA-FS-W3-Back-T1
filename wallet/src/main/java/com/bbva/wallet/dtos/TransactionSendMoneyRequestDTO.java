@@ -9,12 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionDto {
+public class TransactionSendMoneyRequestDTO {
     @Schema(description = "ID de la cuenta destino", example = "31")
     private Long id;
 
     @Schema(description = "Monto a enviar", example = "2000")
-    @Positive
+    @Positive(message = "El monto a enviar debe ser mayor a cero.")
     private Double amount;
 
 }

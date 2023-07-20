@@ -2,6 +2,7 @@ package com.bbva.wallet.controllers;
 
 import com.bbva.wallet.dtos.UpdateUserDto;
 import com.bbva.wallet.entities.FixedTermDeposit;
+import com.bbva.wallet.dtos.UserUpdateRequestDTO;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.UserModel;
@@ -24,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+
 
 @ApiResponses(value = {
         @ApiResponse(responseCode = "400", description = "Custom Error", content = {
@@ -109,7 +111,7 @@ public class UserController {
     )
     @PreAuthorize("#id == authentication.principal.id")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserDto dto, Authentication authentication){
+    public ResponseEntity<Response> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UserUpdateRequestDTO dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Response<User> response = new Response<>();
         response.setData(userService.updateUser(dto,user));
@@ -137,4 +139,6 @@ public class UserController {
         response.setData(userService.getUser(user.getId()));
         return ResponseEntity.ok(response);
     }
+
+
 }

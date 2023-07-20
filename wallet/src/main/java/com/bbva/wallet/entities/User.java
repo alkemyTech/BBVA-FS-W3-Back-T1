@@ -112,9 +112,7 @@ public class User implements UserDetails,Serializable {
 
     @Override
     @JsonIgnore
-    public boolean isEnabled() {
-        return !this.softDelete;
-    }
+    public boolean isEnabled() {return !this.softDelete;}
 
     @PreRemove
     public void deleteUser(){

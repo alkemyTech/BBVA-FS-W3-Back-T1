@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CurrenciesDto {
+public class CreateAccountCurrencyRequestDTO {
     @Schema(description = "Tipo de moneda", example = "USD")
     private Currencies currency;
 }

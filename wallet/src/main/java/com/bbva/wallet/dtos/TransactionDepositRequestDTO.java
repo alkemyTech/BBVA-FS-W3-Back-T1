@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record DepositDTO(
+public record TransactionDepositRequestDTO(
 
         @Schema(description = "Tipo de moneda del depósito", example = "ARS")
         @NotNull Currencies currency,

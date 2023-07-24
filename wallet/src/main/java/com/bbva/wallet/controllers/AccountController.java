@@ -1,5 +1,6 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.AccountCbuRequestDTO;
 import com.bbva.wallet.dtos.CreateAccountCurrencyRequestDTO;
 import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.dtos.AccountUpdateRequestDTO;
@@ -39,6 +40,13 @@ public class AccountController {
     private GenericModelAssembler<Account,AccountModel> genericModelAssembler;
     public AccountController() {
         this.genericModelAssembler = new GenericModelAssembler<>(AccountController.class, AccountModel.class);
+    }
+
+    @GetMapping("/cbu")
+    public ResponseEntity<Response> getByCbu(@RequestBody AccountCbuRequestDTO dto){
+        Response response = new Response<>();
+        response.setData(accountService.getByCbu(dto.cbu()));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

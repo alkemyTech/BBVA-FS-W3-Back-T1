@@ -125,5 +125,7 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-
+    public Account getByCbu(String cbu){
+            return accountRepository.findByCbu(cbu).orElseThrow(ExceptionAccountNotFound::new);
+    }
 }

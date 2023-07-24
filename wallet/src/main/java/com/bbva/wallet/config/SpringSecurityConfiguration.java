@@ -24,6 +24,7 @@ import org.springframework.web.filter.CorsFilter;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -40,13 +41,14 @@ public class SpringSecurityConfiguration   {
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173"); // Reemplaza con la URL de tu cliente (front-end)
+        config.setAllowedOriginPatterns(Collections.singletonList("*")); // Permitir cualquier URL
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
     @Bean
     public CorsFilter corsFilter() {

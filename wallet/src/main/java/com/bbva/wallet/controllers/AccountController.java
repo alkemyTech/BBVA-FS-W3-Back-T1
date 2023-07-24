@@ -42,10 +42,10 @@ public class AccountController {
         this.genericModelAssembler = new GenericModelAssembler<>(AccountController.class, AccountModel.class);
     }
 
-    @GetMapping("/cbu")
-    public ResponseEntity<Response> getByCbu(@RequestBody AccountCbuRequestDTO dto){
+    @GetMapping("/cbu/{cbu}")
+    public ResponseEntity<Response> getByCbu(@PathVariable String cbu){
         Response response = new Response<>();
-        response.setData(accountService.getByCbu(dto.cbu()));
+        response.setData(accountService.getByCbu(cbu));
         return ResponseEntity.ok(response);
     }
 

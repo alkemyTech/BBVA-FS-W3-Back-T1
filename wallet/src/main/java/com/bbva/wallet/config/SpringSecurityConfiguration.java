@@ -41,10 +41,9 @@ public class SpringSecurityConfiguration   {
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Collections.singletonList("*")); // Permitir cualquier URL
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return source;
     }

@@ -93,7 +93,10 @@ public class TransactionService {
         Long recipientAccountId = transactionDto.getId();
         Double amount = transactionDto.getAmount();
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
-        Account sourceAccount = accountRepository.findAll().stream().filter(account -> account.getCurrency() == currency && account.getUserId().getId().equals(user.getId())).findAny().orElseThrow(() -> new ExceptionAccountNotFound());
+        Account sourceAccount = accountRepository.findAll().stream()
+                .filter(account -> account.getCurrency() == currency && account.getUserId()
+                .getId().equals(user.getId()))
+                .findAny().orElseThrow(() -> new ExceptionAccountNotFound("El usuario no tiene una cuenta de este tipo de moneda"));
 
         if(user.isSoftDelete())
         {throw new ExceptionUserNotFound();}

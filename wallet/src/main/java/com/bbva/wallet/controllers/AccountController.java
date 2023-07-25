@@ -1,12 +1,15 @@
 package com.bbva.wallet.controllers;
 
+import com.bbva.wallet.dtos.AccountCbuRequestDTO;
 import com.bbva.wallet.dtos.CreateAccountCurrencyRequestDTO;
 import com.bbva.wallet.dtos.AccountBalanceResponseDTO;
 import com.bbva.wallet.dtos.AccountUpdateRequestDTO;
 import com.bbva.wallet.entities.Account;
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.entities.User;
 import com.bbva.wallet.hateoas.AccountModel;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
+import com.bbva.wallet.hateoas.UserModel;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.UserService;
 import com.bbva.wallet.utils.ExtractUser;
@@ -18,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -46,6 +50,13 @@ public class AccountController {
     private GenericModelAssembler<Account,AccountModel> genericModelAssembler;
     public AccountController() {
         this.genericModelAssembler = new GenericModelAssembler<>(AccountController.class, AccountModel.class);
+    }
+
+    @GetMapping("/cbu/{cbu}")
+    public ResponseEntity<Response> getByCbu(@PathVariable String cbu){
+        Response response = new Response<>();
+        response.setData(accountService.getByCbu(cbu));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(

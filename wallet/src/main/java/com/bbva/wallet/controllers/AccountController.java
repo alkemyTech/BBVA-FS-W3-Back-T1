@@ -52,6 +52,19 @@ public class AccountController {
         this.genericModelAssembler = new GenericModelAssembler<>(AccountController.class, AccountModel.class);
     }
 
+    @Operation(
+            description = "Endpoint accesible a usuarios autenticados",
+            summary = "Busca una cuenta por cbu",
+            responses ={
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content(schema = @Schema(implementation = Account.class), mediaType = "application/json")
+                            }
+                    )
+            }
+    )
     @GetMapping("/cbu/{cbu}")
     public ResponseEntity<Response> getByCbu(@PathVariable String cbu){
         Response response = new Response<>();

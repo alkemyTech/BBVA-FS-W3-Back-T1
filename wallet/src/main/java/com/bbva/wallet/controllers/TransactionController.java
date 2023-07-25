@@ -64,16 +64,17 @@ public class TransactionController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page,
                                                         @RequestParam(required = false) TransactionType transactionType,
+                                                        @RequestParam(required = false) Long accountId,
                                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction sortDirection,
                                                         @PathVariable Long userId){
         Response response = new Response<>();
         CollectionModel<TransactionModel> collectionModel;
         Slice<Transaction> pagedEntity;
         if(page.isPresent()){
-            pagedEntity= transactionService.getTen(page.get(), userId, transactionType, sortDirection);
+            pagedEntity= transactionService.getTen(page.get(), userId, transactionType, sortDirection,accountId);
         }
         else{
-            pagedEntity= transactionService.getTen(0, userId,transactionType,sortDirection);
+            pagedEntity= transactionService.getTen(0, userId,transactionType,sortDirection,accountId);
         }
 
         collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);

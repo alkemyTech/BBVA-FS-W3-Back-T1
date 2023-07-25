@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     Slice<Transaction> findByAccount_UserId_Id(Long userId, Pageable pageable);
     Slice<Transaction> findByAccount_UserId_IdAndType(Long userId, TransactionType transactionType, Pageable pageable);
+    Slice<Transaction> findByAccount_UserId_IdAndAccount_Id(Long userId, Long accountId, Pageable pageable);
+    Slice<Transaction> findByAccount_UserId_IdAndTypeAndAccount_Id(Long userId, TransactionType transactionType, Long accountId, Pageable pageable);
 
     @Modifying
     @Query(value = "DELETE FROM transactions", nativeQuery = true)

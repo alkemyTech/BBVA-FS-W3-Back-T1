@@ -599,7 +599,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/user/21?page=0&sortDirection=DESC&accountId=33",
+							"raw": "{{BASE_URL}}/transactions/user/21?page=0&sortDirection=DESC&currencies=ARS",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -623,8 +623,8 @@
 									"value": "DESC"
 								},
 								{
-									"key": "accountId",
-									"value": "33"
+									"key": "currencies",
+									"value": "ARS"
 								}
 							]
 						}

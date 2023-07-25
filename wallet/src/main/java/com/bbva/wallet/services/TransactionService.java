@@ -218,27 +218,23 @@ public class TransactionService {
         } else throw new ExceptionAccountCurrencyNotFound();
     }
 
-    public Slice<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Long accountId) {
+    public Slice<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
         Account account = null;
-        if (accountId != null) {
-            account = accountRepository.findById(accountId).orElseThrow(ExceptionAccountNotFound::new);
-
-            // Check if the account belongs to the user
-            if (!account.getUserId().equals(user)) {
-                throw new ExceptionAccountCurrencyNotFound();
-            }
+        if (currencies != null) {
+            account = user.getAccountList().stream().filter(ac -> ac.getCurrency()==currencies && !ac.isSoftDelete())
+                    .findFirst().orElseThrow(ExceptionAccountCurrencyNotFound::new);
         }
 
         Pageable pageable = PageRequest.of(page, 10, sortDirection, "transactionDate");
 
         // Continue with transaction retrieval based on the provided filters
-        if (transactionType != null && accountId != null) {
-            return transactionRepository.findByAccount_UserId_IdAndTypeAndAccount_Id(id, transactionType, accountId, pageable);
+        if (transactionType != null && currencies != null) {
+            return transactionRepository.findByAccount_UserId_IdAndTypeAndAccount_Id(id, transactionType, account.getId(), pageable);
         } else if (transactionType != null) {
             return transactionRepository.findByAccount_UserId_IdAndType(id, transactionType, pageable);
-        } else if (accountId != null) {
-            return transactionRepository.findByAccount_UserId_IdAndAccount_Id(id, accountId, pageable);
+        } else if (currencies != null) {
+            return transactionRepository.findByAccount_UserId_IdAndAccount_Id(id, account.getId(), pageable);
         } else {
             return transactionRepository.findByAccount_UserId_Id(id, pageable);
         }

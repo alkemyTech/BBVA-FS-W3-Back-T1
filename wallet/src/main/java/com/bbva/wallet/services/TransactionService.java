@@ -212,9 +212,16 @@ public class TransactionService {
         } else throw new ExceptionAccountCurrencyNotFound();
     }
 
-    public Slice<Transaction> getTen(Integer page, Long id) {
+    public Slice<Transaction> getTen(Integer page, Long id,TransactionType transactionType, Sort.Direction sortDirection) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
-        Pageable pageable = PageRequest.of(page, 10);
-        return transactionRepository.findByAccount_UserId_Id(id, pageable);
+        Pageable pageable = PageRequest.of(page, 10,sortDirection, "transactionDate");
+
+        if (transactionType != null) {
+            return transactionRepository.findByAccount_UserId_IdAndType(id, transactionType, pageable);
+        } else {
+            return transactionRepository.findByAccount_UserId_Id(id, pageable);
+        }
+//
+//        return transactionRepository.findByAccount_UserId_Id(id, pageable);
     }
 }

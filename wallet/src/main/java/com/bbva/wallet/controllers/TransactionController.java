@@ -3,6 +3,7 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.*;
 import com.bbva.wallet.entities.Transaction;
 import com.bbva.wallet.entities.User;
+import com.bbva.wallet.enums.TransactionType;
 import com.bbva.wallet.hateoas.GenericModelAssembler;
 import com.bbva.wallet.hateoas.TransactionModel;
 import com.bbva.wallet.enums.Currencies;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,15 +62,18 @@ public class TransactionController {
 
     @PreAuthorize("hasAuthority('ADMIN') || #userId == authentication.principal.id")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page, @PathVariable Long userId){
+    public ResponseEntity<Response> getUserTransactions(@RequestParam(required = false) Optional<Integer> page,
+                                                        @RequestParam(required = false) TransactionType transactionType,
+                                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction sortDirection,
+                                                        @PathVariable Long userId){
         Response response = new Response<>();
         CollectionModel<TransactionModel> collectionModel;
         Slice<Transaction> pagedEntity;
         if(page.isPresent()){
-            pagedEntity= transactionService.getTen(page.get(), userId);
+            pagedEntity= transactionService.getTen(page.get(), userId, transactionType, sortDirection);
         }
         else{
-            pagedEntity= transactionService.getTen(0, userId);
+            pagedEntity= transactionService.getTen(0, userId,transactionType,sortDirection);
         }
 
         collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);

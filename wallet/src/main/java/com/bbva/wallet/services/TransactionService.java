@@ -40,13 +40,13 @@ public class TransactionService {
     @Autowired
     private AccountService accountService;
 
-    public Transaction getTransaction(Long id){
+    public Transaction getTransaction(Long id) {
 
         return transactionRepository.findById(id)
                 .orElseThrow(ExceptionTransactionNotExist::new);
     }
 
-    public Transaction editTransaction(Long id, String description){
+    public Transaction editTransaction(Long id, String description) {
 
         User authenticatedUser = userRepository.findById(ExtractUser.extract().getId())
                 .orElseThrow(ExceptionUserNotAuthenticated::new);
@@ -54,7 +54,7 @@ public class TransactionService {
         Transaction transactionToEdit = transactionRepository.findById(id)
                 .orElseThrow(ExceptionTransactionNotExist::new);
 
-        if(transactionToEdit.getAccount().getUserId().getId().equals(authenticatedUser.getId())){
+        if (transactionToEdit.getAccount().getUserId().getId().equals(authenticatedUser.getId())) {
             transactionToEdit.setDescription(description);
             return transactionRepository.save(transactionToEdit);
         } else {
@@ -62,8 +62,8 @@ public class TransactionService {
         }
     }
 
-    public List<Transaction> getUserTransactions(Long userId){
-        User userTransactions = userRepository.findById(userId).orElseThrow(()->new ExceptionUserNotFound());
+    public List<Transaction> getUserTransactions(Long userId) {
+        User userTransactions = userRepository.findById(userId).orElseThrow(() -> new ExceptionUserNotFound());
 
         List<Account> userAccounts = userTransactions.getAccountList();
 
@@ -83,7 +83,7 @@ public class TransactionService {
         transactions.addAll(arsTransactions);
         transactions.addAll(usdTransactions);
 
-        if(transactions.isEmpty()){
+        if (transactions.isEmpty()) {
             throw new ExceptionUserWithNoTransactions();
         }
         return transactions;
@@ -95,30 +95,35 @@ public class TransactionService {
         Account recipientAccount = accountRepository.findById(recipientAccountId).orElseThrow(() -> new ExceptionAccountNotFound());
         Account sourceAccount = accountRepository.findAll().stream()
                 .filter(account -> account.getCurrency() == currency && account.getUserId()
-                .getId().equals(user.getId()))
+                        .getId().equals(user.getId()))
                 .findAny().orElseThrow(() -> new ExceptionAccountNotFound("El usuario no tiene una cuenta de este tipo de moneda"));
 
-        if(user.isSoftDelete())
-        {throw new ExceptionUserNotFound();}
+        if (user.isSoftDelete()) {
+            throw new ExceptionUserNotFound();
+        }
 
-        if(currency != recipientAccount.getCurrency())
-        {throw new ExceptionMismatchCurrencies();}
+        if (currency != recipientAccount.getCurrency()) {
+            throw new ExceptionMismatchCurrencies();
+        }
 
-        if (recipientAccount.getUserId().getId().equals(user.getId()))
-        {throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");}
+        if (recipientAccount.getUserId().getId().equals(user.getId())) {
+            throw new ExceptionTransactionNotAllowed("No se puede enviar dinero a uno mismo");
+        }
 
-        if (sourceAccount.getBalance() < amount)
-        {throw new ExceptionInsufficientBalance();}
+        if (sourceAccount.getBalance() < amount) {
+            throw new ExceptionInsufficientBalance();
+        }
 
-        if (sourceAccount.getTransactionLimit()<amount)
-        {throw new ExceptionExceedTransactionLimit();}
+        if (sourceAccount.getTransactionLimit() < amount) {
+            throw new ExceptionExceedTransactionLimit();
+        }
 
         Transaction transactionPayment = Transaction.builder()
-                        .amount(amount)
-                        .description("Enviaste dinero")
-                        .account(sourceAccount)
-                        .type(TransactionType.PAYMENT)
-                        .build();
+                .amount(amount)
+                .description("Enviaste dinero")
+                .account(sourceAccount)
+                .type(TransactionType.PAYMENT)
+                .build();
 
         Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
         sourceAccount.setBalance(newBalanceSourceAccount);
@@ -127,11 +132,11 @@ public class TransactionService {
 
 
         Transaction transactionIncome = Transaction.builder()
-                        .amount(amount)
-                        .description("Recibiste dinero")
-                        .account(recipientAccount)
-                        .type(TransactionType.INCOME)
-                        .build();
+                .amount(amount)
+                .description("Recibiste dinero")
+                .account(recipientAccount)
+                .type(TransactionType.INCOME)
+                .build();
 
         Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
         recipientAccount.setBalance(newBalanceRecipientAccount);
@@ -155,7 +160,7 @@ public class TransactionService {
             throw new ExceptionUserNotFound();
         }
 
-        if(!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())){
+        if (!paymentAccount.getUserId().getId().equals(authenticatedUser.getId())) {
             throw new ExceptionAccountNotFound();
         }
 
@@ -183,7 +188,8 @@ public class TransactionService {
         responsePayment.setTransactionPayment(transactionRepository.save(transactionPayment));
         return responsePayment;
     }
-    public Transaction deposit(TransactionDepositRequestDTO deposit,User user){
+
+    public Transaction deposit(TransactionDepositRequestDTO deposit, User user) {
         Currencies currency = deposit.currency();
         Double amount = deposit.amount();
         String description = deposit.description();
@@ -193,7 +199,7 @@ public class TransactionService {
 
         Optional<Account> optionalAccount = authenticatedUser.hasThisCurrencyAccount(currency);
 
-        if(optionalAccount.isPresent()){
+        if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
 
             Transaction transaction = Transaction.builder()
@@ -212,9 +218,25 @@ public class TransactionService {
         } else throw new ExceptionAccountCurrencyNotFound();
     }
 
-    public Slice<Transaction> getTen(Integer page, Long id) {
+    public Slice<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
-        Pageable pageable = PageRequest.of(page, 10);
-        return transactionRepository.findByAccount_UserId_Id(id, pageable);
+        Account account = null;
+        if (currencies != null) {
+            account = user.getAccountList().stream().filter(ac -> ac.getCurrency()==currencies && !ac.isSoftDelete())
+                    .findFirst().orElseThrow(ExceptionAccountCurrencyNotFound::new);
+        }
+
+        Pageable pageable = PageRequest.of(page, 10, sortDirection, "transactionDate");
+
+        // Continue with transaction retrieval based on the provided filters
+        if (transactionType != null && currencies != null) {
+            return transactionRepository.findByAccount_UserId_IdAndTypeAndAccount_Id(id, transactionType, account.getId(), pageable);
+        } else if (transactionType != null) {
+            return transactionRepository.findByAccount_UserId_IdAndType(id, transactionType, pageable);
+        } else if (currencies != null) {
+            return transactionRepository.findByAccount_UserId_IdAndAccount_Id(id, account.getId(), pageable);
+        } else {
+            return transactionRepository.findByAccount_UserId_Id(id, pageable);
+        }
     }
 }

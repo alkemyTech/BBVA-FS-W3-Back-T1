@@ -599,14 +599,33 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/transactions/user/16",
+							"raw": "{{BASE_URL}}/transactions/user/21?page=0&sortDirection=DESC&currencies=ARS",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"transactions",
 								"user",
-								"16"
+								"21"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "transactionType",
+									"value": "PAYMENT",
+									"disabled": true
+								},
+								{
+									"key": "sortDirection",
+									"value": "DESC"
+								},
+								{
+									"key": "currencies",
+									"value": "ARS"
+								}
 							]
 						}
 					},

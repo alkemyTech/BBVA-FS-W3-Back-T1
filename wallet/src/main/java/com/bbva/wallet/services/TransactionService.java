@@ -218,7 +218,7 @@ public class TransactionService {
         } else throw new ExceptionAccountCurrencyNotFound();
     }
 
-    public Slice<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
+    public Page<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
         Account account = null;
         if (currencies != null) {

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
@@ -123,7 +124,7 @@ import java.util.Optional;
                                                         @PathVariable Long userId){
         Response response = new Response<>();
         CollectionModel<TransactionModel> collectionModel;
-        Slice<Transaction> pagedEntity;
+        Page<Transaction> pagedEntity;
         if(page.isPresent()){
             pagedEntity= transactionService.getTen(page.get(), userId, transactionType, sortDirection,currencies);
         }
@@ -132,7 +133,8 @@ import java.util.Optional;
         }
 
         collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
-        response.setData(collectionModel);
+
+        response.setData(new PaginationResponseDto(pagedEntity.getTotalPages(),collectionModel));
 
         return ResponseEntity.ok(response);
     }

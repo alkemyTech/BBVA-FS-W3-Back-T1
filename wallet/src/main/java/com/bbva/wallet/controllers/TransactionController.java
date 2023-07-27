@@ -134,7 +134,7 @@ import java.util.Optional;
 
         collectionModel = genericModelAssembler.toCollectionModel(pagedEntity);
 
-        response.setData(new PaginationResponseDto(pagedEntity.getTotalPages(),collectionModel));
+        response.setData(new PaginationResponseDto(pagedEntity.getTotalPages(),pagedEntity.getTotalElements(),collectionModel));
 
         return ResponseEntity.ok(response);
     }

@@ -8,10 +8,7 @@ import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
-import com.bbva.wallet.repositories.AccountRepository;
-import com.bbva.wallet.repositories.RoleRepository;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.repositories.*;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +33,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
 
+    private final FixedTermDepositsRepository fixedTermDepositsRepository;
+
 
     @Value("${develop.seeder}")
     private Boolean loadDataBase;
@@ -45,6 +44,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         if (loadDataBase){
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
+
+            fixedTermDepositsRepository.deleteAll();
 
             transactionRepository.deleteAll();
 
@@ -107,7 +108,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userPesosBalance100mil = new User();
             makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
             userPesosBalance100mil = saveUser(userPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.ARS, userPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 

@@ -158,6 +158,12 @@ public class TransactionService {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
+        String description = paymentDto.getDescription();
+
+        if(description.isEmpty()){
+            description = "Pagaste";
+        }
+
         Account paymentAccount = accountRepository.findById(paymentAccountId)
                 .orElseThrow(() -> new ExceptionAccountNotFound());
 
@@ -181,10 +187,11 @@ public class TransactionService {
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
-                .description("Pagaste")
+                .description(description)
                 .account(paymentAccount)
-                .type(TransactionType.PAYMENT)
                 .accountBalance(newBalancePaymentAccount)
+                .type(TransactionType.SERVICEPAYMENT)
+
                 .build();
         paymentAccount.setBalance(newBalancePaymentAccount);
 

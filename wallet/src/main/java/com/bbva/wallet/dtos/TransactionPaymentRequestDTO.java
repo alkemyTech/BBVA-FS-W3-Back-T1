@@ -21,4 +21,6 @@ public class TransactionPaymentRequestDTO {
     @Schema(description = "Moneda del pago", example = "ARS")
     private Currencies currency;
 
+    @Schema(description = "Descripción del pago", example = "Pagaste el cable")
+    private String description;
 }

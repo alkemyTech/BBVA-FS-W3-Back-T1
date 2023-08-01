@@ -42,14 +42,14 @@ public class TransactionControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(transactionController).build();
     }
     @Test
-    @WithMockUser
+//    @WithMockUser
     public void testSendPesosUnauthenticatedUser() throws Exception {
 
         TransactionSendMoneyRequestDTO transactionDto =
                 new TransactionSendMoneyRequestDTO(1L,10.0);
 
 
-        mockMvc.perform(post("/sendArs")
+        mockMvc.perform(post("/transactions/sendArs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": 18, \"amount\": 2000 }"))
                 .andExpect(status().isForbidden());

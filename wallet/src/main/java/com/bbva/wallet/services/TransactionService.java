@@ -118,27 +118,32 @@ public class TransactionService {
             throw new ExceptionExceedTransactionLimit();
         }
 
+        Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
+
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
                 .description("Enviaste dinero")
                 .account(sourceAccount)
                 .type(TransactionType.PAYMENT)
+                .accountBalance(newBalanceSourceAccount)
                 .build();
 
-        Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
+
         sourceAccount.setBalance(newBalanceSourceAccount);
         accountRepository.save(sourceAccount);
         transactionRepository.save(transactionPayment);
 
+        Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
 
         Transaction transactionIncome = Transaction.builder()
                 .amount(amount)
                 .description("Recibiste dinero")
                 .account(recipientAccount)
                 .type(TransactionType.INCOME)
+                .accountBalance(newBalanceRecipientAccount)
                 .build();
 
-        Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
+
         recipientAccount.setBalance(newBalanceRecipientAccount);
         accountRepository.save(recipientAccount);
         transactionRepository.save(transactionIncome);
@@ -178,15 +183,16 @@ public class TransactionService {
             throw new ExceptionInsufficientBalance();
         }
 
+        Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
                 .description(description)
                 .account(paymentAccount)
+                .accountBalance(newBalancePaymentAccount)
                 .type(TransactionType.SERVICEPAYMENT)
-                .build();
 
-        Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
+                .build();
         paymentAccount.setBalance(newBalancePaymentAccount);
 
         TransactionPaymentResponseDTO responsePayment = new TransactionPaymentResponseDTO();
@@ -214,6 +220,7 @@ public class TransactionService {
                     .account(account)
                     .transactionDate(LocalDateTime.now())
                     .description(deposit.description())
+                    .accountBalance(account.getBalance() + amount)
                     .build();
 
             transactionRepository.save(transaction);

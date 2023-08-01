@@ -3,6 +3,7 @@ package com.bbva.wallet.controllers;
 import com.bbva.wallet.dtos.FixedTermCreateRequestDTO;
 import com.bbva.wallet.dtos.FixedTermSimulateResponseDTO;
 import com.bbva.wallet.services.FixedTermService;
+import com.bbva.wallet.utils.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,27 +48,31 @@ public class FixedTermControllerTest {
 
     @Test
     public void FixedTermControler_SimulateFixedTerm_ReturnCreated() throws Exception {
-        // Simular el comportamiento del servicio
-//        FixedTermCreateRequestDTO requestDTO = new FixedTermCreateRequestDTO(100D, 30);
-//
-//        Timestamp fechaCreacion = new Timestamp(System.currentTimeMillis());
-//        Timestamp fechaFinalizacion = new Timestamp(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // Agregar 30 días al tiempo actual
-//        Double montoInvertido = 1000.0;
-//        Double interes = 50.0;
-//        Double montoTotal = montoInvertido + interes;
-//
-//        FixedTermSimulateResponseDTO responseDTO =
-//                new FixedTermSimulateResponseDTO(fechaCreacion, fechaFinalizacion, montoInvertido, interes, montoTotal);
-//
-//        given(fixedTermService.simulateFixedTerm(ArgumentMatchers.any())).willReturn(responseDTO);
+        //Simulo lo que devuelve el servicio.
+        FixedTermCreateRequestDTO requestDTO = new FixedTermCreateRequestDTO(100D, 30);
+
+        Timestamp fechaCreacion = new Timestamp(System.currentTimeMillis());
+        Timestamp fechaFinalizacion = new Timestamp(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // Agregar 30 días al tiempo actual
+        Double montoInvertido = 1000.0;
+        Double interes = 50.0;
+        Double montoTotal = montoInvertido + interes;
+
+        FixedTermSimulateResponseDTO responseDTO =
+                new FixedTermSimulateResponseDTO(fechaCreacion, fechaFinalizacion, montoInvertido, interes, montoTotal);
+
+        given(fixedTermService.simulateFixedTerm(ArgumentMatchers.any())).willReturn(responseDTO);
+
+        // Simular el comportamiento del controller.
+
+        Response<FixedTermSimulateResponseDTO> response = new Response<>();
+        response.setData(responseDTO);
 
         // Realizar la solicitud a través de MockMvc
-        ResultActions response = mockMvc.perform(post("/fixedTerm/simulate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"amount\": 2000, \"cantDias\": 30 }"));
 
-        // Verificar el resultado esperado
-        response.andExpect(status().isOk());
+        mockMvc.perform(post("/fixedTerm/simulate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"amount\": 2000, \"cantDias\": 30 }"))
+                .andExpect(status().isOk());
     }
 
     @Test

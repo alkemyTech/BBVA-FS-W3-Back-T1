@@ -1,8 +1,10 @@
 package com.bbva.wallet.hateoas;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
@@ -38,8 +40,10 @@ public class GenericModelAssembler<T, M extends RepresentationModel<M>> extends 
 
         CollectionModel<M> collectionModel = CollectionModel.of(entityModels);
 
-        if (entities instanceof Slice) {
-            Slice<T> page = (Slice<T>)  entities;
+        if (entities instanceof Page) {
+            Page<T> page = (Page<T>)  entities;
+
+
 
             // Add link for the previous page if it exists
             if (page.hasPrevious()) {
@@ -49,7 +53,9 @@ public class GenericModelAssembler<T, M extends RepresentationModel<M>> extends 
             // Add link for the next page if it exists
             if (page.hasNext()) {
                 collectionModel.add(linkTo(controllerClass).slash("?page=" + page.nextPageable().getPageNumber()).withRel("next"));
+
             }
+
         }
 
         return collectionModel;

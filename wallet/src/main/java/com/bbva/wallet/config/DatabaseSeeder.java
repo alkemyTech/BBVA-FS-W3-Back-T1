@@ -8,10 +8,7 @@ import com.bbva.wallet.entities.Role;
 import com.bbva.wallet.entities.User;
 import com.bbva.wallet.enums.Currencies;
 import com.bbva.wallet.enums.EnumRole;
-import com.bbva.wallet.repositories.AccountRepository;
-import com.bbva.wallet.repositories.RoleRepository;
-import com.bbva.wallet.repositories.TransactionRepository;
-import com.bbva.wallet.repositories.UserRepository;
+import com.bbva.wallet.repositories.*;
 import com.bbva.wallet.services.AccountService;
 import com.bbva.wallet.services.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +33,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
 
+    private final FixedTermDepositsRepository fixedTermDepositsRepository;
+
 
     @Value("${develop.seeder}")
     private Boolean loadDataBase;
@@ -45,6 +44,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         if (loadDataBase){
             Role roleUser = roleRepository.findByName(EnumRole.USER).orElseGet(() -> roleRepository.save(new Role(EnumRole.USER)));
             Role roleAdmin = roleRepository.findByName(EnumRole.ADMIN).orElseGet(() -> roleRepository.save(new Role(EnumRole.ADMIN)));
+
+            fixedTermDepositsRepository.deleteAll();
 
             transactionRepository.deleteAll();
 
@@ -107,7 +108,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             User userPesosBalance100mil = new User();
             makeUser(userPesosBalance100mil, "userPesosBalance100mil@example.com", roleUser);
             userPesosBalance100mil = saveUser(userPesosBalance100mil);
-            savedAccount = accountService.createAccount(Currencies.USD, userPesosBalance100mil);
+            savedAccount = accountService.createAccount(Currencies.ARS, userPesosBalance100mil);
             savedAccount.setBalance(100_000.0);
             accountRepository.save(savedAccount);
 
@@ -155,10 +156,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             TransactionDepositRequestDTO depositDTOARS = new TransactionDepositRequestDTO(Currencies.ARS,500000.0,"Depositaste pesos");
             transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            TransactionPaymentRequestDTO paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),300.0,Currencies.USD);
+            TransactionPaymentRequestDTO paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),300.0,Currencies.USD, "");
             transactionService.pay(paymentDTOUSD,userWithTransactions);
 
-            TransactionPaymentRequestDTO paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS);
+            TransactionPaymentRequestDTO paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),16000.0,Currencies.ARS,"");
             transactionService.pay(paymentDTOARS,userWithTransactions);
 
             TransactionSendMoneyRequestDTO sendMoneyDTOUSD = new TransactionSendMoneyRequestDTO(accountUserCuentaEnDolares.getId(),900.0);
@@ -170,13 +171,13 @@ public class DatabaseSeeder implements CommandLineRunner {
             depositDTOARS = new TransactionDepositRequestDTO(Currencies.ARS,50000.0,"Depositaste pesos");
             transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS);
+            paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),44800.0,Currencies.ARS, "");
             transactionService.pay(paymentDTOARS,userWithTransactions);
 
             sendMoneyDTOUSD = new TransactionSendMoneyRequestDTO(accountUSDUserWithTransactions.getId(),100.0);
             transactionService.sendMoney(sendMoneyDTOUSD,Currencies.USD,userCuentaEnDolares);
 
-             paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD);
+             paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),360.0,Currencies.USD, "");
             transactionService.pay(paymentDTOUSD,userWithTransactions);
 
             sendMoneyDTOARS = new TransactionSendMoneyRequestDTO(accountARSUserWithTransactions.getId(),2000.0);
@@ -188,10 +189,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             depositDTOARS = new TransactionDepositRequestDTO(Currencies.ARS,230000.0,"Depositaste pesos");
             transactionService.deposit(depositDTOARS,userWithTransactions);
 
-            paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),37000.0,Currencies.ARS);
+            paymentDTOARS = new TransactionPaymentRequestDTO(accountARSUserWithTransactions.getId(),37000.0,Currencies.ARS, "");
             transactionService.pay(paymentDTOARS,userWithTransactions);
 
-            paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),550.0,Currencies.USD);
+            paymentDTOUSD = new TransactionPaymentRequestDTO(accountUSDUserWithTransactions.getId(),550.0,Currencies.USD, "");
             transactionService.pay(paymentDTOUSD,userWithTransactions);
 
             depositDTOUSD = new TransactionDepositRequestDTO(Currencies.USD,3400.0,"Depositaste dolares");

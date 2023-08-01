@@ -39,6 +39,9 @@ public class Transaction implements Serializable {
     @NotNull
     private LocalDateTime transactionDate;
 
+    @NotNull
+    private Double accountBalance;
+
     @PrePersist
     protected void onCreate() {
         this.transactionDate= LocalDateTime.now();

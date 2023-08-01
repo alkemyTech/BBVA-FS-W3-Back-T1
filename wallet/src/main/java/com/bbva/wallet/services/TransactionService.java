@@ -118,27 +118,32 @@ public class TransactionService {
             throw new ExceptionExceedTransactionLimit();
         }
 
+        Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
+
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
                 .description("Enviaste dinero")
                 .account(sourceAccount)
                 .type(TransactionType.PAYMENT)
+                .accountBalance(newBalanceSourceAccount)
                 .build();
 
-        Double newBalanceSourceAccount = sourceAccount.getBalance() - amount;
+
         sourceAccount.setBalance(newBalanceSourceAccount);
         accountRepository.save(sourceAccount);
         transactionRepository.save(transactionPayment);
 
+        Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
 
         Transaction transactionIncome = Transaction.builder()
                 .amount(amount)
                 .description("Recibiste dinero")
                 .account(recipientAccount)
                 .type(TransactionType.INCOME)
+                .accountBalance(newBalanceRecipientAccount)
                 .build();
 
-        Double newBalanceRecipientAccount = recipientAccount.getBalance() + amount;
+
         recipientAccount.setBalance(newBalanceRecipientAccount);
         accountRepository.save(recipientAccount);
         transactionRepository.save(transactionIncome);
@@ -153,6 +158,12 @@ public class TransactionService {
         Double amount = paymentDto.getAmount();
         Long paymentAccountId = paymentDto.getId();
         Currencies paymentCurrency = paymentDto.getCurrency();
+        String description = paymentDto.getDescription();
+
+        if(description.isEmpty()){
+            description = "Pagaste";
+        }
+
         Account paymentAccount = accountRepository.findById(paymentAccountId)
                 .orElseThrow(() -> new ExceptionAccountNotFound());
 
@@ -172,15 +183,16 @@ public class TransactionService {
             throw new ExceptionInsufficientBalance();
         }
 
+        Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
 
         Transaction transactionPayment = Transaction.builder()
                 .amount(amount)
-                .description("Pagaste")
+                .description(description)
                 .account(paymentAccount)
-                .type(TransactionType.PAYMENT)
-                .build();
+                .accountBalance(newBalancePaymentAccount)
+                .type(TransactionType.SERVICEPAYMENT)
 
-        Double newBalancePaymentAccount = paymentAccount.getBalance() - amount;
+                .build();
         paymentAccount.setBalance(newBalancePaymentAccount);
 
         TransactionPaymentResponseDTO responsePayment = new TransactionPaymentResponseDTO();
@@ -208,6 +220,7 @@ public class TransactionService {
                     .account(account)
                     .transactionDate(LocalDateTime.now())
                     .description(deposit.description())
+                    .accountBalance(account.getBalance() + amount)
                     .build();
 
             transactionRepository.save(transaction);
@@ -218,7 +231,7 @@ public class TransactionService {
         } else throw new ExceptionAccountCurrencyNotFound();
     }
 
-    public Slice<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
+    public Page<Transaction> getTen(Integer page, Long id, TransactionType transactionType, Sort.Direction sortDirection, Currencies currencies) {
         User user = userRepository.findById(id).orElseThrow(() -> new ExceptionUserNotFound());
         Account account = null;
         if (currencies != null) {

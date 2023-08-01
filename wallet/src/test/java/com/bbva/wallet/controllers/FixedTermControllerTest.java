@@ -27,11 +27,13 @@ public class FixedTermControllerTest {
 
     private MockMvc mockMvc;
 
-    @Mock
-    private FixedTermService fixedTermService;
-
+    //InjectMock crea la instancia de la clase a probar.
     @InjectMocks
     private FixedTermController fixedTermController;
+
+    //Con mock, instancio las dependencias de la clase a probar.
+    @Mock
+    private FixedTermService fixedTermService;
 
     private ObjectMapper objectMapper;
 

@@ -15,6 +15,7 @@ public class TransactionModel extends RepresentationModel<TransactionModel> {
     private String description;
     private Account account;
     private LocalDateTime transactionDate;
+    private Double accountBalance;
 
     public TransactionModel(){
     }
@@ -26,6 +27,7 @@ public class TransactionModel extends RepresentationModel<TransactionModel> {
         this.description = transaction.getDescription();
         this.account = transaction.getAccount();
         this.transactionDate = transaction.getTransactionDate();
+        this.accountBalance = transaction.getAccountBalance();
     }
 
     public Long getId() {
@@ -74,5 +76,13 @@ public class TransactionModel extends RepresentationModel<TransactionModel> {
 
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public Double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(Double accountBalance) {
+        this.accountBalance = accountBalance;
     }
 }

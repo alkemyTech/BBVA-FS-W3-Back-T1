@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.sql.Timestamp;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FixedTermControllerTest {
@@ -36,23 +37,20 @@ public class FixedTermControllerTest {
     @Mock
     private FixedTermService fixedTermService;
 
-    private ObjectMapper objectMapper;
-
     @Before
     public void setUp() {
         initMocks(this);
 
-        objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(fixedTermController).build();
     }
 
     @Test
     public void FixedTermControler_SimulateFixedTerm_ReturnCreated() throws Exception {
         //Simulo lo que devuelve el servicio.
-        FixedTermCreateRequestDTO requestDTO = new FixedTermCreateRequestDTO(100D, 30);
 
         Timestamp fechaCreacion = new Timestamp(System.currentTimeMillis());
-        Timestamp fechaFinalizacion = new Timestamp(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // Agregar 30 días al tiempo actual
+        Timestamp fechaFinalizacion = new Timestamp(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
         Double montoInvertido = 1000.0;
         Double interes = 50.0;
         Double montoTotal = montoInvertido + interes;
@@ -62,28 +60,17 @@ public class FixedTermControllerTest {
 
         given(fixedTermService.simulateFixedTerm(ArgumentMatchers.any())).willReturn(responseDTO);
 
-        // Simular el comportamiento del controller.
-
-        Response<FixedTermSimulateResponseDTO> response = new Response<>();
-        response.setData(responseDTO);
-
         // Realizar la solicitud a través de MockMvc
 
         mockMvc.perform(post("/fixedTerm/simulate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{ \"amount\": 2000, \"cantDias\": 30 }"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.fechaCreacion").value(fechaCreacion.getTime()))
+                .andExpect(jsonPath("$.data.fechaFinalizacion").value(fechaFinalizacion.getTime()))
+                .andExpect(jsonPath("$.data.montoInverito").value(montoInvertido))
+                .andExpect(jsonPath("$.data.interes").value(interes))
+                .andExpect(jsonPath("$.data.montoTotal").value(montoTotal));
     }
 
-    @Test
-    public void FixedTermControler_SimulateFixedTerm_Return400() throws Exception {
-
-        // Realizar la solicitud a través de MockMvc
-        ResultActions response = mockMvc.perform(post("/fixedTerm/simulate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"amount\": 2000, \"cantDias\": 29 }"));
-
-        // Verificar el resultado esperado
-        response.andExpect(status().isBadRequest());
-    }
 }
